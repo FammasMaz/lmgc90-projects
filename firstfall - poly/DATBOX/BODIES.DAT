@@ -1,0 +1,835 @@
+$bdyty
+ RBDY2      1
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.2839532E+00  gyrd= 9.1556443E-01
+$nodty
+ NO3xx      1                coo1= 3.7500000E+01  coo2= 4.1475880E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.4758797E+00  coo2= 0.0000000E+00
+                             coo1= 4.5607192E-01  coo2= 1.4036451E+00
+                             coo1=-1.1940118E+00  coo2= 8.6750035E-01
+                             coo1=-1.1940118E+00  coo2=-8.6750035E-01
+                             coo1= 4.5607192E-01  coo2=-1.4036451E+00
+$$$$$$
+$bdyty
+ RBDY2      2
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.9644873E+00  gyrd= 1.4008413E+00
+$nodty
+ NO3xx      1                coo1= 1.8053490E+01  coo2= 4.2258141E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.2581407E+00  coo2= 9.7676622E-17
+                             coo1= 6.9780384E-01  coo2= 2.1476194E+00
+                             coo1=-1.8268742E+00  coo2= 1.3273018E+00
+                             coo1=-1.8268742E+00  coo2=-1.3273018E+00
+                             coo1= 6.9780384E-01  coo2=-2.1476194E+00
+$$$$$$
+$bdyty
+ RBDY2      3
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 2.1459622E+00  gyrd= 1.5302478E+00
+$nodty
+ NO3xx      1                coo1= 7.8999781E+00  coo2= 4.2466743E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.4667426E+00  coo2=-1.2278242E-16
+                             coo1= 7.6226539E-01  coo2= 2.3460116E+00
+                             coo1=-1.9956367E+00  coo2= 1.4499149E+00
+                             coo1=-1.9956367E+00  coo2=-1.4499149E+00
+                             coo1= 7.6226539E-01  coo2=-2.3460116E+00
+$$$$$$
+$bdyty
+ RBDY2      4
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.2155255E+00  gyrd= 8.6676981E-01
+$nodty
+ NO3xx      1                coo1= 2.7921012E+00  coo2= 4.1397223E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.3972234E+00  coo2=-1.5945604E-17
+                             coo1= 4.3176576E-01  coo2= 1.3288384E+00
+                             coo1=-1.1303774E+00  coo2= 8.2126728E-01
+                             coo1=-1.1303774E+00  coo2=-8.2126728E-01
+                             coo1= 4.3176576E-01  coo2=-1.3288384E+00
+$$$$$$
+$bdyty
+ RBDY2      5
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.9603566E+00  gyrd= 1.3978958E+00
+$nodty
+ NO3xx      1                coo1= 1.3078624E+01  coo2= 4.2253393E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.2533925E+00  coo2=-4.9044344E-17
+                             coo1= 6.9633658E-01  coo2= 2.1431036E+00
+                             coo1=-1.8230328E+00  coo2= 1.3245109E+00
+                             coo1=-1.8230328E+00  coo2=-1.3245109E+00
+                             coo1= 6.9633658E-01  coo2=-2.1431036E+00
+$$$$$$
+$bdyty
+ RBDY2      6
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.9282106E+00  gyrd= 1.3749730E+00
+$nodty
+ NO3xx      1                coo1= 2.8205293E+01  coo2= 4.2216441E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.2164413E+00  coo2= 7.6039882E-17
+                             coo1= 6.8491802E-01  coo2= 2.1079609E+00
+                             coo1=-1.7931386E+00  coo2= 1.3027915E+00
+                             coo1=-1.7931386E+00  coo2=-1.3027915E+00
+                             coo1= 6.8491802E-01  coo2=-2.1079609E+00
+$$$$$$
+$bdyty
+ RBDY2      7
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.8772489E+00  gyrd= 1.3386331E+00
+$nodty
+ NO3xx      1                coo1= 2.3149868E+01  coo2= 4.2157862E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.1578618E+00  coo2= 2.6741475E-17
+                             coo1= 6.6681598E-01  coo2= 2.0522486E+00
+                             coo1=-1.7457469E+00  coo2= 1.2683594E+00
+                             coo1=-1.7457469E+00  coo2=-1.2683594E+00
+                             coo1= 6.6681598E-01  coo2=-2.0522486E+00
+$$$$$$
+$bdyty
+ RBDY2      8
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.6668584E+00  gyrd= 1.1886074E+00
+$nodty
+ NO3xx      1                coo1= 3.3231799E+01  coo2= 4.1916022E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.9160220E+00  coo2=-3.3918111E-17
+                             coo1= 5.9208335E-01  coo2= 1.8222452E+00
+                             coo1=-1.5500943E+00  coo2= 1.1262095E+00
+                             coo1=-1.5500943E+00  coo2=-1.1262095E+00
+                             coo1= 5.9208335E-01  coo2=-1.8222452E+00
+$$$$$$
+$bdyty
+ RBDY2      9
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.3699606E+00  gyrd= 9.7689475E-01
+$nodty
+ NO3xx      1                coo1= 5.6987139E+01  coo2= 4.1574744E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.5747435E+00  coo2=-2.5106314E-17
+                             coo1= 4.8662252E-01  coo2= 1.4976701E+00
+                             coo1=-1.2739943E+00  coo2= 9.2561103E-01
+                             coo1=-1.2739943E+00  coo2=-9.2561103E-01
+                             coo1= 4.8662252E-01  coo2=-1.4976701E+00
+$$$$$$
+$bdyty
+ RBDY2     10
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.0547900E+00  gyrd= 7.5215214E-01
+$nodty
+ NO3xx      1                coo1= 4.7199492E+01  coo2= 4.1212461E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.2124609E+00  coo2=-4.2351336E-17
+                             coo1= 3.7467104E-01  coo2= 1.1531189E+00
+                             coo1=-9.8090151E-01  coo2= 7.1266666E-01
+                             coo1=-9.8090151E-01  coo2=-7.1266666E-01
+                             coo1= 3.7467104E-01  coo2=-1.1531189E+00
+$$$$$$
+$bdyty
+ RBDY2     11
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.5365762E+00  gyrd= 1.0957054E+00
+$nodty
+ NO3xx      1                coo1= 4.2500907E+01  coo2= 4.1766265E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.7662650E+00  coo2= 0.0000000E+00
+                             coo1= 5.4580590E-01  coo2= 1.6798178E+00
+                             coo1=-1.4289384E+00  coo2= 1.0381845E+00
+                             coo1=-1.4289384E+00  coo2=-1.0381845E+00
+                             coo1= 5.4580590E-01  coo2=-1.6798178E+00
+$$$$$$
+$bdyty
+ RBDY2     12
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.5989605E+00  gyrd= 1.1401905E+00
+$nodty
+ NO3xx      1                coo1= 5.1884846E+01  coo2= 4.1837975E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.8379745E+00  coo2=-3.6859857E-17
+                             coo1= 5.6796537E-01  coo2= 1.7480177E+00
+                             coo1=-1.4869526E+00  coo2= 1.0803343E+00
+                             coo1=-1.4869526E+00  coo2=-1.0803343E+00
+                             coo1= 5.6796537E-01  coo2=-1.7480177E+00
+$$$$$$
+$bdyty
+ RBDY2     13
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.9424267E+00  gyrd= 1.3851102E+00
+$nodty
+ NO3xx      1                coo1= 6.6752294E+01  coo2= 4.2232782E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.2327824E+00  coo2=-1.4986185E-16
+                             coo1= 6.8996771E-01  coo2= 2.1235022E+00
+                             coo1=-1.8063589E+00  coo2= 1.3123966E+00
+                             coo1=-1.8063589E+00  coo2=-1.3123966E+00
+                             coo1= 6.8996771E-01  coo2=-2.1235022E+00
+$$$$$$
+$bdyty
+ RBDY2     14
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.6599835E+00  gyrd= 1.1837050E+00
+$nodty
+ NO3xx      1                coo1= 6.1539075E+01  coo2= 4.1908119E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.9081193E+00  coo2= 3.4199643E-17
+                             coo1= 5.8964130E-01  coo2= 1.8147293E+00
+                             coo1=-1.5437010E+00  coo2= 1.1215644E+00
+                             coo1=-1.5437010E+00  coo2=-1.1215644E+00
+                             coo1= 5.8964130E-01  coo2=-1.8147293E+00
+$$$$$$
+$bdyty
+ RBDY2     15
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 2.0136612E+00  gyrd= 1.4359063E+00
+$nodty
+ NO3xx      1                coo1= 7.1992170E+01  coo2= 4.2314665E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.3146651E+00  coo2= 4.6482158E-17
+                             coo1= 7.1527086E-01  coo2= 2.2013774E+00
+                             coo1=-1.8726034E+00  coo2= 1.3605260E+00
+                             coo1=-1.8726034E+00  coo2=-1.3605260E+00
+                             coo1= 7.1527086E-01  coo2=-2.2013774E+00
+$$$$$$
+$bdyty
+ RBDY2     16
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.2847939E+00  gyrd= 9.1616388E-01
+$nodty
+ NO3xx      1                coo1= 4.5403064E+01  coo2= 4.3213765E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.4768461E+00  coo2= 0.0000000E+00
+                             coo1= 4.5637053E-01  coo2= 1.4045641E+00
+                             coo1=-1.1947936E+00  coo2= 8.6806833E-01
+                             coo1=-1.1947936E+00  coo2=-8.6806833E-01
+                             coo1= 4.5637053E-01  coo2=-1.4045641E+00
+$$$$$$
+$bdyty
+ RBDY2     17
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.3898857E+00  gyrd= 9.9110298E-01
+$nodty
+ NO3xx      1                coo1= 4.8864824E+01  coo2= 4.3475948E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.5976470E+00  coo2= 4.8783274E-17
+                             coo1= 4.9370009E-01  coo2= 1.5194526E+00
+                             coo1=-1.2925236E+00  coo2= 9.3907337E-01
+                             coo1=-1.2925236E+00  coo2=-9.3907337E-01
+                             coo1= 4.9370009E-01  coo2=-1.5194526E+00
+$$$$$$
+$bdyty
+ RBDY2     18
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.7207480E+00  gyrd= 1.2270351E+00
+$nodty
+ NO3xx      1                coo1= 3.9642602E+01  coo2= 4.4184812E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.9779670E+00  coo2= 3.1826916E-17
+                             coo1= 6.1122541E-01  coo2= 1.8811584E+00
+                             coo1=-1.6002089E+00  coo2= 1.1626198E+00
+                             coo1=-1.6002089E+00  coo2=-1.1626198E+00
+                             coo1= 6.1122541E-01  coo2=-1.8811584E+00
+$$$$$$
+$bdyty
+ RBDY2     19
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.4837297E+00  gyrd= 1.0580215E+00
+$nodty
+ NO3xx      1                coo1= 5.4727919E+01  coo2= 4.3952989E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.7055190E+00  coo2= 2.1403732E-17
+                             coo1= 5.2703436E-01  coo2= 1.6220450E+00
+                             coo1=-1.3797939E+00  coo2= 1.0024789E+00
+                             coo1=-1.3797939E+00  coo2=-1.0024789E+00
+                             coo1= 5.2703436E-01  coo2=-1.6220450E+00
+$$$$$$
+$bdyty
+ RBDY2     20
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.7941383E+00  gyrd= 1.2793684E+00
+$nodty
+ NO3xx      1                coo1= 3.9381786E+00  coo2= 4.4661423E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.0623277E+00  coo2=-5.8552744E-17
+                             coo1= 6.3729432E-01  coo2= 1.9613902E+00
+                             coo1=-1.6684582E+00  coo2= 1.2122058E+00
+                             coo1=-1.6684582E+00  coo2=-1.2122058E+00
+                             coo1= 6.3729432E-01  coo2=-1.9613902E+00
+$$$$$$
+$bdyty
+ RBDY2     21
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.4427860E+00  gyrd= 1.0288253E+00
+$nodty
+ NO3xx      1                coo1= 3.5971282E+01  coo2= 4.4212132E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.6584550E+00  coo2= 4.5271537E-17
+                             coo1= 5.1249078E-01  coo2= 1.5772844E+00
+                             coo1=-1.3417183E+00  coo2= 9.7481540E-01
+                             coo1=-1.3417183E+00  coo2=-9.7481540E-01
+                             coo1= 5.1249078E-01  coo2=-1.5772844E+00
+$$$$$$
+$bdyty
+ RBDY2     22
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.8497590E+00  gyrd= 1.3190306E+00
+$nodty
+ NO3xx      1                coo1= 5.8753874E+01  coo2= 4.4826834E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.1262627E+00  coo2= 2.7542210E-17
+                             coo1= 6.5705131E-01  coo2= 2.0221960E+00
+                             coo1=-1.7201827E+00  coo2= 1.2497859E+00
+                             coo1=-1.7201827E+00  coo2=-1.2497859E+00
+                             coo1= 6.5705131E-01  coo2=-2.0221960E+00
+$$$$$$
+$bdyty
+ RBDY2     23
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.2202862E+00  gyrd= 8.7016462E-01
+$nodty
+ NO3xx      1                coo1= 6.3788189E+01  coo2= 4.4337725E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.4026958E+00  coo2=-3.1642856E-17
+                             coo1= 4.3345682E-01  coo2= 1.3340429E+00
+                             coo1=-1.1348047E+00  coo2= 8.2448388E-01
+                             coo1=-1.1348047E+00  coo2=-8.2448388E-01
+                             coo1= 4.3345682E-01  coo2=-1.3340429E+00
+$$$$$$
+$bdyty
+ RBDY2     24
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.4627031E+00  gyrd= 1.0430278E+00
+$nodty
+ NO3xx      1                coo1= 3.1107044E+01  coo2= 4.4818865E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.6813493E+00  coo2= 2.2023521E-17
+                             coo1= 5.1956550E-01  coo2= 1.5990582E+00
+                             coo1=-1.3602401E+00  coo2= 9.8827231E-01
+                             coo1=-1.3602401E+00  coo2=-9.8827231E-01
+                             coo1= 5.1956550E-01  coo2=-1.5990582E+00
+$$$$$$
+$bdyty
+ RBDY2     25
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.8859306E+00  gyrd= 1.3448239E+00
+$nodty
+ NO3xx      1                coo1= 2.5586038E+01  coo2= 4.5732325E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.1678413E+00  coo2=-7.9487514E-17
+                             coo1= 6.6989980E-01  coo2= 2.0617396E+00
+                             coo1=-1.7538204E+00  coo2= 1.2742251E+00
+                             coo1=-1.7538204E+00  coo2=-1.2742251E+00
+                             coo1= 6.6989980E-01  coo2=-2.0617396E+00
+$$$$$$
+$bdyty
+ RBDY2     26
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.5041323E+00  gyrd= 1.0725703E+00
+$nodty
+ NO3xx      1                coo1= 2.0738134E+01  coo2= 4.5205978E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.7289714E+00  coo2= 2.0827013E-17
+                             coo1= 5.3428156E-01  coo2= 1.6443496E+00
+                             coo1=-1.3987673E+00  coo2= 1.0162639E+00
+                             coo1=-1.3987673E+00  coo2=-1.0162639E+00
+                             coo1= 5.3428156E-01  coo2=-1.6443496E+00
+$$$$$$
+$bdyty
+ RBDY2     27
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 9.0350639E-01  gyrd= 6.4427449E-01
+$nodty
+ NO3xx      1                coo1= 6.9288828E+01  coo2= 4.4298623E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.0385634E+00  coo2=-1.4430343E-17
+                             coo1= 3.2093373E-01  coo2= 9.8773245E-01
+                             coo1=-8.4021541E-01  coo2= 6.1045223E-01
+                             coo1=-8.4021541E-01  coo2=-6.1045223E-01
+                             coo1= 3.2093373E-01  coo2=-9.8773245E-01
+$$$$$$
+$bdyty
+ RBDY2     28
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 9.0591050E-01  gyrd= 6.4598882E-01
+$nodty
+ NO3xx      1                coo1= 1.5560845E+01  coo2= 4.4419901E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.0413268E+00  coo2= 2.8707708E-17
+                             coo1= 3.2178769E-01  coo2= 9.9036067E-01
+                             coo1=-8.4245111E-01  coo2= 6.1207656E-01
+                             coo1=-8.4245111E-01  coo2=-6.1207656E-01
+                             coo1= 3.2178769E-01  coo2=-9.9036067E-01
+$$$$$$
+$bdyty
+ RBDY2     29
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.9693925E+00  gyrd= 1.4043391E+00
+$nodty
+ NO3xx      1                coo1= 1.0836967E+01  coo2= 4.6175103E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.2637792E+00  coo2=-1.4578598E-16
+                             coo1= 6.9954623E-01  coo2= 2.1529819E+00
+                             coo1=-1.8314358E+00  coo2= 1.3306160E+00
+                             coo1=-1.8314358E+00  coo2=-1.3306160E+00
+                             coo1= 6.9954623E-01  coo2=-2.1529819E+00
+$$$$$$
+$bdyty
+ RBDY2     30
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.2936372E+00  gyrd= 9.2246993E-01
+$nodty
+ NO3xx      1                coo1= 4.3021232E+01  coo2= 4.4977662E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.4870113E+00  coo2=-5.6312404E-17
+                             coo1= 4.5951177E-01  coo2= 1.4142318E+00
+                             coo1=-1.2030174E+00  coo2= 8.7404333E-01
+                             coo1=-1.2030174E+00  coo2=-8.7404333E-01
+                             coo1= 4.5951177E-01  coo2=-1.4142318E+00
+$$$$$$
+$bdyty
+ RBDY2     31
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 2.1415670E+00  gyrd= 1.5271137E+00
+$nodty
+ NO3xx      1                coo1= 5.1488046E+01  coo2= 4.6573839E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.4616904E+00  coo2=-4.1095642E-17
+                             coo1= 7.6070416E-01  coo2= 2.3412067E+00
+                             coo1=-1.9915493E+00  coo2= 1.4469453E+00
+                             coo1=-1.9915493E+00  coo2=-1.4469453E+00
+                             coo1= 7.6070416E-01  coo2=-2.3412067E+00
+$$$$$$
+$bdyty
+ RBDY2     32
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.9930715E+00  gyrd= 1.4212242E+00
+$nodty
+ NO3xx      1                coo1= 4.6738164E+01  coo2= 4.6737138E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.2909977E+00  coo2= 4.7447499E-17
+                             coo1= 7.0795722E-01  coo2= 2.1788683E+00
+                             coo1=-1.8534561E+00  coo2= 1.3466146E+00
+                             coo1=-1.8534561E+00  coo2=-1.3466146E+00
+                             coo1= 7.0795722E-01  coo2=-2.1788683E+00
+$$$$$$
+$bdyty
+ RBDY2     33
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.8139371E+00  gyrd= 1.2934866E+00
+$nodty
+ NO3xx      1                coo1= 6.7108966E+01  coo2= 4.6535894E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.0850861E+00  coo2= 2.8640768E-17
+                             coo1= 6.4432703E-01  coo2= 1.9830347E+00
+                             coo1=-1.6868701E+00  coo2= 1.2255828E+00
+                             coo1=-1.6868701E+00  coo2=-1.2255828E+00
+                             coo1= 6.4432703E-01  coo2=-1.9830347E+00
+$$$$$$
+$bdyty
+ RBDY2     34
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.9064214E+00  gyrd= 1.3594355E+00
+$nodty
+ NO3xx      1                coo1= 7.2808604E+01  coo2= 4.6746145E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.1913950E+00  coo2=-5.1858659E-17
+                             coo1= 6.7717830E-01  coo2= 2.0841405E+00
+                             coo1=-1.7728758E+00  coo2= 1.2880697E+00
+                             coo1=-1.7728758E+00  coo2=-1.2880697E+00
+                             coo1= 6.7717830E-01  coo2=-2.0841405E+00
+$$$$$$
+$bdyty
+ RBDY2     35
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.9951583E+00  gyrd= 1.4227122E+00
+$nodty
+ NO3xx      1                coo1= 1.7287414E+01  coo2= 4.7272853E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.2933964E+00  coo2= 4.7348297E-17
+                             coo1= 7.0869847E-01  coo2= 2.1811496E+00
+                             coo1=-1.8553967E+00  coo2= 1.3480246E+00
+                             coo1=-1.8553967E+00  coo2=-1.3480246E+00
+                             coo1= 7.0869847E-01  coo2=-2.1811496E+00
+$$$$$$
+$bdyty
+ RBDY2     36
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.7934947E+00  gyrd= 1.2789095E+00
+$nodty
+ NO3xx      1                coo1= 3.3904714E+01  coo2= 4.7305353E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.0615880E+00  coo2=-2.9297386E-17
+                             coo1= 6.3706573E-01  coo2= 1.9606867E+00
+                             coo1=-1.6678597E+00  coo2= 1.2117710E+00
+                             coo1=-1.6678597E+00  coo2=-1.2117710E+00
+                             coo1= 6.3706573E-01  coo2=-1.9606867E+00
+$$$$$$
+$bdyty
+ RBDY2     37
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.3956380E+00  gyrd= 9.9520488E-01
+$nodty
+ NO3xx      1                coo1= 7.0015358E+00  coo2= 4.6676294E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.6042593E+00  coo2= 2.4190983E-17
+                             coo1= 4.9574338E-01  coo2= 1.5257412E+00
+                             coo1=-1.2978730E+00  coo2= 9.4295994E-01
+                             coo1=-1.2978730E+00  coo2=-9.4295994E-01
+                             coo1= 4.9574338E-01  coo2=-1.5257412E+00
+$$$$$$
+$bdyty
+ RBDY2     38
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.4916745E+00  gyrd= 1.0636868E+00
+$nodty
+ NO3xx      1                coo1= 6.1995063E+01  coo2= 4.6887735E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.7146514E+00  coo2= 0.0000000E+00
+                             coo1= 5.2985641E-01  coo2= 1.6307304E+00
+                             coo1=-1.3871821E+00  coo2= 1.0078468E+00
+                             coo1=-1.3871821E+00  coo2=-1.0078468E+00
+                             coo1= 5.2985641E-01  coo2=-1.6307304E+00
+$$$$$$
+$bdyty
+ RBDY2     39
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.9739347E+00  gyrd= 1.4075781E+00
+$nodty
+ NO3xx      1                coo1= 3.8149964E+01  coo2= 4.8160835E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.2690003E+00  coo2=-1.4511582E-16
+                             coo1= 7.0115966E-01  coo2= 2.1579476E+00
+                             coo1=-1.8356598E+00  coo2= 1.3336849E+00
+                             coo1=-1.8356598E+00  coo2=-1.3336849E+00
+                             coo1= 7.0115966E-01  coo2=-2.1579476E+00
+$$$$$$
+$bdyty
+ RBDY2     40
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.8264684E+00  gyrd= 1.3024225E+00
+$nodty
+ NO3xx      1                coo1= 5.5852456E+01  coo2= 4.7899092E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.0994906E+00  coo2= 2.8249109E-17
+                             coo1= 6.4877828E-01  coo2= 1.9967342E+00
+                             coo1=-1.6985236E+00  coo2= 1.2340496E+00
+                             coo1=-1.6985236E+00  coo2=-1.2340496E+00
+                             coo1= 6.4877828E-01  coo2=-1.9967342E+00
+$$$$$$
+$bdyty
+ RBDY2     41
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.5022696E+00  gyrd= 1.0712420E+00
+$nodty
+ NO3xx      1                coo1= 2.9041220E+01  coo2= 4.7529595E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.7268303E+00  coo2= 0.0000000E+00
+                             coo1= 5.3361990E-01  coo2= 1.6423132E+00
+                             coo1=-1.3970350E+00  coo2= 1.0150054E+00
+                             coo1=-1.3970350E+00  coo2=-1.0150054E+00
+                             coo1= 5.3361990E-01  coo2=-1.6423132E+00
+$$$$$$
+$bdyty
+ RBDY2     42
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 2.0183604E+00  gyrd= 1.4392572E+00
+$nodty
+ NO3xx      1                coo1= 2.3200667E+00  coo2= 4.8734149E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.3200667E+00  coo2= 0.0000000E+00
+                             coo1= 7.1694005E-01  coo2= 2.2065146E+00
+                             coo1=-1.8769734E+00  coo2= 1.3637010E+00
+                             coo1=-1.8769734E+00  coo2=-1.3637010E+00
+                             coo1= 7.1694005E-01  coo2=-2.2065146E+00
+$$$$$$
+$bdyty
+ RBDY2     43
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 9.0596274E-01  gyrd= 6.4602607E-01
+$nodty
+ NO3xx      1                coo1= 4.1224513E+01  coo2= 4.6756593E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.0413869E+00  coo2=-1.4352199E-17
+                             coo1= 3.2180624E-01  coo2= 9.9041778E-01
+                             coo1=-8.4249969E-01  coo2= 6.1211185E-01
+                             coo1=-8.4249969E-01  coo2=-6.1211185E-01
+                             coo1= 3.2180624E-01  coo2=-9.9041778E-01
+$$$$$$
+$bdyty
+ RBDY2     44
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 8.9533911E-01  gyrd= 6.3845055E-01
+$nodty
+ NO3xx      1                coo1= 2.2711940E+01  coo2= 4.7132495E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.0291752E+00  coo2=-5.8779242E-17
+                             coo1= 3.1803264E-01  coo2= 9.7880381E-01
+                             coo1=-8.3262025E-01  coo2= 6.0493402E-01
+                             coo1=-8.3262025E-01  coo2=-6.0493402E-01
+                             coo1= 3.1803264E-01  coo2=-9.7880381E-01
+$$$$$$
+$bdyty
+ RBDY2     45
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.0875587E+00  gyrd= 7.7551893E-01
+$nodty
+ NO3xx      1                coo1= 4.3329713E+01  coo2= 4.7697362E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.2501279E+00  coo2=-1.9918825E-17
+                             coo1= 3.8631078E-01  coo2= 1.1889423E+00
+                             coo1=-1.0113747E+00  coo2= 7.3480677E-01
+                             coo1=-1.0113747E+00  coo2=-7.3480677E-01
+                             coo1= 3.8631078E-01  coo2=-1.1889423E+00
+$$$$$$
+$bdyty
+ RBDY2     46
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.0946597E+00  gyrd= 7.8058257E-01
+$nodty
+ NO3xx      1                coo1= 1.3820937E+01  coo2= 4.8046170E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.2582905E+00  coo2= 0.0000000E+00
+                             coo1= 3.8883314E-01  coo2= 1.1967054E+00
+                             coo1=-1.0179784E+00  coo2= 7.3960459E-01
+                             coo1=-1.0179784E+00  coo2=-7.3960459E-01
+                             coo1= 3.8883314E-01  coo2=-1.1967054E+00
+$$$$$$
+$bdyty
+ RBDY2     47
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 9.6855808E-01  gyrd= 6.9066171E-01
+$nodty
+ NO3xx      1                coo1= 5.9395919E+01  coo2= 4.8002176E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.1133390E+00  coo2= 2.5114108E-17
+                             coo1= 3.4404068E-01  coo2= 1.0588484E+00
+                             coo1=-9.0071021E-01  coo2= 6.5440427E-01
+                             coo1=-9.0071021E-01  coo2=-6.5440427E-01
+                             coo1= 3.4404068E-01  coo2=-1.0588484E+00
+$$$$$$
+$bdyty
+ RBDY2     48
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.9404601E+00  gyrd= 1.3837079E+00
+$nodty
+ NO3xx      1                coo1= 2.0976265E+01  coo2= 4.9891672E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 2.2305219E+00  coo2=-1.0011050E-16
+                             coo1= 6.8926916E-01  coo2= 2.1213524E+00
+                             coo1=-1.8045301E+00  coo2= 1.3110679E+00
+                             coo1=-1.8045301E+00  coo2=-1.3110679E+00
+                             coo1= 6.8926916E-01  coo2=-2.1213524E+00
+$$$$$$
+$bdyty
+ RBDY2     49
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.4709876E+00  gyrd= 1.0489353E+00
+$nodty
+ NO3xx      1                coo1= 6.4465303E+01  coo2= 4.9231985E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.6908722E+00  coo2= 0.0000000E+00
+                             coo1= 5.2250824E-01  coo2= 1.6081150E+00
+                             coo1=-1.3679443E+00  coo2= 9.9386973E-01
+                             coo1=-1.3679443E+00  coo2=-9.9386973E-01
+                             coo1= 5.2250824E-01  coo2=-1.6081150E+00
+$$$$$$
+$bdyty
+ RBDY2     50
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.1256301E+00  gyrd= 8.0266700E-01
+$nodty
+ NO3xx      1                coo1= 2.4379962E+01  coo2= 4.8977162E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.2938903E+00  coo2= 3.7188417E-17
+                             coo1= 3.9983410E-01  coo2= 1.2305628E+00
+                             coo1=-1.0467793E+00  coo2= 7.6052966E-01
+                             coo1=-1.0467793E+00  coo2=-7.6052966E-01
+                             coo1= 3.9983410E-01  coo2=-1.2305628E+00
+$$$$$$
+$bdyty
+ RBDY2     51
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.5325936E+00  gyrd= 1.0928655E+00
+$nodty
+ NO3xx      1                coo1= 8.6965081E+00  coo2= 4.9584328E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.7616872E+00  coo2= 4.0121305E-17
+                             coo1= 5.4439127E-01  coo2= 1.6754641E+00
+                             coo1=-1.4252348E+00  coo2= 1.0354937E+00
+                             coo1=-1.4252348E+00  coo2=-1.0354937E+00
+                             coo1= 5.4439127E-01  coo2=-1.6754641E+00
+$$$$$$
+$bdyty
+ RBDY2     52
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.2097083E+00  gyrd= 8.6262169E-01
+$nodty
+ NO3xx      1                coo1= 4.1509956E+01  coo2= 4.9610891E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.3905366E+00  coo2=-8.0496644E-17
+                             coo1= 4.2969945E-01  coo2= 1.3224789E+00
+                             coo1=-1.1249678E+00  coo2= 8.1733692E-01
+                             coo1=-1.1249678E+00  coo2=-8.1733692E-01
+                             coo1= 4.2969945E-01  coo2=-1.3224789E+00
+$$$$$$
+$bdyty
+ RBDY2     53
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 9.5792283E-01  gyrd= 6.8307790E-01
+$nodty
+ NO3xx      1                coo1= 5.7255179E+00  coo2= 4.9061838E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.1011140E+00  coo2=-1.2837429E-17
+                             coo1= 3.4026295E-01  coo2= 1.0472217E+00
+                             coo1=-8.9081996E-01  coo2= 6.4721859E-01
+                             coo1=-8.9081996E-01  coo2=-6.4721859E-01
+                             coo1= 3.4026295E-01  coo2=-1.0472217E+00
+$$$$$$
+$bdyty
+ RBDY2     54
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 1.0781697E+00  gyrd= 7.6882383E-01
+$nodty
+ NO3xx      1                coo1= 2.6851930E+01  coo2= 4.9530882E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.2393355E+00  coo2=-2.0267251E-17
+                             coo1= 3.8297574E-01  coo2= 1.1786781E+00
+                             coo1=-1.0026435E+00  coo2= 7.2846314E-01
+                             coo1=-1.0026435E+00  coo2=-7.2846314E-01
+                             coo1= 3.8297574E-01  coo2=-1.1786781E+00
+$$$$$$
+$bdyty
+ RBDY2     55
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 9.2269768E-01  gyrd= 6.5795946E-01
+$nodty
+ NO3xx      1                coo1= 1.1888953E+01  coo2= 4.9328668E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.0606234E+00  coo2=-5.5345235E-17
+                             coo1= 3.2775065E-01  coo2= 1.0087128E+00
+                             coo1=-8.5806234E-01  coo2= 6.2341878E-01
+                             coo1=-8.5806234E-01  coo2=-6.2341878E-01
+                             coo1= 3.2775065E-01  coo2=-1.0087128E+00
+$$$$$$
+$bdyty
+ RBDY2     56
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 9.5260351E-01  gyrd= 6.7928479E-01
+$nodty
+ NO3xx      1                coo1= 6.1003261E+01  coo2= 4.9516512E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.0949996E+00  coo2= 1.2981197E-17
+                             coo1= 3.3837348E-01  coo2= 1.0414065E+00
+                             coo1=-8.8587326E-01  coo2= 6.4362460E-01
+                             coo1=-8.8587326E-01  coo2=-6.4362460E-01
+                             coo1= 3.3837348E-01  coo2=-1.0414065E+00
+$$$$$$
+$bdyty
+ RBDY2     57
+$blmty
+ PLAIN      1  behav  PLEXx  avrd= 9.6347203E-01  gyrd= 6.8703494E-01
+$nodty
+ NO3xx      1                coo1= 7.3892507E+01  coo2= 4.9861881E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ POLYG      1  color  BLUEx  nb_vertex=      5
+                             coo1= 1.1074927E+00  coo2=-5.0759913E-17
+                             coo1= 3.4223407E-01  coo2= 1.0532882E+00
+                             coo1=-8.9598044E-01  coo2= 6.5096789E-01
+                             coo1=-8.9598044E-01  coo2=-6.5096789E-01
+                             coo1= 3.4223407E-01  coo2=-1.0532882E+00
+$$$$$$
+$bdyty
+ RBDY2     58
+$blmty
+ PLAIN      1  behav  TDURx  avrd= 1.4599706E+01  gyrd= 4.6664413E+01
+$nodty
+ NO3xx      1                coo1= 6.2500000E+01  coo2=-2.5000000E+00  coo3= 0.0000000E+00  
+$tacty                                                                  
+ JONCx      1  color  WALLx  axe1= 6.5000000E+01  axe2= 2.5000000E+00
+$$$$$$
+$bdyty
+ RBDY2     59
+$blmty
+ PLAIN      1  behav  TDURx  avrd= 1.4599706E+01  gyrd= 4.6664413E+01
+$nodty
+ NO3xx      1                coo1= 6.2500000E+01  coo2= 7.7500000E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ JONCx      1  color  WALLx  axe1= 6.5000000E+01  axe2= 2.5000000E+00
+$$$$$$
+$bdyty
+ RBDY2     60
+$blmty
+ PLAIN      1  behav  TDURx  avrd= 1.1557420E+01  gyrd= 2.8992369E+01
+$nodty
+ NO3xx      1                coo1=-2.5000000E+00  coo2= 3.7500000E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ JONCx      1  color  WALLx  axe1= 4.0000000E+01  axe2= 2.5000000E+00
+$$$$$$
+$bdyty
+ RBDY2     61
+$blmty
+ PLAIN      1  behav  TDURx  avrd= 1.1557420E+01  gyrd= 2.8992369E+01
+$nodty
+ NO3xx      1                coo1= 1.2750000E+02  coo2= 3.7500000E+01  coo3= 0.0000000E+00  
+$tacty                                                                  
+ JONCx      1  color  WALLx  axe1= 4.0000000E+01  axe2= 2.5000000E+00
+$$$$$$
+      

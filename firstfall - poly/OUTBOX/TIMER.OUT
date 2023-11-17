@@ -1,0 +1,21 @@
+Internal timers: 
+================ 
+                          Elapsed time  :  Elapsed ratio :
+ 
+ - [RBDY2] comp mass      0.0000000D+00 s          0.00 %
+ - [RBDY2] comp Fext      0.0000000D+00 s          0.00 %
+ - [RBDY2] comp bulk      0.0000000D+00 s          0.00 %
+ - [RBDY2] comp Free V    0.1562500D-01 s          0.32 %
+ - [inter_2D] recup       0.1562500D-01 s          0.32 %
+ - [NLGS2] prep           0.0000000D+00 s          0.00 %
+ - [NLGS2] iter           0.0000000D+00 s          0.00 %
+ - [NLGS2] check          0.0000000D+00 s          0.00 %
+ - [NLGS2] post           0.0000000D+00 s          0.00 %
+ - [inter_2D] stock       0.3125000D-01 s          0.64 %
+ - [RBDY2] comp dof       0.4687500D-01 s          0.96 %
+ - [RBDY2] update dof     0.0000000D+00 s          0.00 %
+                         -----------------       ---------
+  Accounted time          0.1093750D+00 s          2.25 %
+  Total elapsed time      0.4859375D+01
+ 
+ 
