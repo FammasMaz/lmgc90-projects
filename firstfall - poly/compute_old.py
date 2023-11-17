@@ -90,13 +90,14 @@ for k in range(1,ni+1):
     chipy.utilities_logMes('COMPUTE Free Vloc')
     chipy.RBDY2_ComputeFreeVelocity() # compute free velocity for RBDY2
 
-    chipy.utilities_logMes('COMPUTE PROX TACTORS')
-    chipy.overall_SelectProxTactors() # set prox tactors for overall
-    chipy.DKJCx_SelectProxTactors() # select prox tactors for DKJCx
-    chipy.DKPLx_SelectProxTactors() # select prox tactors for DKPLx
+    chipy.utilities_logMes('SELECT PROX TACTORS')
+    chipy.SelectProxTactors()
+
+    chipy.utilities_logMes('RESOLUTION' )
     chipy.RecupRloc()
-    chipy.nlgs_ExSolver(stype,norm,tol,relax,gs_it1,gs_it2)
-    chipy.StockRloc()
+
+    chipy.ExSolver(stype, norm, tol, relax, gs_it1, gs_it2)
+    chipy.UpdateTactBehav()
 
     chipy.utilities_logMes('COMPUTE DOF')
     chipy.RBDY2_ComputeDof() # compute degrees of freedom for RBDY2

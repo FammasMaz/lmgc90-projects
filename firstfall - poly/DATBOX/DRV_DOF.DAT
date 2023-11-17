@@ -1,6 +1,6 @@
 ! DOF
 $bdyty
- RBDY2     58
+ RBDY2     64
 $nodty
  NO3xx      1
 $dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
@@ -10,7 +10,7 @@ $dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI
 $$$$$$
 
 $bdyty
- RBDY2     59
+ RBDY2     65
 $nodty
  NO3xx      1
 $dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
@@ -20,7 +20,7 @@ $dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI
 $$$$$$
 
 $bdyty
- RBDY2     60
+ RBDY2     66
 $nodty
  NO3xx      1
 $dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
@@ -30,7 +30,7 @@ $dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI
 $$$$$$
 
 $bdyty
- RBDY2     61
+ RBDY2     67
 $nodty
  NO3xx      1
 $dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
