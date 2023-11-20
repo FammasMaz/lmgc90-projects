@@ -5,11 +5,11 @@ import numpy as np
 chipy.Initialize()
 chipy.checkDirectories() # check if directories exist e.g. DATABOX
 
-chipy.SetDimension(2) # 2D problem
+chipy.SetDimension(3) # 2D problem
 
 ## parameters for computation
 
-ni = 6000 # number of iterations
+ni = 1000 # number of iterations
 dt = 1.e-3 # time step
 theta = 0.5 
 
@@ -26,6 +26,9 @@ relax = 1.0 # relaxation parameter
 norm = 'QM/16'
 gs_it1 = 50 # min number of Gauss-Seidel iterations
 gs_it2 = 10 # max number of Gauss-Seidel iterations (gs_it1*gs_it2)
+# interaction parameters
+Rloc_tol = 5.e-2
+
 
 ## model reading
 chipy.utilities_logMes('READ BODIES')
@@ -51,16 +54,14 @@ chipy.ReadDrivenDof() # read driven degrees of freedom
 
 ## model writing
 chipy.utilities_logMes('WRITE BODIES')
-chipy.overall_WriteBodies() # write bodies for overall
-chipy.RBDY2_WriteBodies() # write bodies for RBDY2
+chipy.WriteBodies()
 
 chipy.utilities_logMes('WRITE BEHAVIORS')
 chipy.bulk_behav_WriteBehaviours() # write behaviors for bulk
 chipy.tact_behav_WriteBehaviours() # write behaviors for tacts
 
 chipy.utilities_logMes('WRITE DRIVEN DOF')
-chipy.overall_WriteDrivenDof() # write driven degrees of freedom for overall
-chipy.RBDY2_WriteDrivenDof() # write driven degrees of freedom for RBDY2
+chipy.WriteDrivenDof() # write driven degrees of freedom for RBDY2
 
 ## compute paramaters definition
 chipy.utilities_logMes('INIT TIME STEPPING')
@@ -71,55 +72,51 @@ chipy.Integrator_InitTheta(theta) # set theta for theta-method
 chipy.OpenDisplayFiles()
 chipy.ComputeMass()
 
+
+chipy.PRPRx_ShrinkPolyrFaces(1e-3)
+chipy.PRPRx_UseCpF2fExplicitDetection(1e-3)
+chipy.PRPRx_LowSizeArrayPolyr(10)
+chipy.nlgs_3D_DiagonalResolution()
 ## simulation start
 for k in range(1,ni+1):
     chipy.utilities_logMes('iter:'+str(k))
-    chipy.utilities_logMes('INCREMENT STEP')
-    chipy.TimeEvolution_IncrementStep() # increment step
-    chipy.RBDY2_IncrementStep() # increment step for RBDY2
-
-    chipy.utilities_logMes('DISPLAY TIMES')
-    chipy.TimeEvolution_DisplayStep() # display times
+    chipy.IncrementStep()
 
     chipy.utilities_logMes('COMPUTE Fext')
-    chipy.RBDY2_ComputeFext() # compute external forces for RBDY2
+    chipy.ComputeFext() # compute external forces for RBDY2
 
     chipy.utilities_logMes('COMPUTE Fint')
-    chipy.RBDY2_ComputeBulk() # compute internal forces for RBDY2
+    chipy.ComputeBulk() # compute internal forces for RBDY2
 
     chipy.utilities_logMes('COMPUTE Free Vloc')
-    chipy.RBDY2_ComputeFreeVelocity() # compute free velocity for RBDY2
+    chipy.ComputeFreeVelocity() # compute free velocity for RBDY2
 
-    chipy.utilities_logMes('COMPUTE PROX TACTORS')
-    chipy.overall_SelectProxTactors() # set prox tactors for overall
-    chipy.DKJCx_SelectProxTactors() # select prox tactors for DKJCx
-    chipy.DKDKx_SelectProxTactors() # select prox tactors for DKDKx
+    chipy.utilities_logMes('SELECT PROX TACTORS')
+    chipy.SelectProxTactors()
+
+    chipy.utilities_logMes('RESOLUTION' )
     chipy.RecupRloc()
-    chipy.nlgs_ExSolver(stype,norm,tol,relax,gs_it1,gs_it2)
+
+    chipy.ExSolver(stype, norm, tol, relax, gs_it1, gs_it2)
+    chipy.UpdateTactBehav()
     chipy.StockRloc()
 
     chipy.utilities_logMes('COMPUTE DOF')
-    chipy.RBDY2_ComputeDof() # compute degrees of freedom for RBDY2
+    chipy.ComputeDof() # compute degrees of freedom for RBDY2
 
     chipy.utilities_logMes('UPDATE DOF')
-    chipy.TimeEvolution_UpdateStep() # update degrees of freedom for time evolution
-    chipy.RBDY2_UpdateDof() # update degrees of freedom for RBDY2
+    chipy.UpdateStep() # update degrees of freedom for time evolution
 
-    chipy.utilities_logMes('WRITE LAST DOF')
-    chipy.TimeEvolution_WriteLastDof() # write last degrees of freedom for time evolution
-    chipy.RBDY2_WriteLastDof() # write last degrees of freedom for RBDY2
-
-    chipy.utilities_logMes('WRITE LAST Vloc Rloc')
-    chipy.TimeEvolution_WriteLastVlocRloc() # write last velocities and rotations)
-    chipy.DKJCx_WriteLastVlocRloc() # write last velocities and rotations for DKJCx
-    chipy.DKDKx_WriteLastVlocRloc() # write last velocities and rotations for DKDKx
-
+    chipy.utilities_logMes('WRITE OUT')
+    chipy.WriteOut()
     # post 2d
-    chipy.WriteDisplayFiles(freq_visu,ref_radius)
+    chipy.utilities_logMes('VISU & POSTPRO')
+    chipy.WriteDisplayFiles(freq_visu)
     # writeout handling
-    chipy.overall_CleanWriteOutFlags()
+    chipy.WritePostproFiles()
 
 chipy.CloseDisplayFiles()
+chipy.ClosePostproFiles()
 chipy.Finalize()
 
 

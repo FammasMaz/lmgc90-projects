@@ -1,0 +1,25 @@
+Internal timers: 
+================ 
+                          Elapsed time  :  Elapsed ratio :
+ 
+ - [RBDY3] comp mass      0.0000000D+00 s          0.00 %
+ - [RBDY3] comp Fext      0.0000000D+00 s          0.00 %
+ - [RBDY3] comp bulk      0.0000000D+00 s          0.00 %
+ - [RBDY3] comp Free V    0.6250000D-01 s          0.48 %
+ - [PRPLx] select         0.7500000D+00 s          5.81 %
+ - [PRPRx] select         0.3437500D+01 s         26.63 %
+ - [inter_3D] recupByPo   0.0000000D+00 s          0.00 %
+ - [inter_3D] recup       0.1093750D+00 s          0.85 %
+ - [NLGS3] prep           0.1171875D+01 s          9.08 %
+ - [NLGS3] iter           0.1343750D+01 s         10.41 %
+ - [NLGS3] check          0.1875000D+00 s          1.45 %
+ - [NLGS3] post           0.1250000D+00 s          0.97 %
+ - [NLGS3] update tact    0.1562500D-01 s          0.12 %
+ - [inter_3D] stock       0.5000000D+00 s          3.87 %
+ - [RBDY3] comp dof       0.1562500D-01 s          0.12 %
+ - [RBDY3] update dof     0.0000000D+00 s          0.00 %
+                         -----------------       ---------
+  Accounted time          0.7718750D+01 s         59.81 %
+  Total elapsed time      0.1290625D+02
+ 
+ 
