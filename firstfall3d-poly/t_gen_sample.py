@@ -19,8 +19,8 @@ if os.path.isdir('./OUTBOX'):
 dim = 3
 
 ## geometric params
-Rmin = 0.5 # minimum radius of particles
-Rmax = 2.0 # maximum radius of particles
+Rmin = 2 # minimum radius of particles
+Rmax = 5 # maximum radius of particles
 
 Px = 30*Rmax # width of the particle generation
 Py = 5*Rmax # height of the particle generation
@@ -30,7 +30,7 @@ lx = 50*Rmax # width of the domain
 ly = 30*Rmax # height of the domain
 lz = 30*Rmax # depth of the domain
 
-nb_particles = 300 # number of particles
+nb_particles = 500 # number of particles
 pp = 0.3 # particle-particle friction
 pw = 0.5 # particle-wall friction
 
@@ -73,7 +73,7 @@ radii = pre.granulo_Random(nb_particles,Rmin,Rmax)
 for i in range(nb_rem):
     # body = pre.rigidSphere(r=radii[i],center=coors[3*i:3*(i+1)],model=mod,
     #                         material=plex,color='BLUEx')
-    body = pre.rigidPolyhedron(radius=radii[i], center=coors[3*i : 3*(i+1)], nb_vertices=6, model=mod,
+    body = pre.rigidPolyhedron(radius=radii[i], center=coors[3*i : 3*(i+1)], nb_vertices=int(np.random.uniform(5,9)), model=mod,
                           material=plex, color='BLUEx')
     body.translate(dx=-8*Rmax,dz=40)
     body.imposeInitValue(component=2,value=-20.0) # velocity imposed on the particle in y direction
