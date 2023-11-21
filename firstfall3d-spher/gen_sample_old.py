@@ -15,13 +15,16 @@ Rmax = 2.5 # maximum radius of particles
 
 Px = 30*Rmax # width of the particle generation
 Py = 5*Rmax # height of the particle generation
+Pz = 10*Rmax # depth of the particle generation
+
 
 lx = 50*Rmax # width of the domain
 ly = 30*Rmax # height of the domain
+lz = 30*Rmax # depth of the domain
 
-n = 1000 # number of particles
+n = 200 # number of particles
 
-dim = 2 # dimension of the problem
+dim = 3 # dimension of the problem
 
 ## container defintion
 bodies = pre.avatars() # container for bodies
@@ -35,40 +38,33 @@ plex = pre.material(name='PLEXx', materialType='RIGID', density=5.)
 mat.addMaterial(tdur,plex)
 
 ## model definition
-mod = pre.model(name='rigid', physics='MECAx', element='Rxx2D',dimension=dim)
+mod = pre.model(name='rigid', physics='MECAx', element='Rxx3D',dimension=dim)
 
 ## particle generation
 radii = pre.granulo_Random(n, Rmin, Rmax) # random radii
-[nb_rem, coor] = pre.depositInBox2D(radii, Px, Py) # deposit particles in a box
+[nb_rem, coor] = pre.depositInBox3D(radii, Px, Py, Pz) # deposit particles in a box
 
 # balls avatar generation
 for i in range(nb_rem):
     #body = pre.rigidDisk(r=radii[i], center=coor[2*i : 2*(i+1)],model=mod,material=plex,color='BLUEx')
-    body = pre.rigidPolygon(radius=radii[i], center=coor[2*i : 2*(i+1)], nb_vertices=5, model=mod,
+    body = pre.rigidPolyhedron(radius=radii[i], center=coor[3*i : 3*(i+1)], nb_vertices=5, model=mod,
                              material=plex, color='BLUEx')
-    body.translate(dy=40, dx=lx/6.)
+    body.translate(dy=40,dz=Rmax, dx=0.5*lz + 2.*Rmax)
     bodies+=body
-
 ## wall avatar generation
-down = pre.rigidJonc(axe1=0.5*lx+Rmax,axe2=Rmax,center=[0.5*lx, -Rmax],model=mod,
-                     material=tdur,color='WALLx')
-up = pre.rigidJonc(axe1=0.5*lx+Rmax,axe2=Rmax,center=[0.5*lx, ly+Rmax],model=mod,
-                     material=tdur,color='WALLx')
-left = pre.rigidJonc(axe1=0.5*ly+Rmax,axe2=Rmax,center=[-Rmax,0.5*ly],model=mod,
-                        material=tdur,color='WALLx')
-right = pre.rigidJonc(axe1=0.5*ly+Rmax,axe2=Rmax,center=[lx+Rmax,0.5*ly],model=mod,
-                        material=tdur,color='WALLx')
-
-bodies += down; bodies += up; bodies += left; bodies += right
-
-left.rotate(psi=math.pi/2.,center=left.nodes[1].coor)
-right.rotate(psi=math.pi/2.,center=right.nodes[1].coor)
+back=pre.roughWall3D(lx=lx, ly=ly, model=mod, material=tdur, r=Rmax*0.5, color='WALLx', center=[0.5*lx, 0.5*ly, -Rmax])
+down=pre.roughWall3D(lx=lx, ly=lz, model=mod, material=tdur, r=Rmax*0.5, color='WALLx', center=[0.5*lx, 0.5*ly, -Rmax])
+left=pre.roughWall3D(lx=ly, ly=ly, model=mod, material=tdur, r=Rmax*0.5, color='WALLx', center=[0.5*lx, 0.5*ly, -Rmax])
+down.rotate(theta=math.pi/2.,center=down.nodes[1].coor);down.translate(dy=-0.5*ly);down.translate(dz=0.5*lz)
+left.rotate(theta=math.pi/2.,center=left.nodes[1].coor);left.rotate(psi=math.pi/2.,center=left.nodes[1].coor);left.translate(dz=0.5*lz, dx=-0.5*lx)
+bodies += down; bodies += back; bodies += left
+pre.visuAvatars(bodies)
 
 ## boundary conditions
-down.imposeDrivenDof(component=[1,2,3],dofty='vlocy')
-up.imposeDrivenDof(component=[1,2,3],dofty='vlocy')
-left.imposeDrivenDof(component=[1,2,3],dofty='vlocy')
-right.imposeDrivenDof(component=[1,2,3],dofty='vlocy')
+down.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
+left.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
+back.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
+
 
 ## defining interactions
 
@@ -78,12 +74,12 @@ tacts+=ppi; tacts+=ppw
 
 ## visibility declaration
 # between disk and disk
-sv = pre.see_table(CorpsCandidat='RBDY2', candidat='POLYG',colorCandidat='BLUEx',behav=ppi,
-                   CorpsAntagoniste='RBDY2', antagoniste='POLYG',colorAntagoniste='BLUEx',
+sv = pre.see_table(CorpsCandidat='RBDY3', candidat='POLYR',colorCandidat='BLUEx',behav=ppi,
+                   CorpsAntagoniste='RBDY3', antagoniste='POLYR',colorAntagoniste='BLUEx',
                    alert=0.1*Rmin)
 # between disk and wall
-svw = pre.see_table(CorpsCandidat='RBDY2', candidat='POLYG',colorCandidat='BLUEx',behav=ppw,
-                    CorpsAntagoniste='RBDY2', antagoniste='JONCx',colorAntagoniste='WALLx',
+svw = pre.see_table(CorpsCandidat='RBDY3', candidat='POLYR',colorCandidat='BLUEx',behav=ppw,
+                    CorpsAntagoniste='RBDY3', antagoniste='PLANx',colorAntagoniste='WALLx',
                     alert=0.1*Rmin)
 svs+=sv; svs+=svw
 

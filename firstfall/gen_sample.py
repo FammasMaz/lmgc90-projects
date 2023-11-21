@@ -39,14 +39,14 @@ mod = pre.model(name='rigid', physics='MECAx', element='Rxx2D',dimension=dim)
 
 ## particle generation
 radii = pre.granulo_Random(n, Rmin, Rmax) # random radii
-[nb_rem, coor] = pre.depositInBox2D(radii, Px, Py) # deposit particles in a box
+[nb_rem, coor] = pre.depositInBox2D(radii, lx, ly) # deposit particles in a box
 
 # balls avatar generation
 for i in range(0, nb_rem):
     #body = pre.rigidDisk(r=radii[i], center=coor[2*i : 2*(i+1)],model=mod,material=plex,color='BLUEx')
     body = pre.rigidDisk(r=radii[i], center=coor[2*i : 2*(i+1)], model=mod,
                              material=plex, color='BLUEx')
-    body.translate(dy=40)
+    #body.translate(dy=40)
     bodies+=body
 
 ## wall avatar generation
@@ -66,9 +66,29 @@ right.rotate(psi=math.pi/2.,center=right.nodes[1].coor)
 
 ## boundary conditions
 down.imposeDrivenDof(component=[1,2,3],dofty='vlocy')
-up.imposeDrivenDof(component=[1,2,3],dofty='vlocy')
+up.imposeDrivenDof(component=[1,3],dofty='vlocy')
 left.imposeDrivenDof(component=[1,2,3],dofty='vlocy')
-right.imposeDrivenDof(component=[1,2,3],dofty='vlocy')
+right.imposeDrivenDof(component=[2,3],dofty='vlocy')
+
+up.imposeDrivenDof(component=2,dofty='force',description='predefined',ct=10.0, rampi=1.0)
+right.imposeDrivenDof(component=1,dofty='vlocy',description='evolution',evolutionFile='vx.dat')
+
+t0=0.5
+t1 =1.
+vx =0.1
+
+def imposedVx(t):
+    # 0 until t0
+    if t <= t0:
+        return 0.
+    # linear growing between [t0, t1]
+    elif t > t0 and t <= t1:
+        return -vx*(t-t0)/(t1-t0)
+    # constant value afterward
+    else:
+        return -vx
+
+pre.writeEvolution(f=imposedVx, instants=np.linspace(0., 2*t1, 1000) ,path='DATBOX/', name='vx.dat')
 
 ## defining interactions
 

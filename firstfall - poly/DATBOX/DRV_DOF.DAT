@@ -1,6 +1,6 @@
 ! DOF
 $bdyty
- RBDY2    925
+ RBDY2     63
 $nodty
  NO3xx      1
 $dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
@@ -10,17 +10,7 @@ $dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI
 $$$$$$
 
 $bdyty
- RBDY2    926
-$nodty
- NO3xx      1
-$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
- vlocy      1  0.0000000e+00  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
- force      2  1.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
- vlocy      3  0.0000000e+00  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
-$$$$$$
-
-$bdyty
- RBDY2    927
+ RBDY2     64
 $nodty
  NO3xx      1
 $dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
@@ -30,11 +20,21 @@ $dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI
 $$$$$$
 
 $bdyty
- RBDY2    928
+ RBDY2     65
 $nodty
  NO3xx      1
 $dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
- vlocy      1 evolution vx.dat
+ vlocy      1  0.0000000e+00  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+ vlocy      2  0.0000000e+00  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+ vlocy      3  0.0000000e+00  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$$$$$$
+
+$bdyty
+ RBDY2     66
+$nodty
+ NO3xx      1
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      1  0.0000000e+00  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
  vlocy      2  0.0000000e+00  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
  vlocy      3  0.0000000e+00  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
 $$$$$$
