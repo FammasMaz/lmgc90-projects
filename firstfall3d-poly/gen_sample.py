@@ -1,101 +1,114 @@
-# import modules
-from __future__ import print_function
 import os, sys
 import numpy as np
 import math
-import matplotlib.pyplot as plt
+import shutil
+
 from pylmgc90 import pre
 
-## defining variables
-pp = 0.1 # particle-particle friction
-pw = 0.5 # particle-wall friction
+if not os.path.isdir('./DATBOX'):
+  os.mkdir('./DATBOX')
+if os.path.isdir('./DISPLAY'):
+  shutil.rmtree('./DISPLAY')
+if os.path.isdir('./POSTPRO'):
+  shutil.rmtree('./POSTPRO')
+if os.path.isdir('./OUTBOX'):
+  shutil.rmtree('./OUTBOX')
 
-Rmin = 1.0 # minimum radius of particles
-Rmax = 2.5 # maximum radius of particles
+
+# 3D firstfall
+dim = 3
+
+## geometric params
+ptype = 'POLYR' # particle type
+Rmin = 2 # minimum radius of particles
+Rmax = 5 # maximum radius of particles
 
 Px = 30*Rmax # width of the particle generation
 Py = 5*Rmax # height of the particle generation
 Pz = 10*Rmax # depth of the particle generation
 
-
 lx = 50*Rmax # width of the domain
 ly = 30*Rmax # height of the domain
 lz = 30*Rmax # depth of the domain
 
-n = 200 # number of particles
+nb_particles = 500 # number of particles
+pp = 0.3 # particle-particle friction
+pw = 0.5 # particle-wall friction
 
-dim = 3 # dimension of the problem
 
-## container defintion
+## containers definitions:
 bodies = pre.avatars() # container for bodies
-mat = pre.materials() # container for materials
+mats = pre.materials() # container for materials
+mods = pre.models() # container for models
 svs = pre.see_tables() # container for see tables
 tacts = pre.tact_behavs() # container for tact behaviors
 
-## material definition
+## create materials
+# print(pre.config.lmgc90dicts.bulkBehavOptions['RIGID'])
 tdur = pre.material(name='TDURx', materialType='RIGID', density=1000.)
 plex = pre.material(name='PLEXx', materialType='RIGID', density=5.)
-mat.addMaterial(tdur,plex)
+mats.addMaterial(tdur,plex)
 
-## model definition
-mod = pre.model(name='rigid', physics='MECAx', element='Rxx3D',dimension=dim)
+## create a model of rigid
+mod = pre.model(name='rigid',physics='MECAx',element='Rxx3D',dimension=dim)
+mods.addModel(mod)
 
-## particle generation
-radii = pre.granulo_Random(n, Rmin, Rmax) # random radii
-[nb_rem, coor] = pre.depositInBox3D(radii, Px, Py, Pz) # deposit particles in a box
+## creation of the walls
+back = pre.rigidPlan(axe1=lx/2.,axe2=ly/2.,axe3=Rmax/2.,center=[0.,0.,-Rmax],
+                     material=tdur,model=mod,color='WALLx')
+left = pre.rigidPlan(axe1=ly/2.,axe2=lz/2.,axe3=Rmax/2.,center=[0.,0.,-Rmax],
+                     material=tdur,model=mod,color='WALLx')
+down = pre.rigidPlan(axe1=lx/2.,axe2=lz/2.,axe3=Rmax/2.,center=[0.,0.,-Rmax],
+                   material=tdur,model=mod,color='WALLx')
 
-# balls avatar generation
+left.rotate(description='axis',alpha=math.pi/2.,axis=[0.,1.,0.],center=left.nodes[1].coor)
+left.translate(dx=-lx/2.,dz=ly/2.)
+down.rotate(description='axis',alpha=math.pi/2.,axis=[1.,0.,0.],center=down.nodes[1].coor)
+down.translate(dy=-ly/2.,dz=lz/2.)
+bodies.addAvatar(back);bodies.addAvatar(left);bodies.addAvatar(down)
+
+## creation of spheres grains and stuff
+radii = pre.granulo_Random(nb_particles,Rmin,Rmax)
+[nb_rem,coors] = pre.depositInBox3D(radii,Px,Py,Pz)
+
 for i in range(nb_rem):
-    #body = pre.rigidDisk(r=radii[i], center=coor[2*i : 2*(i+1)],model=mod,material=plex,color='BLUEx')
-    body = pre.rigidPolyhedron(radius=radii[i], center=coor[3*i : 3*(i+1)], nb_vertices=5, model=mod,
-                             material=plex, color='BLUEx')
-    body.translate(dy=40,dz=Rmax, dx=0.5*lz + 2.*Rmax)
-    bodies+=body
-## wall avatar generation
-back=pre.roughWall3D(lx=lx, ly=ly, model=mod, material=tdur, r=Rmax*0.5, color='WALLx', center=[0.5*lx, 0.5*ly, -Rmax])
-down=pre.roughWall3D(lx=lx, ly=lz, model=mod, material=tdur, r=Rmax*0.5, color='WALLx', center=[0.5*lx, 0.5*ly, -Rmax])
-left=pre.roughWall3D(lx=ly, ly=ly, model=mod, material=tdur, r=Rmax*0.5, color='WALLx', center=[0.5*lx, 0.5*ly, -Rmax])
-down.rotate(theta=math.pi/2.,center=down.nodes[1].coor);down.translate(dy=-0.5*ly);down.translate(dz=0.5*lz)
-left.rotate(theta=math.pi/2.,center=left.nodes[1].coor);left.rotate(psi=math.pi/2.,center=left.nodes[1].coor);left.translate(dz=0.5*lz, dx=-0.5*lx)
-bodies += down; bodies += back; bodies += left
+    if ptype == 'POLYR':
+        body = pre.rigidPolyhedron(radius=radii[i], center=coors[3*i : 3*(i+1)], nb_vertices=int(np.random.uniform(5,9)), model=mod,
+                          material=plex, color='BLUEx')
+    else:
+        body = pre.rigidSphere(r=radii[i],center=coors[3*i:3*(i+1)],model=mod,
+                            material=plex,color='BLUEx')
+    body.translate(dx=-8*Rmax,dz=40)
+    body.imposeInitValue(component=2,value=-20.0) # velocity imposed on the particle in y direction
+    body.imposeInitValue(component=1,value=-20.0) # velocity imposed on the particle in x direction
+    bodies.addAvatar(body)
+
 pre.visuAvatars(bodies)
 
-## boundary conditions
-down.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
+## impose 0 velcities on walls
 left.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
+down.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
 back.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
 
+## define interatactions4
+ppi = pre.tact_behav(name='iqsc0',law='IQS_CLB',fric=pp)
+pwi = pre.tact_behav(name='iqsc1',law='IQS_CLB',fric=pw)
 
-## defining interactions
+tacts+=ppi;tacts+=pwi
 
-ppi = pre.tact_behav(name='iqsc0', law='IQS_CLB', fric=pp)
-ppw = pre.tact_behav(name='iqsc1', law='IQS_CLB', fric=pw)
-tacts+=ppi; tacts+=ppw
-
-## visibility declaration
-# between disk and disk
-sv = pre.see_table(CorpsCandidat='RBDY3', candidat='POLYR',colorCandidat='BLUEx',behav=ppi,
-                   CorpsAntagoniste='RBDY3', antagoniste='POLYR',colorAntagoniste='BLUEx',
-                   alert=0.1*Rmin)
-# between disk and wall
-svw = pre.see_table(CorpsCandidat='RBDY3', candidat='POLYR',colorCandidat='BLUEx',behav=ppw,
+## see table
+vpp = pre.see_table(CorpsCandidat='RBDY3', candidat=ptype,colorCandidat='BLUEx',behav=ppi,
+                    CorpsAntagoniste='RBDY3', antagoniste=ptype,colorAntagoniste='BLUEx',
+                      alert=0.1)
+vpw = pre.see_table(CorpsCandidat='RBDY3', candidat=ptype,colorCandidat='BLUEx',behav=pwi,
                     CorpsAntagoniste='RBDY3', antagoniste='PLANx',colorAntagoniste='WALLx',
-                    alert=0.1*Rmin)
-svs+=sv; svs+=svw
+                      alert=0.1)
 
+svs+=vpp;svs+=vpw
 
-pre.visuAvatars(bodies)
+post = pre.postpro_commands()
+pre.writeDatbox(dim,mats,mods,bodies,tacts,svs,post=post)
 
-if not os.path.isdir('./DATBOX/'):
-    os.mkdir('./DATBOX/')
-
-## writing data files
-pre.writeBulkBehav(mat,chemin='./DATBOX/',dim=dim)
-pre.writeBodies(bodies,chemin='./DATBOX/')
-pre.writeDofIni(bodies,chemin='./DATBOX/')
-pre.writeDrvDof(bodies,chemin='./DATBOX/')
-pre.writeTactBehav(tacts,svs,chemin='./DATBOX/')
-pre.writeVlocRlocIni(chemin='./DATBOX/')
 
 
 
