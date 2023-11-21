@@ -83,8 +83,6 @@ for i in range(nb_rem):
     body.imposeInitValue(component=1,value=-20.0) # velocity imposed on the particle in x direction
     bodies.addAvatar(body)
 
-pre.visuAvatars(bodies)
-
 ## impose 0 velcities on walls
 left.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
 down.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
