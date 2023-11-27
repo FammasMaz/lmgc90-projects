@@ -1,4 +1,6 @@
 from pylmgc90 import chipy
+from pylmgc90.chipy import computation 
+import numpy as np
 
 # Initializing
 chipy.Initialize()
@@ -22,6 +24,7 @@ norm = 'QM/16'
 gs_it1 = 50 # min number of Gauss-Seidel iterations
 gs_it2 = 10 # max number of Gauss-Seidel iterations (gs_it1*gs_it2)
 solver_type = 'Stored_Delassus_Loops'
+lx = 75. # x periodicity
 
 ## read and loading data
 
@@ -40,6 +43,13 @@ chipy.OpenPostproFiles()
 ## simulation
 chipy.utilities_logMes('COMPUTE  MASS')
 chipy.ComputeMass()
+computation.initialize( dim, dt, theta, h5_file='lmgc90.h5' )
+chipy.SetPeriodicCondition(xperiod=lx)
+nb_diskx = chipy.DISKx_GetNbDISKx()
+nb_joncx = chipy.JONCx_GetNbJONCx()
+disk_kine = np.zeros( nb_diskx )
+wall_kine = np.zeros( nb_joncx )
+kine_dict = {'DISKx': disk_kine, 'JONCx': wall_kine}
 
 for k in range(nb_steps):
     chipy.utilities_logMes('INCREMENT STEP')
@@ -74,8 +84,15 @@ for k in range(nb_steps):
     chipy.utilities_logMes('WRITE OUT')
     chipy.WriteOut(freq_write)
 
-    chipy.utilities_logMes('VISU & POSTPRO')
-    chipy.WriteDisplayFiles(freq_disp)
+    if k%freq_disp == 0:
+        for i in range(nb_diskx):
+            v = chipy.RBDY2_GetBodyVector('V___',i+1)
+            m = chipy.RBDY2_GetBodyMass(i+1)
+            I = chipy.RBDY2_GetBodyInertia(i+1)
+            disk_kine[i] = 0.5*m*np.dot(v[:2],v[:2]) + I*v[2]*v[2]
+
+        chipy.utilities_logMes('VISU & POSTPRO')
+        chipy.WriteDisplayFiles(1,E_kin=('tacts',kine_dict))
     chipy.WritePostproFiles()
     chipy.checkInteractiveCommand()
 
