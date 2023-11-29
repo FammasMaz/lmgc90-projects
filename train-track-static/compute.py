@@ -5,7 +5,7 @@ import numpy as np
 # Initializing
 chipy.Initialize()
 chipy.checkDirectories()
-
+model = 'POLYR'
 dim = 3
 mhyp = 0 # modeling hypothesis ( 1 = plain strain, 2 = plain stress, 3 = axi-symmetry)
 deformable = 0 
@@ -41,6 +41,8 @@ chipy.OpenDisplayFiles()
 chipy.OpenPostproFiles()
 
 ## simulation
+if model !='SPHER': chipy.PRPRx_UseCpCundallDetection(300) # use Cundall detection
+
 chipy.utilities_logMes('COMPUTE  MASS')
 chipy.ComputeMass()
 

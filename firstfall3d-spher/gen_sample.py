@@ -46,7 +46,7 @@ tacts = pre.tact_behavs() # container for tact behaviors
 ## create materials
 # print(pre.config.lmgc90dicts.bulkBehavOptions['RIGID'])
 tdur = pre.material(name='TDURx', materialType='RIGID', density=1000.)
-plex = pre.material(name='PLEXx', materialType='RIGID', density=5.)
+plex = pre.material(name='PLEXx', materialType='ELAS', density=2000., young=90.e6, nu=0.3,anisotropy='isotropic',elas='standard')
 mats.addMaterial(tdur,plex)
 
 ## create a model of rigid
