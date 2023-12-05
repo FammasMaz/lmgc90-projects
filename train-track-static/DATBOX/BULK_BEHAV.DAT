@@ -31,4 +31,9 @@ $behav  lawty
  PLEXx  RIGID                           Umas= 5.0000000e+02
 $behav  lawty
  TDURx  RIGID                           Umas= 1.0000000e+03
+$behav  lawty
+ stone  ELAS                            Umas= 2.5000000e+03
+                                        elas: standard     
+                                        ani_: isotropic    
+                                        EYng= 5.0000000e+10  Epss= 2.0000000e-01
       

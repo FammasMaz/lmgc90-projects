@@ -21,10 +21,10 @@ dim = 3
 ## geometric params
 ptype = 'POLYR' # particle type
 gen_type = 'box'
-Rmin = 2 # minimum radius of particles
-Rmax = 3 # maximum radius of particles
-min_vert = 6 # minimum number of vertices
-max_vert = 12 # maximum number of vertices
+Rmin = 0.5 # minimum radius of particles
+Rmax = 2 # maximum radius of particles
+min_vert = 10 # minimum number of vertices
+max_vert = 18 # maximum number of vertices
 per_layer = 2 # layers per lay
 
 
@@ -60,6 +60,15 @@ mats.addMaterial(tdur,plex)
 mod = pre.model(name='rigid',physics='MECAx',element='Rxx3D',dimension=dim)
 mods.addModel(mod)
 
+## elastic model for grains
+mod_grain = pre.model(name='M3DH8', physics='MECAx', element='Rxx3D', dimension=dim,
+                      external_model='MatL_', kinematic='small', material='elas_',
+                      anisotropy='iso__', mass_storage='lump_')
+mods.addModel(mod_grain)
+stones = pre.material(name='stone', materialType='ELAS', density=2500., elas='standard',
+                      anisotropy='isotropic', young=50e9, nu=0.2)
+mats.addMaterial(stones)
+
 
 
 #### wall avatar generation
@@ -76,12 +85,12 @@ layers = [1, 1,  0.75, 0.75, 0.5, 0.5]
 layersx = [1, 0.99, 0.98]
 if gen_type == 'box':
   for j in range(len(layers)):
-    radii = pre.granulo_Random(nb_particles,Rmin,Rmax)
+    radii = pre.granulo_Random(nb_particles,Rmin,Rmax,seed=43)
     [nb_rem,coors] = pre.depositInBox3D(radii,Px,Py*layers[j],Pz)
     for i in range(nb_rem):
         if ptype == 'POLYR':
-            body = pre.rigidPolyhedron(radius=radii[i], center=coors[3*i : 3*(i+1)], nb_vertices=6, generation_type='random',model=mod,
-                              material=plex, color='BLUEx')
+            body = pre.rigidPolyhedron(radius=radii[i], center=coors[3*i : 3*(i+1)], nb_vertices=6, generation_type='random',model=mod_grain,
+                              material=stones, color='BLUEx')
         else:
             body = pre.rigidSphere(r=radii[i],center=coors[3*i:3*(i+1)],model=mod,
                               material=plex,color='BLUEx')
@@ -106,10 +115,6 @@ else:
         bodies.addAvatar(body)
 
    
-
-
-## rail avatar using mesh
-rail = pre.buildMesh2D()
 
 #### rail avatar generation
 # rail = pre.rigidPlan(axe1=Px/2.1,axe2=Rmax,axe3=Rmax/2.,center=[0.,0.,0.],
