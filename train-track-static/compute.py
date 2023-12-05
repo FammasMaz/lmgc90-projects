@@ -10,8 +10,8 @@ dim = 3
 mhyp = 0 # modeling hypothesis ( 1 = plain strain, 2 = plain stress, 3 = axi-symmetry)
 deformable = 0 
 # solver and params
-dt = 1.e-3
-nb_steps = 9000
+dt = 1.e-2
+nb_steps = 500
 theta = 0.5
 freq_write = 50 # frequency of writing results
 freq_disp = 50 # frequency of visualization
