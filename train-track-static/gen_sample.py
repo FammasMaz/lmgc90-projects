@@ -37,7 +37,7 @@ lx = 65*Rmax # width of the domain
 ly = 55*Rmax # height of the domain
 lz = 45*Rmax # depth of the domain
 
-nb_particles = 4000 # number of particles
+nb_particles = 5 # number of particles
 pp = 0.3 # particle-particle friction
 pw = 0.5 # particle-wall friction
 
@@ -53,21 +53,34 @@ tacts = pre.tact_behavs() # container for tact behaviors
 # print(pre.config.lmgc90dicts.bulkBehavOptions['RIGID'])
 tdur = pre.material(name='TDURx', materialType='RIGID', density=1000.)
 plex = pre.material(name='PLEXx', materialType='RIGID', density=500.)
-mats.addMaterial(tdur,plex)
+mats.addMaterial(tdur)
+stones = pre.material(name='STONE', materialType='ELAS', density=2500., elas='standard',
+                      anisotropy='isotropic', young=50e9, nu=0.2)
+mats.addMaterial(stones)
+# material for rail
+mat_rail = pre.material(name='RAILx', materialType='ELAS', density=2500., elas='standard',
+                      anisotropy='isotropic', young=200e9, nu=0.2)
+mats.addMaterial(mat_rail)
+
 
 
 ## create a model of rigid
 mod = pre.model(name='rigid',physics='MECAx',element='Rxx3D',dimension=dim)
 mods.addModel(mod)
+# model for rail
+mod_rail = pre.model(name='M3DH8', physics='MECAx', element='H8xxx', dimension=dim,
+                      external_model='MatL_', kinematic='small', material='elas_',
+                      anisotropy='iso__', mass_storage='lump_')
+mods.addModel(mod_rail)
+
+
 
 ## elastic model for grains
 mod_grain = pre.model(name='M3DH8', physics='MECAx', element='Rxx3D', dimension=dim,
                       external_model='MatL_', kinematic='small', material='elas_',
                       anisotropy='iso__', mass_storage='lump_')
 mods.addModel(mod_grain)
-stones = pre.material(name='stone', materialType='ELAS', density=2500., elas='standard',
-                      anisotropy='isotropic', young=50e9, nu=0.2)
-mats.addMaterial(stones)
+
 
 
 
@@ -128,8 +141,21 @@ else:
 # rail2.translate(dz=Pz*(2),dy = 3*Rmax)
 
 # bodies.addAvatar(rail2)
+        
 
-
+## rail avatar with mesh
+rail = pre.buildMeshH8(x0=-Px/2.1, y0=-Rmax, z0=0., lx=2*Px/2.1, ly=4*Rmax, lz=2*Rmax, nb_elem_x=2, nb_elem_y=2, nb_elem_z=2)
+rail = pre.buildMeshedAvatar(mesh=rail, model=mod_rail, material=mat_rail)
+rail.addContactors(group='up', shape='CSpxx', color='REDxx')
+rail.rotate(description='axis',alpha=math.pi/2.,axis=[1.,0.,0.],center=rail.nodes[1].coor)
+rail.translate(dz=Pz*8.,dy = -3*Rmax)
+bodies.addAvatar(rail)
+rail2 = pre.buildMeshH8(x0=-Px/2.1, y0=-Rmax, z0=0., lx=2*Px/2.1, ly=4*Rmax, lz=2*Rmax, nb_elem_x=2, nb_elem_y=2, nb_elem_z=2)
+rail2 = pre.buildMeshedAvatar(mesh=rail2, model=mod_rail, material=mat_rail)
+rail2.addContactors(group='up', shape='CSpxx', color='REDxx')
+rail2.rotate(description='axis',alpha=math.pi/2.,axis=[1.,0.,0.],center=rail2.nodes[1].coor)
+rail2.translate(dz=Pz*8.,dy = 3*Rmax)
+bodies.addAvatar(rail2)
 
 
 #### impose 0 velcities on walls
@@ -141,6 +167,7 @@ down.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
 #### define interatactions4
 ppi = pre.tact_behav(name='iqsc0',law='IQS_CLB',fric=pp)
 pwi = pre.tact_behav(name='iqsc1',law='IQS_CLB',fric=pw)
+prp = pre.tact_behav(name='iqsc2',law='GAP_SGR_CLB_g0',fric=pw)
 
 tacts+=ppi;tacts+=pwi
 
@@ -151,6 +178,14 @@ vpp = pre.see_table(CorpsCandidat='RBDY3', candidat=ptype,colorCandidat='BLUEx',
 vpw = pre.see_table(CorpsCandidat='RBDY3', candidat=ptype,colorCandidat='BLUEx',behav=pwi,
                     CorpsAntagoniste='RBDY3', antagoniste='PLANx',colorAntagoniste='WALLx',
                       alert=0.1)
+rww = pre.see_table(CorpsCandidat='MAILx', candidat='CSxxx',colorCandidat='REDxx',behav=prp,
+                    CorpsAntagoniste='RBDY3', antagoniste='PLANx',colorAntagoniste='WALLx',
+                      alert=0.1)
+rwp = pre.see_table(CorpsCandidat='MAILx', candidat='CSxxx',colorCandidat='REDxx',behav=prp,
+                    CorpsAntagoniste='RBDY3', antagoniste=ptype,colorAntagoniste='BLUEx',
+                      alert=0.1)
+svs+=vpp;svs+=vpw;svs+=rww ;svs+=rwp
+
 
 
 svs+=vpp;svs+=vpw

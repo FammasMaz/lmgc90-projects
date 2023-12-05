@@ -32,6 +32,12 @@ chipy.SetDimension(dim,mhyp)
 chipy.utilities_logMes('INIT TIME STEPPING')
 chipy.TimeEvolution_SetTimeStep(dt)
 chipy.Integrator_InitTheta(theta)
+chipy.ReadModels()
+chipy.ReadBehaviours()
+chipy.ReadBodies()
+chipy.LoadBehaviours()
+chipy.LoadModels()
+chipy.LoadTactors()
 chipy.utilities_logMes('READ DATABOX')
 chipy.ReadDatbox(deformable)
 
@@ -45,6 +51,7 @@ if model !='SPHER': chipy.PRPRx_UseCpCundallDetection(300) # use Cundall detecti
 
 chipy.utilities_logMes('COMPUTE  MASS')
 chipy.ComputeMass()
+chipy.ComputeBulk()
 
 for k in range(nb_steps):
     chipy.utilities_logMes('INCREMENT STEP')
