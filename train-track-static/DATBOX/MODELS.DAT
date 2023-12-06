@@ -23,7 +23,7 @@
 !                            123456789012345678901234567890
 $model  mdlty  finel  eleop  value   
  M3DH8
-        MECAx  Rxx3D  aniso  iso__
+        MECAx  H8xxx  aniso  iso__
                       isext  MatL_
                       kine_  small
                       mstrg  lump_

@@ -37,7 +37,7 @@ lx = 65*Rmax # width of the domain
 ly = 55*Rmax # height of the domain
 lz = 45*Rmax # depth of the domain
 
-nb_particles = 5 # number of particles
+nb_particles = 2000 # number of particles
 pp = 0.3 # particle-particle friction
 pw = 0.5 # particle-wall friction
 
@@ -53,25 +53,20 @@ tacts = pre.tact_behavs() # container for tact behaviors
 # print(pre.config.lmgc90dicts.bulkBehavOptions['RIGID'])
 tdur = pre.material(name='TDURx', materialType='RIGID', density=1000.)
 plex = pre.material(name='PLEXx', materialType='RIGID', density=500.)
-mats.addMaterial(tdur)
 stones = pre.material(name='STONE', materialType='ELAS', density=2500., elas='standard',
                       anisotropy='isotropic', young=50e9, nu=0.2)
-mats.addMaterial(stones)
 # material for rail
 mat_rail = pre.material(name='RAILx', materialType='ELAS', density=2500., elas='standard',
                       anisotropy='isotropic', young=200e9, nu=0.2)
-mats.addMaterial(mat_rail)
 
-
+mats.addMaterial(tdur),mats.addMaterial(stones),mats.addMaterial(mat_rail)
 
 ## create a model of rigid
 mod = pre.model(name='rigid',physics='MECAx',element='Rxx3D',dimension=dim)
-mods.addModel(mod)
 # model for rail
 mod_rail = pre.model(name='M3DH8', physics='MECAx', element='H8xxx', dimension=dim,
                       external_model='MatL_', kinematic='small', material='elas_',
                       anisotropy='iso__', mass_storage='lump_')
-mods.addModel(mod_rail)
 
 
 
@@ -79,10 +74,9 @@ mods.addModel(mod_rail)
 mod_grain = pre.model(name='M3DH8', physics='MECAx', element='Rxx3D', dimension=dim,
                       external_model='MatL_', kinematic='small', material='elas_',
                       anisotropy='iso__', mass_storage='lump_')
-mods.addModel(mod_grain)
 
 
-
+mods.addModel(mod),mods.addModel(mod_grain),mods.addModel(mod_rail)
 
 #### wall avatar generation
 down = pre.rigidPlan(axe1=lx/2.,axe2=lz/2.,axe3=Rmax/2.,center=[0.,0.,0.],
@@ -119,6 +113,7 @@ if gen_type == 'box':
 else:
   #### ballast avatar generation part 2
   for j in range(len(layers)):
+    radii = pre.granulo_Random(nb_particles,Rmin,Rmax,seed=43)
     coors = pre.cubicLattice3D(int(Px/Rmax), int(Py*layers[j]/Rmax), per_layer, Rmax*2)
     nb_rem = coors.shape[0]
     for i in range(len(coors)//3):
@@ -161,6 +156,8 @@ bodies.addAvatar(rail2)
 #### impose 0 velcities on walls
 down.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
 
+rail.imposeDrivenDof(component=3,dofty='vlocy', ct=-20)
+rail2.imposeDrivenDof(component=3,dofty='vlocy', ct=-20)
 
 
 
@@ -169,7 +166,7 @@ ppi = pre.tact_behav(name='iqsc0',law='IQS_CLB',fric=pp)
 pwi = pre.tact_behav(name='iqsc1',law='IQS_CLB',fric=pw)
 prp = pre.tact_behav(name='iqsc2',law='GAP_SGR_CLB_g0',fric=pw)
 
-tacts+=ppi;tacts+=pwi
+tacts+=ppi;tacts+=pwi ;tacts+=prp
 
 #### see table
 vpp = pre.see_table(CorpsCandidat='RBDY3', candidat=ptype,colorCandidat='BLUEx',behav=ppi,
@@ -188,7 +185,6 @@ svs+=vpp;svs+=vpw;svs+=rww ;svs+=rwp
 
 
 
-svs+=vpp;svs+=vpw
 post = pre.postpro_commands()
 body_track = pre.postpro_command(name='CONTACT FORCE DISTRIBUTION', step = 1, val=1)
 body_coord = pre.postpro_command(name='COORDINATION NUMBER', step = 1) 

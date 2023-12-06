@@ -12,4 +12,232 @@ $dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI
  vlocy      6  0.0000000e+00  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
 $$$$$$
 
+$bdyty
+ MAILx      1
+$model
+ MECAx
+$nodty
+ NO3xx      1
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      2
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      3
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      4
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      5
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      6
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      7
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      8
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      9
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     10
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     11
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     12
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     13
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     14
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     15
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     16
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     17
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     18
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     19
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     20
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     21
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     22
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     23
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     24
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     25
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     26
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     27
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$$$$$$
+
+$bdyty
+ MAILx      2
+$model
+ MECAx
+$nodty
+ NO3xx      1
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      2
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      3
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      4
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      5
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      6
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      7
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      8
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx      9
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     10
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     11
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     12
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     13
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     14
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     15
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     16
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     17
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     18
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     19
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     20
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     21
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     22
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     23
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     24
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     25
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     26
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$nodty
+ NO3xx     27
+$dofty  numbr [CT......+......AMP..*..cos.(..OMEGA.*.time.+.PHI..)]...*...[RAMPI.....+.....RAMP.*.time]
+ vlocy      3 -2.0000000e+01  0.0000000e+00  0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00
+$$$$$$
+
       

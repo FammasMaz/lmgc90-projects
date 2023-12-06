@@ -28,8 +28,6 @@
 $gravy  
                    grv1= 0.0000000e+00  grv2= 0.0000000e+00  grv3=-9.8100000e+00
 $behav  lawty
- PLEXx  RIGID                           Umas= 5.0000000e+02
-$behav  lawty
  RAILx  ELAS                            Umas= 2.5000000e+03
                                         elas: standard     
                                         ani_: isotropic    
