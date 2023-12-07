@@ -1,4 +1,6 @@
 OUTBOX/
 DISPLAY/
 POSTPRO/
+DATBOX/
+seed_*/
 .DS_Store
