@@ -10,8 +10,8 @@ dim = 3
 mhyp = 0 # modeling hypothesis ( 1 = plain strain, 2 = plain stress, 3 = axi-symmetry)
 deformable = False
 # solver and params
-dt = 0.01
-nb_steps = 1000
+dt = 1.e-3
+nb_steps = 10000
 theta = 0.5
 freq_write = 50 # frequency of writing results
 freq_disp = 50 # frequency of visualization
@@ -81,10 +81,11 @@ for k in range(nb_steps):
     chipy.WriteOut(freq_write)
 
     chipy.utilities_logMes('VISU & POSTPRO')
-    print(f'\nSTEP {k}\n')
     chipy.WriteDisplayFiles(freq_disp)
     chipy.WritePostproFiles()
     chipy.checkInteractiveCommand()
+
+
 
 ## close display and postpro
 chipy.CloseDisplayFiles()
@@ -92,3 +93,48 @@ chipy.ClosePostproFiles()
 
 ## Finalizing
 chipy.Finalize()
+
+
+
+
+from pylmgc90.chipy import computation
+
+# space dimension
+dim = 2
+
+# modeling hypothesis: 1 = plain strain
+mhyp = 1
+
+# time evolution parameters
+dt = 1e-3
+nb_steps = 10000
+
+# theta integrator parameter
+theta = 0.5
+
+# interaction parameters
+Rloc_tol = 5.e-2
+
+# nlgs parameters
+tol = 1e-4
+relax = 1.0
+norm = 'Quad '
+gs_it1 = 50
+gs_it2 = 10
+stype='Stored_Delassus_Loops         '
+
+# write parameter
+freq_write   = 10
+
+# display parameters
+freq_display = 10
+
+computation.initialize(dim, dt, theta, mhyp, deformable=False)
+
+for k in range(1, nb_steps+1):
+    if k%50==0:
+        print( f"computing step {k}")
+    computation.one_step(stype, norm, tol, relax, gs_it1, gs_it2,
+                         freq_write, freq_display                )
+
+computation.finalize()

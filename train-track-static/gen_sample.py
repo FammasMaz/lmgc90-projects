@@ -2,7 +2,7 @@
 import os, sys
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath('gen_sample.py')))
 sys.path.insert(0, parent_dir)
-
+from datetime import datetime
 import numpy as np
 from pylmgc90 import pre
 from utilities.utilities import * 
@@ -11,8 +11,10 @@ from utilities.generators import *
 
 # create directories
 seed=np.random.randint(1,1000,1)[0]
-par_dir = f'./seed_{seed}/'
-os.mkdir(par_dir)
+seed=687
+cur_time = datetime.now()
+par_dir = f'./seed_{seed}_' + cur_time.strftime('%d%m-%H%M%S') + '/'
+[os.mkdir(par_dir) if not os.path.exists(par_dir) else None]
 create_dirs(par_dir=par_dir)
 
 ## geometric params
@@ -24,12 +26,13 @@ gen_type = 'box'
 Rmin = 0.4 # minimum radius of particles
 Rmax = 2. # maximum radius of particles
 max_particles = 2000 # number of particles
+track_every = 50
 min_vert = 6 # minimum number of vertices
 max_vert = 18 # maximum number of vertices
-Px = 45*Rmax # width of the particle generation
-Py = 25*Rmax # height of the particle generation
+Px = 20*Rmax # width of the particle generation
+Py = 15*Rmax # height of the particle generation
 Pz = 5*Rmax # depth of the particle generation
-layers = [1.0526, 0.7522, 0.7520, 0.6131, 0.6024, 0.5034]
+layers = [1.0526, 0.7522, 0.7520, 0.6131]
 layers = layers[::-1]
 
 # ground params
@@ -84,7 +87,7 @@ def creation(entities_to_gen, dict_mat, dict_mod):
       # impose driven dofs
       [rail.imposeDrivenDof(component=3,dofty='vlocy', ct=-20) for rail in rail_bodies]
       bodies+=rail_bodies
-    return bodies, mats, mods
+    return bodies, mats, mods, wall_bodies, ballast_bodies
 
 ## Interaction
 def interaction(see_dict, post_dict):
@@ -97,8 +100,6 @@ def write_datbox(dim, bodies, mats, mods, tacts, svs, post, view=True):
    pre.visuAvatars(bodies)
     # write bodies
    pre.writeDatbox(dim,mats,mods,bodies,tacts,svs,post=post, datbox_path=os.path.join(par_dir,'DATBOX'))
-
-
 
 ####### PREPROCESSING #######
 ## dictionaries
@@ -119,10 +120,14 @@ dict_mod = {'rigid': {'physics':'MECAx', 'element':'Rxx3D', 'dimension':dim},
                       'external_model':'MatL_', 'kinematic':'small', 'material':'elas_',
                       'anisotropy':'iso__', 'mass_storage':'lump_'}}
 
+## CREATE AVATARS
+bodies, mat, mods, _, ballast_bodies = creation(entities_to_gen, dict_mat, dict_mod)
+
 dict_tact = {'iqsc0': {'law':'IQS_CLB', 'fric':pp},
               'iqsc1': {'law':'IQS_CLB', 'fric':pw},
               'iqsc2': {'law':'GAP_SGR_CLB_g0', 'fric':rw},
               'iqsc3': {'law':'GAP_SGR_CLB_g0', 'fric':rp}}
+## INTERACTION
 tacts = create_tact_behavs(dict_tact)
 
 dict_see = {'vpp': {'CorpsCandidat':'RBDY3', 'candidat':ptype,'colorCandidat':'BLUEx','behav':tacts['iqsc0'],
@@ -138,10 +143,14 @@ dict_see = {'vpp': {'CorpsCandidat':'RBDY3', 'candidat':ptype,'colorCandidat':'B
                     'CorpsAntagoniste':'RBDY3', 'antagoniste':ptype,'colorAntagoniste':'BLUEx',
                       'alert':0.1}}
 post_dict = {'CONTACT FORCE DISTRIBUTION': {'step':1, 'val':1},
-              'COORDINATION NUMBER': {'step':1}}
+              'COORDINATION NUMBER': {'step':1},
+              'BODY TRACKING': {'step':1, 'rigid_set':ballast_bodies[::track_every]},
+              'TORQUE EVOLUTION': {'step':1, 'rigid_set':ballast_bodies[::track_every]},
+              'AVERAGE VELOCITY EVOLUTION': {'step':1, 'color':'BLUEx'},
+              'KINETIC ENERGY': {'step':1},
+              'DISSIPATED ENERGY': {'step':1}
+              }
 
-
-bodies, mat, mods = creation(entities_to_gen, dict_mat, dict_mod)
 svs, post = interaction(dict_see, post_dict)
 write_datbox(dim, bodies, mat, mods, tacts, svs, post)
 
