@@ -16,24 +16,31 @@ def rail_generator(nb_rails, rail_length, rail_height, rail_width, rail_spacing,
 def ballast_generator(nb_particles, Rmin, Rmax, Px, Py, Pz, layers, mat, mod, ptype, min_vert, max_vert, gen_type='box', seed=43, color='BLUEx'):
    bodies = pre.avatars()
    total_particles = 0
+   particle_char = {'body_id': [], 'radius': []}
+   k=2
    for j in range(len(layers)):
-      radii = pre.granulo_Random(nb_particles, Rmin, Rmax, seed=seed)
+      radii_x = pre.granulo_Uniform(np.int(nb_particles*layers[j]), Rmin, Rmax)
       #if gen_type == 'box':
-      [nb_rem,coors] = pre.depositInBox3D(radii, Px, Py*layers[j], Pz)
+      [nb_rem,coors] = pre.depositInBox3D(radii=radii_x, lx=Px, ly=Py*layers[j], lz=Pz)
       #else:
          #coors = pre.cubicLattice3D(int(Px/Rmax), int(Py*layers[j]/Rmax), 1, Rmax*2)
          #nb_rem = len(coors)//3
       for i in range(nb_rem):
           if ptype == 'POLYR':
-              body = pre.rigidPolyhedron(radius=radii[i], center=coors[3*i : 3*(i+1)], nb_vertices=np.random.randint(min_vert, max_vert), generation_type='random',model=mod,
+              body = pre.rigidPolyhedron(radius=radii_x[i], center=coors[3*i : 3*(i+1)], nb_vertices=np.random.randint(min_vert, max_vert), generation_type='random',model=mod,
                                 material=mat, color=color)
+
+              
           else:
-              body = pre.rigidSphere(r=radii[i],center=coors[3*i:3*(i+1)],model=mod,
+              body = pre.rigidSphere(r=radii_x[i],center=coors[3*i:3*(i+1)],model=mod,
                                 material=mat,color=color)
           body.translate(dz=Pz*(len(layers)-j) + Rmax*4.)
           bodies.addAvatar(body)
+          particle_char['body_id'].append(k)
+          particle_char['radius'].append(radii_x[i])
+          k+=1
       total_particles += nb_rem
-   return bodies, total_particles
+   return bodies, total_particles, particle_char
 
 def wall_generator(wall_length, wall_height, wall_width, wall_material, wall_model, rot_axis=None,alpha=math.pi/2., wall_offset=None, wall_color='WALLx'):
         bodies = pre.avatars()

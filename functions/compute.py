@@ -20,51 +20,41 @@ def computer(deformable=False):
     # nlgs
     tol = 1.e-4
     relax = 1.0
-    norm = 'QM/16'
-    gs_it1 = 50 # min number of Gauss-Seidel iterations
+    norm = 'QM'
+    gs_it1 = 100 # min number of Gauss-Seidel iterations
     gs_it2 = 10 # max number of Gauss-Seidel iterations (gs_it1*gs_it2)
-    solver_type = 'Stored_Delassus_Loops'
-    lx = 75. # x periodicity
+    # solver_type = 'Stored_Delassus_Loops'
+    solver_type = 'Exchange_Local_Global'
 
     ## read and loading data
-
     chipy.SetDimension(dim,mhyp)
-    chipy.utilities_logMes('INIT TIME STEPPING')
     chipy.TimeEvolution_SetTimeStep(dt)
     chipy.Integrator_InitTheta(theta)
-    chipy.utilities_logMes('READ DATABOX')
     chipy.ReadDatbox(deformable)
 
     ## Open display & postpro
-    chipy.utilities_logMes('DISPLAY & WRITE')
     chipy.OpenDisplayFiles()
     chipy.OpenPostproFiles()
 
     ## simulation
-    if model !='SPHER': chipy.PRPRx_UseCpCundallDetection(300) # use Cundall detection
+    if model !='SPHER': chipy.PRPRx_UseCpCundallDetection(100) # use Cundall detection
+    chipy.PRPRx_ShrinkPolyrFaces(1.e-2)
+    chipy.PRPRx_LowSizeArrayPolyr(10)
 
-    chipy.utilities_logMes('COMPUTE  MASS')
     chipy.ComputeMass()
     chipy.ComputeBulk()
-    chipy.utilities_logMes('ASSEMB KT')
-    chipy.AssembleMechanicalLHS()
+    #chipy.AssembleMechanicalLHS()
     for k in range(nb_steps):
-        chipy.utilities_logMes('INCREMENT STEP')
         chipy.IncrementStep()
 
-        chipy.utilities_logMes('COMPUTE  Fext')
         chipy.ComputeFext()
 
-        chipy.utilities_logMes('COMPUTE  Fint')
         chipy.ComputeBulk()
 
-        chipy.utilities_logMes('COMPUTE Free Vlocy')
         chipy.ComputeFreeVelocity()
 
-        chipy.utilities_logMes('COMPUTE PROX TACTORS')
         chipy.SelectProxTactors()
 
-        chipy.utilities_logMes('RESOLUTION')
         chipy.RecupRloc(Rloc_tol)
 
         chipy.ExSolver(solver_type, norm, tol, relax, gs_it1, gs_it2)
@@ -72,19 +62,15 @@ def computer(deformable=False):
 
         chipy.StockRloc()
 
-        chipy.utilities_logMes('COMPUTE DOF, FIELDS, etc...')
         chipy.ComputeDof()
 
-        chipy.utilities_logMes('UPDATE DOF, FIELDS')
         chipy.UpdateStep()
-        chipy.utilities_logMes('WRITE OUT')
         chipy.WriteOut(freq_write)
 
-        chipy.utilities_logMes('VISU & POSTPRO')
         print(f'\nSTEP {k}\n')
         chipy.WriteDisplayFiles(freq_disp)
         chipy.WritePostproFiles()
-        chipy.checkInteractiveCommand()
+        # chipy.checkInteractiveCommand()
 
     ## close display and postpro
     chipy.CloseDisplayFiles()
