@@ -13,7 +13,7 @@ i = 6
 max_retries = 500  # Maximum number of retries for a single iteration
 
 while i < 200:
-    par_dir = f'./train-track-static/seed_radius_{687}_{i+1}/'
+    par_dir = f'./train-track-static/data/seed_radius_{687}_{i+1}/'
     shutil.rmtree(par_dir) if os.path.exists(par_dir) else None
     os.mkdir(par_dir) if not os.path.exists(par_dir) else None
     create_dirs(par_dir=par_dir)
@@ -55,4 +55,4 @@ while i < 200:
         print(f"Max retries reached for iteration {i}. Moving to next iteration.")
 
     i += 1  # Increment i after the try-except block
-    os.chdir('../../')
+    os.chdir('../../../')
