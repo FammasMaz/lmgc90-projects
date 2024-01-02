@@ -133,17 +133,17 @@ def random_ballast_deng(par_dir, seed=687, visu=False, step=1):
     Rmin = 0.025 # minimum radius of particles
     Rmax = 0.060 # maximum radius of particles
     max_particles = 2000 # number of particles
-    min_vert = 30 # minimum number of vertices
-    max_vert = 32 # maximum number of vertices
-    Px = 2. # width of the particle generation
-    Py = 0.5 # height of the particle generation
-    Pz = 0.4 # depth of the particle generation
-    layers = np.linspace(1,0.5,4)
+    min_vert = 9 # minimum number of vertices
+    max_vert = 20 # maximum number of vertices
+    Px = 2.01 # width of the particle generation
+    Py = 0.51 # height of the particle generation
+    Pz = 0.42 # depth of the particle generation
+    layers = np.linspace(1,0.5,np.random.randint(5,8)) # stacks of particles
     layers = layers[::-1]
 
     # ground params
-    lx = 4 # width of the domain
-    ly = 2 # height of the domain
+    lx = 5 # width of the domain
+    ly = 3 # height of the domain
     lz = 0.15 # depth of the domain
 
     ## rail params
@@ -192,7 +192,7 @@ def random_ballast_deng(par_dir, seed=687, visu=False, step=1):
         bodies+=wall_bodies
     if 'ballast' in entities_to_gen:
     ## Ballast generation
-        ballast_bodies, total_paricles, par_char = ballast_generator(max_particles, Rmin, Rmax, Px, Py, Pz, layers, mats['STONE'], mods['M3DH9'], ptype, min_vert, max_vert, seed=seed)
+        ballast_bodies, total_paricles, par_char = ballast_generator(max_particles, Rmin, Rmax, Px, Py, Pz, layers, mats['TDURx'], mods['rigid'], ptype, min_vert, max_vert, seed=seed)
         bodies+=ballast_bodies
         track_every = int(total_paricles/50)
     if 'rail' in entities_to_gen:
@@ -236,4 +236,94 @@ def random_ballast_deng(par_dir, seed=687, visu=False, step=1):
 
 
 
+
+def random_ballast_sncf_ir(par_dir, seed=687, visu=False, step=1):
+    
+    dim = 3
+
+    # ballast params
+    ptype = 'POLYR' # particle type
+    gen_type = 'cube'
+    Rmin = 0.025 # minimum radius of particles
+    Rmax = 0.060 # maximum radius of particles
+    max_particles = 2000 # number of particles
+    min_vert = 9 # minimum number of vertices
+    max_vert = 20 # maximum number of vertices
+    Px = 2.01 # width of the particle generation
+    Py = 0.51 # height of the particle generation
+    Pz = 0.42 # depth of the particle generation
+    layers = np.linspace(1,0.6,np.random.randint(5,8)) # stacks of particles
+    layers = layers[::-1]
+    # ground params
+    lx = 5 # width of the domain
+    ly = 3 # height of the domain
+    lz = 0.15 # depth of the domain
+
+    # if distribution is in cubic lattice
+    part_dist = 0.1 # particle spacing
+    n_layers = int(12*1.8/0.4/len(layers)) # number of layers in a stack of particles
+
+    # friction params
+    pp = 0.3 # particle-particle friction
+    pw = 0.8 # particle-wall friction
+
+
+    # entities_to_gen
+    entities_to_gen = ['wall', 'ballast']
+
+    # material dict and container
+    dict_mat = {'TDURx': {'materialType':'RIGID', 'density':2700.}}
+    mats = create_materials(dict_mat)
+
+    # model dict and container
+    dict_mod = {'rigid': {'physics':'MECAx', 'element':'Rxx3D', 'dimension':dim}}
+    mods = create_models(dict_mod)
+
+    ## Avatar generation
+    bodies = pre.avatars()
+
+    ## wall avatar generation if wall in entities_to_gen
+    if 'wall' in entities_to_gen:
+        wall_bodies = wall_generator(lx, ly, lz, mats['TDURx'], mods['rigid'])
+        # impose driven dofs
+        [wall_body.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy') for wall_body in wall_bodies]
+        bodies+=wall_bodies
+
+    ## Ballast generation if ballast in entities_to_gen
+    if 'ballast' in entities_to_gen:
+        ballast_bodies, total_paricles, par_char = ballast_generator(max_particles, Rmin, Rmax, Px, Py, Pz, layers, mats['TDURx'], mods['rigid'], ptype, min_vert, max_vert, seed=seed, part_dist=part_dist, nb_layers=n_layers, gen_type=gen_type)
+        bodies+=ballast_bodies
+        track_every = int(total_paricles/50)
+
+    dict_tact = {'iqsc0': {'law':'IQS_CLB', 'fric':pp},
+                'iqsc1': {'law':'IQS_CLB', 'fric':pw}}
+    
+    tacts = create_tact_behavs(dict_tact)
+    dict_see = {'vpp': {'CorpsCandidat':'RBDY3', 'candidat':ptype,'colorCandidat':'BLUEx','behav':tacts['iqsc0'],
+                        'CorpsAntagoniste':'RBDY3', 'antagoniste':ptype,'colorAntagoniste':'BLUEx',
+                        'alert':0.001},
+                'vpw': {'CorpsCandidat':'RBDY3', 'candidat':ptype,'colorCandidat':'BLUEx','behav':tacts['iqsc1'],
+                        'CorpsAntagoniste':'RBDY3', 'antagoniste':'PLANx','colorAntagoniste':'WALLx',
+                        'alert':0.001}}
+    post_dict = {'CONTACT FORCE DISTRIBUTION': {'step':step, 'val':1},
+                'COORDINATION NUMBER': {'step':step},
+                'BODY TRACKING': {'step':step, 'rigid_set':ballast_bodies[::track_every]},
+                'TORQUE EVOLUTION': {'step':step, 'rigid_set':ballast_bodies[::track_every]},
+                'AVERAGE VELOCITY EVOLUTION': {'step':step, 'color':'BLUEx'},
+                'KINETIC ENERGY': {'step':step},
+                'DISSIPATED ENERGY': {'step':step}
+                }
+    svs = create_see_tables(dict_see)
+    post = create_postpro_commands(post_dict)
+    [pre.visuAvatars(bodies) if visu else None]
+    pre.writeDatbox(dim,mats,mods,bodies,tacts,svs,post=post, datbox_path=os.path.join(par_dir,'DATBOX'))
+    dict_sample = {'Px':Px, 'Py':Py, 'Pz':Pz, 'Total Particles':total_paricles, 'Track Every': track_every, 'Layers':len(layers)}
+    par_char_f = 'particle_characteristics.dat'
+    with open(os.path.join(par_dir, par_char_f), 'w') as f:
+        for row in zip(*par_char.values()):
+            f.write('   '.join(str(x) for x in row)+'\n')
+    return dict_sample
+
+
+    
 

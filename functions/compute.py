@@ -10,17 +10,17 @@ def computer(deformable=False):
     mhyp = 0 # modeling hypothesis ( 1 = plain strain, 2 = plain stress, 3 = axi-symmetry)
     deformable = deformable
     # solver and params
-    dt = 0.01
-    nb_steps = 1000
+    dt = 5.e-4
+    nb_steps = 5000
     theta = 0.5
     freq_write = 50 # frequency of writing results
     freq_disp = 50 # frequency of visualization
     ref_radius = 0.1 # radius for visualization
     Rloc_tol = 5.e-2 # interaction parameter
     # nlgs
-    tol = 1.e-4
+    tol = 1.666e-3
     relax = 1.0
-    norm = 'QM'
+    norm = 'Quad'
     gs_it1 = 100 # min number of Gauss-Seidel iterations
     gs_it2 = 10 # max number of Gauss-Seidel iterations (gs_it1*gs_it2)
     # solver_type = 'Stored_Delassus_Loops'
@@ -37,8 +37,9 @@ def computer(deformable=False):
     chipy.OpenPostproFiles()
 
     ## simulation
-    if model !='SPHER': chipy.PRPRx_UseCpCundallDetection(100) # use Cundall detection
+    chipy.POLYR_TopologyAngle(10)
     chipy.PRPRx_ShrinkPolyrFaces(1.e-2)
+    if model !='SPHER': chipy.PRPRx_UseCpCundallDetection(100) # use Cundall detection
     chipy.PRPRx_LowSizeArrayPolyr(10)
 
     chipy.ComputeMass()
@@ -66,6 +67,7 @@ def computer(deformable=False):
 
         chipy.UpdateStep()
         chipy.WriteOut(freq_write)
+        chipy.WriteOutVlocRloc(freq_write)
 
         print(f'\nSTEP {k}\n')
         chipy.WriteDisplayFiles(freq_disp)
