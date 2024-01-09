@@ -325,5 +325,104 @@ def random_ballast_sncf_ir(par_dir, seed=687, visu=False, step=1):
     return dict_sample
 
 
-    
+def random_ballast_test_sncf(par_dir, seed=687, visu=False, step=1):
+    dim = 3
+
+    # ground params
+    lx = 6
+    ly = 6
+    lz = 0.10
+
+    # ballast params
+    #ballast_bib, layers, nb_particles, lx, ly, lz, mat, mod, Rmin=0.3, Rmax=0.4
+    ballast_bib = 'BIBLIGRAINS/BIBLIGRAINS.DAT'
+    layers = np.linspace(1,0.5, np.random.randint(20,35))
+    layers = layers[::-1]
+    nb_particles = 1500
+    Rmin = 1.4044198827808083E-002
+    Rmax = 5.7470355839992146E-002
+    Px = np.random.uniform(1.96,2.5) # width of the particle generation
+    Py = np.random.uniform(0.4,0.6) # height of the particle generation
+    Pz = np.random.uniform(0.18,0.25) # depth of the particle generation
+
+    # friction params
+    pp = 0.5 # particle-particle friction
+    pw = 0.8 # particle-wall friction
+
+    # entities_to_gen
+    entities_to_gen = ['wall', 'ballast']
+
+    # material dict and container
+    dict_mat = {'TDURx': {'materialType':'RIGID', 'density':2700.}}
+    mats = create_materials(dict_mat)
+
+    # model dict and container
+    dict_mod = {'rigid': {'physics':'MECAx', 'element':'Rxx3D', 'dimension':dim}}
+    mods = create_models(dict_mod)
+
+    ## Avatar generation
+    bodies = pre.avatars()
+
+    ## wall avatar generation if wall in entities_to_gen
+    if 'wall' in entities_to_gen:
+        wall_bodies = wall_generator(lx, ly, lz, mats['TDURx'], mods['rigid'])
+        # impose driven dofs
+        [wall_body.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy') for wall_body in wall_bodies]
+        bodies+=wall_bodies
+
+    ## Ballast generation if ballast in entities_to_gen
+    if 'ballast' in entities_to_gen:
+        ballast_bodies, total_paricles, par_char = ballast_generator_custom(ballast_bib, layers, nb_particles, Px, Py, Pz, mats['TDURx'], mods['rigid'], Rmin=Rmin, Rmax=Rmax)
+        bodies+=ballast_bodies
+        track_every = 50
+
+    # tact dict and container
+    dict_tact = {'iqsc0': {'law':'IQS_CLB', 'fric':pp},
+                'iqsc1': {'law':'IQS_CLB', 'fric':pw}}
+    tacts = create_tact_behavs(dict_tact)
+
+    # see dict and container
+    dict_see = {'vpp': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc0'],
+                        'CorpsAntagoniste':'RBDY3', 'antagoniste':'POLYR','colorAntagoniste':'BLUEx',
+                        'alert':0.001},
+                'vpw': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc1'],
+                        'CorpsAntagoniste':'RBDY3', 'antagoniste':'PLANx','colorAntagoniste':'WALLx',
+                        'alert':0.001}}
+    svs = create_see_tables(dict_see)
+
+    # post dict and container
+    post_dict = {'CONTACT FORCE DISTRIBUTION': {'step':step, 'val':1},
+                'COORDINATION NUMBER': {'step':step},
+                'BODY TRACKING': {'step':step, 'rigid_set':ballast_bodies[::track_every]},
+                'TORQUE EVOLUTION': {'step':step, 'rigid_set':ballast_bodies[::track_every]},
+                'AVERAGE VELOCITY EVOLUTION': {'step':step, 'color':'BLUEx'},
+                'KINETIC ENERGY': {'step':step},
+                'DISSIPATED ENERGY': {'step':step}
+                }
+    post = create_postpro_commands(post_dict)
+
+    # visu
+    if visu: pre.visuAvatars(bodies)
+
+    # write datbox
+    pre.writeBodies(bodies,chemin=os.path.join(par_dir,'DATBOX'))
+    pre.writeBulkBehav(mats,chemin=os.path.join(par_dir,'DATBOX'),dim=3)
+    pre.writeTactBehav(tacts,svs,chemin=os.path.join(par_dir,'DATBOX'))
+    pre.writeDrvDof(bodies,chemin=os.path.join(par_dir,'DATBOX'))
+    pre.writeDofIni(bodies,chemin=os.path.join(par_dir,'DATBOX'))
+    pre.writeVlocRlocIni(chemin=os.path.join(par_dir,'DATBOX'))
+    pre.writePostpro(commands=post, parts=bodies, path=os.path.join(par_dir,'DATBOX'))
+
+
+    dict_sample = {'Px':Px, 'Py':Py, 'Pz':Pz, 'Total Particles':total_paricles, 'Track Every': track_every, 'Layers':len(layers)}
+    par_char_f = 'particle_characteristics.dat'
+    with open(os.path.join(par_dir, par_char_f), 'w') as f:
+        for row in zip(*par_char.values()):
+            f.write('   '.join(str(x) for x in row)+'\n')
+    return dict_sample
+
+
+
+
+
 

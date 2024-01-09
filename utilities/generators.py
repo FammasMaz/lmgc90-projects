@@ -2,6 +2,8 @@ from pylmgc90 import pre
 import math
 import numpy as np
 
+from pylmgc90 import chipy    
+
 def rail_generator(nb_rails, rail_length, rail_height, rail_width, rail_spacing, rail_offset, rail_color, rail_material, rail_model):
     bodies = pre.avatars()
     for i in range(nb_rails):
@@ -22,7 +24,7 @@ def ballast_generator(nb_particles, Rmin, Rmax, Px, Py, Pz, layers, mat, mod, pt
       radii_x = pre.granulo_Uniform(np.int(nb_particles), Rmin, Rmax)
       #radii_x = pre.granulo_Uniform(np.int(nb_particles*layers[j]), Rmin, Rmax)
       if gen_type == 'box':
-        [nb_rem,coors] = pre.depositInBox3D(radii=radii_x, lx=Px, ly=Py*layers[j], lz=Pz)
+         [nb_rem,coors] = pre.depositInBox3D(radii=radii_x, lx=Px, ly=Py*layers[j], lz=Pz)
       else:
          nbx = int(Px/part_dist); nby = int(Py*layers[j]/part_dist)
          coors = pre.cubicLattice3D(nbx, nby, nb_layers, part_dist, x0 = -Px/2., y0 = -Py*layers[j]/2., z0 = 0.01)
@@ -38,7 +40,7 @@ def ballast_generator(nb_particles, Rmin, Rmax, Px, Py, Pz, layers, mat, mod, pt
             #                    material=mat,color=color)
           r=np.random.random(3)*np.pi
           #body.rotate(phi=r[0],theta=r[1],psi=r[2])
-          body.translate(dz=Pz*(len(layers)-j) + Rmax*18.)
+          body.translate(dz=Pz*(len(layers)-j) + Rmax*1.5)
           bodies.addAvatar(body)
           particle_char['body_id'].append(k)
           particle_char['radius'].append(radii_x[i])
@@ -54,6 +56,30 @@ def wall_generator(wall_length, wall_height, wall_width, wall_material, wall_mod
         [wall.rotate(description='axis',alpha=alpha,axis=rot_axis,center=wall.nodes[1].coor) if rot_axis is not None else None]
         bodies.addAvatar(wall)
         return bodies
+
+def ballast_generator_custom(ballast_bib, layers, nb_particles, Px, Py, Pz, mat, mod, Rmin=0.3, Rmax=0.4):
+  bodies = pre.avatars()
+  total_particles = 0
+  particle_char = {'body_id': [], 'radius': []}
+  k=2
+  lballast = get_lbody(ballast_bib)
+  for j in range(len(layers)):
+    radii_x = pre.granulo_Uniform(np.int(nb_particles), Rmin, Rmax)
+    [nb_dep, coors] = pre.depositInBox3D(radii_x, Px, Py*layers[j], Pz)
+    x = coors[::3];  y = coors[1::3];  z = coors[2::3]
+    for k in range(nb_dep):
+      rand = int(np.random.random()*len(lballast))
+      body = pre.rigidPolyhedron(mod, mat, color='BLUEx', generation_type='full', vertices=lballast[rand][0], faces=lballast[rand][1])
+      r = np.random.random(3)*np.pi
+      body.rotate(phi=r[0],theta=r[1],psi=r[2])
+      body.translate(dx=x[k], dy=y[k], dz=z[k])
+      # translate up 
+      body.translate(dz=Pz*(len(layers)-j) + Rmax*1.5)
+      bodies.addAvatar(body)
+      particle_char['body_id'].append(k)
+      particle_char['radius'].append(radii_x[k])
+    total_particles += nb_dep
+  return bodies, total_particles, particle_char
 
 
 def get_lbody(file):
