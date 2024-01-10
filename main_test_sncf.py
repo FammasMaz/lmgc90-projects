@@ -35,7 +35,7 @@ def stdout_redirected(to=os.devnull):
             _redirect_stdout(to=old_stdout) # restore stdout.
                                             # buffering and flags such as
                                             # CLOEXEC may be different
-i = 4
+i = 6
 visu = False
 while i < 200:
     par_dir = f'./train-track-static/data/sncf_random_test_{i+1}/'
@@ -47,14 +47,24 @@ while i < 200:
         create_dirs(par_dir=par_dir)
         
         with stdout_redirected():
-            dict_sample = random_ballast_test_sncf(par_dir=par_dir, seed=687, visu=visu, step=10)
+            dict_sample = random_ballast_test_sncf(par_dir=par_dir, seed=687, visu=visu, step=1000)
         print(dict_sample)
+        # add 
+        '''SNAPSHOT SAMPLE
+        STEP 2000'''
+        # to par_dir/DATBOX/POSTPRO.DAT. First remove the last line
+        # with open(par_dir+'DATBOX/POSTPRO.DAT', 'r') as file:
+        #     lines = file.readlines()
+        # with open(par_dir+'DATBOX/POSTPRO.DAT', 'w') as file:
+        #     file.writelines(lines[:-1])
+        #     file.write('SNAPSHOT SAMPLE\nSTEP 100\nEND')
+        # to par_dir/DATBOX/POSTPRO.DAT end
+
         os.chdir(par_dir)
         dict_str = json.dumps(dict_sample, indent=4)
     # Write to file
         with open('dict.txt', 'w') as file:
             file.write(dict_str)
-        #if: else: os.chdir(par_dir)
     else: os.chdir(par_dir)
     print('Finished generating sample. Starting computation...')
     failed=computer()  # Call your function

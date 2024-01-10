@@ -16,15 +16,15 @@ def computer(deformable=False):
     dt = 1.e-3
     nb_steps = 2000
     theta = 0.5
-    freq_write = 50 # frequency of writing results
-    freq_disp = 50 # frequency of visualization
+    freq_write = 1000 # frequency of writing results
+    freq_disp = 1000 # frequency of visualization
     Rloc_tol = 5.e-2 # interaction parameter
     # nlgs
     tol = 1.666e-2
     relax = 1.0
     norm = 'Quad'
-    gs_it1 = 300 # min number of Gauss-Seidel iterations
-    gs_it2 = 50 # max number of Gauss-Seidel iterations (gs_it1*gs_it2)
+    gs_it1 = 100 # min number of Gauss-Seidel iterations
+    gs_it2 = 10 # max number of Gauss-Seidel iterations (gs_it1*gs_it2)
     # solver_type = 'Stored_Delassus_Loops'
     solver_type = 'Stored_Delassus_Loops'
 

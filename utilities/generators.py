@@ -61,7 +61,7 @@ def ballast_generator_custom(ballast_bib, layers, nb_particles, Px, Py, Pz, mat,
   bodies = pre.avatars()
   total_particles = 0
   particle_char = {'body_id': [], 'radius': []}
-  k=2
+  l=2
   lballast = get_lbody(ballast_bib)
   for j in range(len(layers)):
     radii_x = pre.granulo_Uniform(np.int(nb_particles), Rmin, Rmax)
@@ -76,8 +76,9 @@ def ballast_generator_custom(ballast_bib, layers, nb_particles, Px, Py, Pz, mat,
       # translate up 
       body.translate(dz=Pz*(len(layers)-j) + Rmax*1.5)
       bodies.addAvatar(body)
-      particle_char['body_id'].append(k)
+      particle_char['body_id'].append(l)
       particle_char['radius'].append(radii_x[k])
+      l+=1
     total_particles += nb_dep
   return bodies, total_particles, particle_char
 
