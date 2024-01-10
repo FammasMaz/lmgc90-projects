@@ -5,3 +5,4 @@ DATBOX/
 seed_*/
 .DS_Store
 data/
+*.pyc
