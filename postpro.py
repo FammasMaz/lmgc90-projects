@@ -1,8 +1,8 @@
-# In[ ]:
 from utilities.postpro import *
 import os
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 # Step:1 
 # creating contact forces files
 par_dir = './train-track-static/data/seed_687_1/'
@@ -73,6 +73,4 @@ pos_mod = np.concatenate((np.zeros((3,1)), pos[-1,1:4]), axis=1).T
 int_vec, int_vec_wall = intercenter_vec(pos_mod, contacts_mod, contacts_wall_mod, track_every)
 # edge features are concat of contacts_mod and int_vec
 edge_features = np.concatenate((contacts_mod[:,2:], int_vec), axis=1)
-
-
 
