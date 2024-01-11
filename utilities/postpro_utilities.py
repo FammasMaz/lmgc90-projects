@@ -141,20 +141,19 @@ def edge_index_creator(contacts, contacts_wall):
     # contactenate the first two columns of contacts and contacts_wall
     # and create the edge_index
     edge_index = np.concatenate((contacts[:,:2], contacts_wall[:,:2]), axis=0)
-    edge_index = torch.tensor(edge_index, dtype=torch.float32).transpose(0,1)
+    edge_index = torch.tensor(edge_index, dtype=torch.float32)
     return edge_index
 
 def state_variables(dict):
     x = torch.tensor([], dtype=torch.float32)
     for key in dict:
-        x = torch.cat((x, torch.tensor(dict[key], dtype=torch.float32)), dim=0)
-    return x.transpose(0,1)
+        x = torch.cat((x, torch.tensor(dict[key], dtype=torch.float32)), dim=1)
+    return x
 
 
 def arvd_writer(par_dir):
-    samples = sampler(par_dir, fname = 'BODIES.OUT',sw='$blmty')
-    # ignore the first sample
-    indices = [1]
+    samples = sampler(par_dir, fname = 'BODIES.OUT',sw='$bdyty')
+    indices = [1,3]
     # remove if file exists
     if os.path.exists(par_dir + 'OUTBOX/BODIES.DAT'):
         os.remove(par_dir + 'OUTBOX/BODIES.DAT')
@@ -168,13 +167,21 @@ def arvd_writer(par_dir):
             file.write('    '.join([str(i) for i in numbers_out]))
             file.write('\n')
 
-def intercenter_vec(pos, contacts_mod, contacts_wall_mod, track_every):
-    inter_vec = np.zeros((contacts_mod.shape[0],3))
-    inter_vec_wall = np.zeros((contacts_wall_mod.shape[0],3))
-    for i in range(contacts_mod.shape[0]):
-        # find the index of the contact point
-        inter_vec[i,:] = pos[int(contacts_mod[i,0]//track_every)-1] - pos[int(contacts_mod[i,1]//track_every)-1]
-        # same for the wall
-    for i in range(contacts_wall_mod.shape[0]):
-        inter_vec_wall = pos[int(contacts_wall_mod[i,0]//track_every)-1] - pos[int(contacts_wall_mod[i,1]//track_every)-1]
-    return inter_vec, inter_vec_wall
+
+def intercenter_vec(pos, contacts, track_every=1):
+    # for each contact find the cand and ant positions
+    idx = [int((i-1)//(track_every+1)) for i in contacts[:,0]] if track_every!=0 else contacts[:,0].astype(int)-1
+    idx_ant = [int((i-1)//(track_every+1)) for i in contacts[:,1]] if track_every!=0 else contacts[:,1].astype(int)-1
+    
+    cand = pos[idx,:]
+    ant = pos[idx_ant,:]
+    # find the intercenter vector
+    inter_vec = cand - ant
+    return inter_vec
+
+def stress_calculator(contact_forces, inter_vec):
+    # contact_forces: (nb_contacts, 3)
+    # inter_vec: (nb_contacts, 3)
+    # stress: (nb_contacts, 3)
+    stress = torch.tensor(contact_forces * inter_vec, dtype=torch.float32)
+    return stress
