@@ -5,7 +5,7 @@ sys.path.insert(0, parent_dir)
 from datetime import datetime
 import numpy as np
 from pylmgc90 import pre
-from utilities.utilities import * 
+from utilities.lmgc90_utilities import * 
 from utilities.creators import *
 from utilities.generators import *
 

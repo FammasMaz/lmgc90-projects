@@ -1,6 +1,6 @@
 from functions.gen_sample import random_ballast_sncf_ir
 from functions.compute import computer
-from utilities.utilities import create_dirs
+from utilities.lmgc90_utilities import create_dirs
 import json
 import os, shutil
 par_dir = f'./train-track-static/data/seed_sncf_{687}_{1}/'

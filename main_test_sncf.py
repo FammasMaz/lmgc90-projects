@@ -1,6 +1,6 @@
 from functions.gen_sample import random_ballast_test_sncf
 from functions.compute import computer_juan, computer
-from utilities.utilities import create_dirs
+from utilities.lmgc90_utilities import create_dirs
 import json
 import os, shutil
 import os
@@ -35,7 +35,7 @@ def stdout_redirected(to=os.devnull):
             _redirect_stdout(to=old_stdout) # restore stdout.
                                             # buffering and flags such as
                                             # CLOEXEC may be different
-i = 6
+i = 10
 visu = False
 while i < 200:
     par_dir = f'./train-track-static/data/sncf_random_test_{i+1}/'

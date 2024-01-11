@@ -1,6 +1,6 @@
 import os, json
 import shutil
-from utilities.utilities import create_dirs
+from utilities.lmgc90_utilities import create_dirs
 from functions.gen_sample import random_ballast_sncf_ir
 from functions.compute import computer
 import os
