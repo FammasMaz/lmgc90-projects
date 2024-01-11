@@ -33,6 +33,8 @@ def cleaner(src_dir):
     shutil.copyfile(src_dir+'OUTBOX/Vloc_Rloc.OUT.'+str(highest_num), './train-track-static/data/cleaned_data/'+folder_name+'/OUTBOX/Vloc_Rloc.OUT')
     # copy DOF.OUT
     shutil.copyfile(src_dir+'OUTBOX/DOF.OUT.'+str(highest_num//2), './train-track-static/data/cleaned_data/'+folder_name+'/OUTBOX/DOF.OUT')
+    # copy BODIES.OUT
+    shutil.copyfile(src_dir+'OUTBOX/BODIES.OUT', './train-track-static/data/cleaned_data/'+folder_name+'/OUTBOX/BODIES.OUT')
     # Copy the complete postpro
     shutil.copytree(src_dir+'POSTPRO/', './train-track-static/data/cleaned_data/'+folder_name+'/POSTPRO/')
     # copy dict.txt
