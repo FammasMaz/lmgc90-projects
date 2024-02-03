@@ -67,6 +67,7 @@ def computer(deformable=False):
             chipy.StockRloc()
 
             chipy.ComputeDof()
+            chipy.PRPRx_GetInteractionVector()
 
             chipy.UpdateStep()
             chipy.WriteOut(freq_write)
