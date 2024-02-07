@@ -57,6 +57,31 @@ def wall_generator(wall_length, wall_height, wall_width, wall_material, wall_mod
         bodies.addAvatar(wall)
         return bodies
 
+def trapezoid_generator(txb,txt, ty, tz, mat, mod, color='BLUEx'):
+    body = pre.avatar(dimension=3)
+    body.addBulk(pre.rigid3d())
+   # create a trapezoid
+  
+    body.addNode(pre.node(np.array([0., -ty/2, 0.]), 1))
+    body.addNode(pre.node(np.array([0., ty/2, 0.]), 1))
+    body.addNode(pre.node(np.array([txb, -ty/2, 0.]), 1))
+    body.addNode(pre.node(np.array([txb, ty/2, 0.]), 1))
+    body.addNode(pre.node(np.array([txt, -ty/2, tz]), 1))
+    body.addNode(pre.node(np.array([txt, ty/2, tz]), 1))
+    body.addNode(pre.node(np.array([0., -ty/2, tz]), 1))
+    body.addNode(pre.node(np.array([0., ty/2, tz]), 1))
+
+    body.defineGroups()
+    body.defineModel(model=mod)
+    body.defineMaterial(material=mat)
+    # define contactors on all the faces of the trapezoid
+    #body.addContactors(shape='PLANx', color=color, group='all')
+    body.computeRigidProperties()
+    return body
+
+
+    
+
 def ballast_generator_custom(ballast_bib, layers, nb_particles, Px, Py, Pz, mat, mod, Rmin=0.3, Rmax=0.4):
   bodies = pre.avatars()
   total_particles = 0

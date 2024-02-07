@@ -14,7 +14,7 @@ def computer(deformable=False):
     deformable = deformable
     # solver and params
     dt = 1.e-3
-    nb_steps = 2000
+    nb_steps = 200
     theta = 0.5
     freq_write = 1000 # frequency of writing results
     freq_disp = 1000 # frequency of visualization
@@ -67,7 +67,7 @@ def computer(deformable=False):
             chipy.StockRloc()
 
             chipy.ComputeDof()
-            chipy.PRPRx_GetInteractionVector()
+            f = chipy.getInteractions()
 
             chipy.UpdateStep()
             chipy.WriteOut(freq_write)
@@ -87,7 +87,7 @@ def computer(deformable=False):
 
     ## Finalizing
     chipy.Finalize()
-    return failed
+    return failed, f
 
 def computer_juan():
         # Initializing
