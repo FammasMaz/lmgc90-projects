@@ -11,18 +11,13 @@ import argparse
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('--visu', type=bool, default=False, help='Visualize the sample')
 parser.add_argument('--wall', type=bool, default=True, help='Add wall')
-parser.add_argument('--trap', type=bool, default=False, help='Add trapezoid')
-parser.add_argument('--ballast', type=bool, default=True, help='Add ballast')
+parser.add_argument('--trap', type=bool, default=True, help='Add trapezoid')
+parser.add_argument('--ballast', type=bool, default=False, help='Add ballast')
 parser.add_argument('--layers', type=float, default=1, help='Add ballast')
 parser.add_argument('--nb_layers_min', type=int, default=1, help='Add ballast')
 parser.add_argument('--nb_layers_max', type=int, default=5, help='Add ballast')
 # thats it
 args = parser.parse_args()
-
-
-
-
-
 
 
 @contextmanager
@@ -64,8 +59,8 @@ while i < 1:
         os.mkdir(par_dir) if not os.path.exists(par_dir) else None
         create_dirs(par_dir=par_dir)
         
-        with stdout_redirected():
-            simul_params = random_compacted_sncf(par_dir=par_dir, seed=687, visu=visu, step=1, args=args)
+        #with stdout_redirected():
+        simul_params = random_compacted_sncf(par_dir=par_dir, seed=687, visu=visu, step=1, args=args)
         # add 
         '''SNAPSHOT SAMPLE
         STEP 2000'''
@@ -77,7 +72,7 @@ while i < 1:
         #     file.write('SNAPSHOT SAMPLE\nSTEP 100\nEND')
         # to par_dir/DATBOX/POSTPRO.DAT end
         print(f'Number of layers: {simul_params["nb_layers"]}')
-        print(f'Ratio of top to lower layer{simul_params["ratio"]}')
+        print(f'Ratio of top to lower layer: {simul_params["ratio"]}')
         os.chdir(par_dir)
     # Write to file
     else: os.chdir(par_dir)

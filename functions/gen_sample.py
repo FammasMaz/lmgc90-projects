@@ -440,7 +440,7 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
     ## ballast params
     ballast_bib = 'BIBLIGRAINS/BIBLIGRAINS.DAT'
     #layers = np.linspace(1,0.5, np.random.randint(20,35))
-    if args.layers==1:layers = [1] 
+    if args.layers==1:layers = [1]; nb_layers = 1
     else:
         nb_layers  = np.random.randint(args.nb_layers_min,args.nb_layers_max) 
         layers = np.linspace(1,args.layers, nb_layers)
@@ -477,8 +477,12 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
         bodies+=wall_bodies
 
     if args.trap:
-        trapezoid = trapezoid_generator(txb,txt, ty, tz, mats['TDURx'], mods['rigid'])
-        trapezoid.translate(dy=lz)
+        #trapezoid = trapezoid_generator(txb,txt, ty, tz, mats['TDURx'], mods['rigid'])
+        #mesh from file
+        meshed_trap = pre.readMesh('trap.msh', dim=3)
+        trapezoid = pre.surfacicMeshToRigid3D(meshed_trap, material=mats['TDURx'], model=mods['rigid'], color='BLUEx')
+        trapezoid.imposeDrivenDof(component=[1,2,4,5,],dofty='vlocy')
+        trapezoid.translate(dz = 0.1)
         bodies+=trapezoid
 
     if args.ballast:
@@ -499,20 +503,18 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
     dict_pw = {'vpw': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc1'],
                         'CorpsAntagoniste':'RBDY3', 'antagoniste':'PLANx','colorAntagoniste':'WALLx',
                         'alert':0.001}}
-    dict_pt = {'vpt': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc2'],
-                        'CorpsAntagoniste':'RBDY3', 'antagoniste':'RBDY3','colorAntagoniste':'BLUEx',
-                        'alert':0.001}}
+
     dict_see = {}
     if args.wall: dict_see.update(dict_pp)
-    if args.trap: dict_see.update(dict_pt)
     if args.ballast: dict_see.update(dict_pw)
+    breakpoint()
     svs = create_see_tables(dict_see)
 
     # post dict and container
     post_dict = {'CONTACT FORCE DISTRIBUTION': {'step':step, 'val':1},
                 'COORDINATION NUMBER': {'step':step},
-                'BODY TRACKING': {'step':step, 'rigid_set':ballast_bodies[::track_every]},
-                'TORQUE EVOLUTION': {'step':step, 'rigid_set':ballast_bodies[::track_every]},
+                #'BODY TRACKING': {'step':step, 'rigid_set':ballast_bodies[::track_every]},
+                #'TORQUE EVOLUTION': {'step':step, 'rigid_set':ballast_bodies[::track_every]},
                 'AVERAGE VELOCITY EVOLUTION': {'step':step, 'color':'BLUEx'},
                 'KINETIC ENERGY': {'step':step},
                 'DISSIPATED ENERGY': {'step':step}
