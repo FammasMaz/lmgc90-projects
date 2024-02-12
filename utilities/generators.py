@@ -89,7 +89,7 @@ def ballast_generator_custom(ballast_bib, layers, nb_particles, Px, Py, Pz, mat,
   l=2
   lballast = get_lbody(ballast_bib)
   for j in range(len(layers)):
-    radii_x = pre.granulo_Uniform(np.int(nb_particles), Rmin, Rmax)
+    radii_x = pre.granulo_Uniform(int(nb_particles), Rmin, Rmax)
     [nb_dep, coors] = pre.depositInBox3D(radii_x, Px, Py*layers[j], Pz)
     x = coors[::3];  y = coors[1::3];  z = coors[2::3]
     for k in range(nb_dep):

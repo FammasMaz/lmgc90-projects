@@ -1,7 +1,9 @@
 from pylmgc90 import chipy
-from pylmgc90.chipy import computation 
+from pylmgc90 import post
 import numpy as np
 from tqdm.auto import tqdm
+import pickle
+
 def computer(deformable=False):
     # Initializing
     chipy.Initialize()  # initializing the library
@@ -14,7 +16,7 @@ def computer(deformable=False):
     deformable = deformable
     # solver and params
     dt = 1.e-3
-    nb_steps = 200
+    nb_steps = 2000
     theta = 0.5
     freq_write = 1000 # frequency of writing results
     freq_disp = 1000 # frequency of visualization
@@ -67,7 +69,6 @@ def computer(deformable=False):
             chipy.StockRloc()
 
             chipy.ComputeDof()
-            f = chipy.getInteractions()
 
             chipy.UpdateStep()
             chipy.WriteOut(freq_write)
@@ -80,12 +81,61 @@ def computer(deformable=False):
             print(f'Error at step {k}')
             failed = True
             return failed
+        
+    # Post Processing
+    time = chipy.TimeEvolution_GetTime()
+    f2f = chipy.PRPRx_GetF2f2Inters()
+    inter = chipy.getInteractions()
+    icdans = np.array([inter[i][1] for i in range(len(inter)) if inter[i][0]==b'PRPRx'])
+    ic_vec = np.zeros((len(icdans),3))
+    # for each interaction get the intercenter vector
+    for i in range(len(icdans)):
+        ic_vec[i,:] = chipy.PRPRx_GetInteractionVector("Coor_", int(icdans[i]))
+    # making the post pro files manually
+    # 15. rl (3,1)
+    # 16. vl (3,1)
+    # 17. gaptt(1)
+    # 18. coord (3,1)
+    # 19. local (3,3)
+    indices = [3,7,15,16,17,18,13]
+    # use only the ones where first value is PRPRx
+    inter_filt = [inter[i] for i in range(len(inter)) if inter[i][0]==b'PRPRx']
+    stacked = np.array([inter_filt[i][1] for i in range(len(inter_filt))]).reshape(-1,1)
+    for index in indices:
+        column_data = np.array([row[index] for row in inter_filt])
+        if index in [3,7,17]:
+            column_data = column_data.reshape(-1, 1)
+        if index == 13:
+            column_data = np.array([0 if row[13] == b'stick' else 1 for row in inter_filt]).reshape(-1, 1)
+        stacked = np.hstack((stacked, column_data))
+
+    column_19 = np.array([row[19] for row in inter_filt]).reshape(-1, 9)
+    stacked = np.hstack((stacked, column_19))
+    stacked = np.hstack((stacked, ic_vec))
+    # save the post pro files
+    with open('postpro.pkl','wb') as f:
+        pickle.dump((f2f, inter, ic_vec, stacked),f)
+    # as dat file
+    np.savetxt('postpro.dat', stacked, fmt='%s', delimiter='   ')
+
+
+
+              
+
+    
 
     ## close display and postpro
     chipy.CloseDisplayFiles()
     chipy.ClosePostproFiles()
 
+
+
+    # also save in a text file
+
     ## Finalizing
+
+    #f = chipy.PRPRx_GetInteractionVector("Coor_", )
+
     chipy.Finalize()
     return failed, f
 

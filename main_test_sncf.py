@@ -35,9 +35,9 @@ def stdout_redirected(to=os.devnull):
             _redirect_stdout(to=old_stdout) # restore stdout.
                                             # buffering and flags such as
                                             # CLOEXEC may be different
-i = 20
+i = 220
 visu = False
-while i < 200:
+while i < 300:
     par_dir = f'./train-track-static/data/sncf_random_test_{i+1}/'
     print(f'Iteration {i+1}')
     print(f'Creating directory {par_dir}...')
@@ -68,11 +68,10 @@ while i < 200:
     else: os.chdir(par_dir)
     print('Finished generating sample. Starting computation...')
     [failed, f]=computer() 
-    breakpoint() 
     if failed:
         print(f'Failed at iteration {i}: trying again...')
         continue
-    shutil.rmtree('DISPLAY') if i % 10 != 0 else None
+    #shutil.rmtree('DISPLAY') if i % 10 != 0 else None
     visu = False
     i += 1  # Increment i after the try-except block
     os.chdir('../../../')

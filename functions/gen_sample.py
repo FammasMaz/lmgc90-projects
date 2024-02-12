@@ -336,8 +336,7 @@ def random_ballast_test_sncf(par_dir, seed=687, visu=False, step=1):
     # ballast params
     #ballast_bib, layers, nb_particles, lx, ly, lz, mat, mod, Rmin=0.3, Rmax=0.4
     ballast_bib = 'BIBLIGRAINS/BIBLIGRAINS.DAT'
-    #layers = np.linspace(1,0.5, np.random.randint(20,35))
-    layers = [1]
+    layers = np.linspace(1,0.5, np.random.randint(20,30))
     layers = layers[::-1]
     nb_particles = 1500
     Rmin = 1.4044198827808083E-002
@@ -394,8 +393,8 @@ def random_ballast_test_sncf(par_dir, seed=687, visu=False, step=1):
     # post dict and container
     post_dict = {'CONTACT FORCE DISTRIBUTION': {'step':step, 'val':1},
                 'COORDINATION NUMBER': {'step':step},
-                'BODY TRACKING': {'step':step, 'rigid_set':ballast_bodies[::track_every]},
-                'TORQUE EVOLUTION': {'step':step, 'rigid_set':ballast_bodies[::track_every]},
+                #'BODY TRACKING': {'step':step, 'rigid_set':ballast_bodies[::track_every]},
+                #'TORQUE EVOLUTION': {'step':step, 'rigid_set':ballast_bodies[::track_every]},
                 'AVERAGE VELOCITY EVOLUTION': {'step':step, 'color':'BLUEx'},
                 'KINETIC ENERGY': {'step':step},
                 'DISSIPATED ENERGY': {'step':step}
@@ -427,9 +426,10 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
     dim = 3
 
     # ground params
-    lx = 3
-    ly = 2
-    lz = 0.05
+    # ground params
+    lx = 6
+    ly = 6
+    lz = 0.10
 
     # a trapezoid for shaping the ballast
     txb = 0.2
@@ -507,7 +507,6 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
     dict_see = {}
     if args.wall: dict_see.update(dict_pp)
     if args.ballast: dict_see.update(dict_pw)
-    breakpoint()
     svs = create_see_tables(dict_see)
 
     # post dict and container
@@ -527,7 +526,13 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
     # write datbox
     pre.writeDatbox(dim,mats,mods,bodies,tacts,svs,post=post, datbox_path=os.path.join(par_dir,'DATBOX'))
     params = {'nb_layers': nb_layers, 'ratio': args.layers}
-    return params
+
+    dict_sample = {'Px':Px, 'Py':Py, 'Pz':Pz, 'Total Particles':total_paricles, 'Track Every': track_every, 'Layers':len(layers)}
+    par_char_f = 'particle_characteristics.dat'
+    with open(os.path.join(par_dir, par_char_f), 'w') as f:
+        for row in zip(*par_char.values()):
+            f.write('   '.join(str(x) for x in row)+'\n')
+    return dict_sample, params
 
     
 
