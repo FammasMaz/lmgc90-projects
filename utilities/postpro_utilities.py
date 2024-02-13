@@ -11,7 +11,8 @@ import torch
 from torch_geometric.data import Data   
 import torch
 import re
-from pathlib import Path    
+from pathlib import Path   
+import pickle 
 
 # vectorize function
 # index 2 indicates the first body
@@ -87,6 +88,31 @@ def contact_writer(par_dir):
             file.write('    '.join([str(stick_idx)]))
             file.write('\n')
 
+def coordinates_writer(par_dir):
+    samples = sampler(par_dir, fname = 'BODIES.OUT', sw = '$nodty')
+    indices = [3,5,7]
+    # remove if file exists
+    if os.path.exists(par_dir + 'OUTBOX/COORDINATES.DAT'):
+        os.remove(par_dir + 'OUTBOX/COORDINATES.DAT')
+    # write in dat file and also write in pickle
+    coord = np.array([])
+    with open(par_dir + 'OUTBOX/COORDINATES.DAT', 'w') as file:
+        for sample in samples:
+            numbers = extract_numbers(sample[1:])
+            numbers_out = [numbers[i] for i in indices]
+            # change to scientific notation .6e
+            numbers_out = [f'{i:.6e}' for i in numbers_out]
+            file.write('    '.join([str(i) for i in numbers_out]))
+            file.write('\n')
+            coord = np.append(coord, numbers_out)
+    coord = coord.reshape(-1,len(indices))
+    with open(par_dir + 'OUTBOX/COORDINATES.pkl', 'wb') as file:
+        pickle.dump(coord, file)
+    
+
+        
+
+
 def contact_writer_wall(par_dir):
     samples = sampler(par_dir)
     indices = [1,6,8,9,10,11,12,13,14,16,18,20,22,24,26,28,30,32,34,36,38]
@@ -122,12 +148,13 @@ def tracker(par_dir, start_idx=2):
     
 
     
-def dof_writer(par_dir):
-    samples = sampler(par_dir, fname = 'DOF.OUT',sw='$bdyty')
-    indices = [1, 5, 7, 9, 17, 19, 21, 23, 25, 27]
+def dof_writer(par_dir, fname = 'DOF.OUT.2'):
+    samples = sampler(par_dir, fname = fname,sw='$bdyty')
+    indices = [1, 5, 7, 9, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39]
     # remove if file exists
     if os.path.exists(par_dir + 'OUTBOX/DOF.DAT'):
         os.remove(par_dir + 'OUTBOX/DOF.DAT')
+    dof = np.array([])
     with open(par_dir + 'OUTBOX/DOF.DAT', 'w') as file:
         for sample in samples:
             numbers = extract_numbers(sample[1:])
@@ -136,6 +163,45 @@ def dof_writer(par_dir):
             numbers_out = [f'{i:.6e}' for i in numbers_out]
             file.write('    '.join([str(i) for i in numbers_out]))
             file.write('\n')
+            dof = np.append(dof, numbers_out)
+    dof = dof.reshape(-1, len(indices))
+    with open(par_dir + 'OUTBOX/DOF.pkl', 'wb') as file:
+        pickle.dump(dof, file)
+
+
+def mass_writer(par_dir, density = 2900, plate=True):
+    samples = sampler(par_dir, fname = 'BODIES.OUT',sw='$tacty')
+    # ignore the first
+    samples = samples[1:]
+    mass = np.array([])
+    # append mass of plate 
+    if plate: mass = np.append(mass, 1.)
+    density = density
+    with open(par_dir + 'OUTBOX/MASS.DAT', 'w') as file:
+        for sample in samples:
+            numbers = extract_numbers(sample[1:])
+            nb_vertices = int(numbers[1])
+            nb_faces = int(numbers[2])
+            # vertices is every second number starting from 5 and ending at 5+nb_vertices*3
+            vertices = np.array(numbers[4:4+nb_vertices*6:2]).reshape(nb_vertices, 3).astype(float)
+            ind_vert = nb_vertices*6 + 4
+            faces = np.array(numbers[ind_vert:ind_vert+nb_faces*6:2]) -1
+            faces = faces.reshape(nb_faces, 3).astype(int)   
+            # swap the third and second column
+            faces[:,[1, 2]] = faces[:,[2, 1]]
+            total_volume = sum(tetrahedron_volume(vertices[face[0]], vertices[face[1]], vertices[face[2]]) for face in faces)
+            m = total_volume * density
+            file.write(f'{m:.6e}')
+            file.write('\n')
+            mass = np.append(mass,  m)
+
+    
+    mass = mass.reshape(-1,1)
+    with open(par_dir + 'OUTBOX/mass.pkl', 'wb') as file:
+        pickle.dump(mass, file)
+
+            
+
 
 def edge_index_creator(contacts, contacts_wall):
     # contactenate the first two columns of contacts and contacts_wall
@@ -157,6 +223,8 @@ def arvd_writer(par_dir):
     # remove if file exists
     if os.path.exists(par_dir + 'OUTBOX/BODIES.DAT'):
         os.remove(par_dir + 'OUTBOX/BODIES.DAT')
+    arvd = np.array([])
+
     with open(par_dir + 'OUTBOX/BODIES.DAT', 'w') as file:
         # first sample is the plane
         for sample in samples:
@@ -166,6 +234,11 @@ def arvd_writer(par_dir):
             numbers_out = [f'{i:.6e}' for i in numbers_out]
             file.write('    '.join([str(i) for i in numbers_out]))
             file.write('\n')
+            arvd = np.append(arvd, numbers_out)
+    arvd = arvd.reshape(-1,2)
+    with open(par_dir + 'OUTBOX/arvd.pkl', 'wb') as file:
+        pickle.dump(arvd, file)
+
 
 
 def intercenter_vec(pos, contacts, track_every=1):
@@ -185,3 +258,34 @@ def stress_calculator(contact_forces, inter_vec):
     # stress: (nb_contacts, 3)
     stress = torch.tensor(contact_forces * inter_vec, dtype=torch.float32)
     return stress
+
+def read_pickled_file(par_dir, fname, dir='OUTBOX/'):
+    if dir: par_dir = par_dir + dir
+    with open(par_dir + fname, 'rb') as file:
+        data = pickle.load(file)
+    return data 
+
+
+def tetrahedron_volume(a, b, c):
+    return abs(np.dot(a, np.cross(b, c))) / 6
+
+
+def plate_connection(par_dir):
+    postpro = read_pickled_file(par_dir, 'postpro.pkl', False)
+    inter = postpro[1]
+    # use only the ones where first value is PRPRx
+    inter_filt = [inter[i] for i in range(len(inter)) if inter[i][0]==b'PRPLx']
+    stacked = np.array([inter_filt[i][3] for i in range(len(inter_filt))]).reshape(-1,1)
+    return stacked.astype(int)
+
+def gravitational_force_creator(m, g=9.8):
+    f = np.zeros((m.shape[0], 3))
+    # first one is rigid plate
+    f[1:,2] = -m*g
+    return f
+
+
+
+
+
+
