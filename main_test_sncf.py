@@ -35,7 +35,7 @@ def stdout_redirected(to=os.devnull):
             _redirect_stdout(to=old_stdout) # restore stdout.
                                             # buffering and flags such as
                                             # CLOEXEC may be different
-i = 220
+i = 227
 visu = False
 while i < 300:
     par_dir = f'./train-track-static/data/sncf_random_test_{i+1}/'

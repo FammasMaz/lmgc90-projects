@@ -119,8 +119,7 @@ def computer(deformable=False):
     np.savetxt('postpro.dat', stacked, fmt='%s', delimiter='   ')
 
 
-
-              
+    chipy.WriteBodies()
 
     
 
