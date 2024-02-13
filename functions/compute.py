@@ -122,7 +122,8 @@ def computer(deformable=False):
     chipy.WriteBodies()
 
     
-
+    chipy.ReadBodies()
+    chipy.WriteBodies()
     ## close display and postpro
     chipy.CloseDisplayFiles()
     chipy.ClosePostproFiles()
