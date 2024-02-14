@@ -1,14 +1,15 @@
 # writing the postpro script
 import numpy as np
-from utilities.postpro_utilities import mass_writer, coordinates_writer, dof_writer, arvd_writer, read_pickled_file, plate_connection
+from utilities.postpro_utilities import mass_writer, coordinates_writer, dof_writer, arvd_writer, read_pickled_file, plate_connection, stress_calculator
 from torch_geometric.data import Data   
 import argparse
 from pathlib import Path
 import torch
+from tqdm.auto import tqdm
 
 parser = argparse.ArgumentParser()  
 parser.add_argument('--par_dir', type=str, default='/Users/fammasmaz/Downloads/')
-parser.add_argument('--stem', type=str, default='sncf_random_test_20') 
+parser.add_argument('--stem', type=str, default='sncf_random_test_2') 
 args = parser.parse_args()
 
 
@@ -66,6 +67,13 @@ def gravitational_force_creator(m, g=9.8):
     # first one is rigid plate
     f[1:, 2] = -m[1:, 0]*g
     return f
+def stress_calculation(edge_features):
+   reaction_forces = edge_features[:, 0:3]
+   intercenter_vectors = edge_features[:, -3:]
+   psi = stress_calculator(reaction_forces, intercenter_vectors)
+   return np.array(psi).astype(np.float32)
+   
+   
 
 
 # find the names of the files that start with 'sncf'
@@ -74,17 +82,22 @@ par_dir = Path(args.par_dir)
 files_posix = [f for f in par_dir.iterdir() if f.stem.startswith(args.stem)]
 # in string format
 files = [str(f)+'/' for f in files_posix]
+j = 6
 
-for out_dir in files:
-  x = node_creator(out_dir)
-  n_nodes = x.shape[0]
-  edge_index, edge_features = edge_index_creator(out_dir)
-  n = hot_vector_plate_conection(out_dir, n_nodes)
-  f = gravitational_force_creator(x[:, -1].reshape(-1, 1))
-  y = x.copy()
-  data = Data(x=torch.tensor(x, dtype=torch.float32), edge_index=torch.tensor(edge_index, dtype=torch.long), edge_attr=torch.tensor(edge_features, dtype=torch.float32), y=torch.tensor(y, dtype=torch.float32), f=torch.tensor(f, dtype=torch.float32), n=torch.tensor(n, dtype=torch.float32))
-  # number from the folder
+for out_dir in tqdm(files):
   i = int(Path(out_dir).stem[-2:])
-  save_dir = Path(args.par_dir) / 'pt_data'
-  torch.save(data, save_dir / f'freefall_{i}.pt')
+  if i >= j:
+    x = node_creator(out_dir)
+    n_nodes = x.shape[0]
+    edge_index, edge_features = edge_index_creator(out_dir)
+    n = hot_vector_plate_conection(out_dir, n_nodes)
+    f = gravitational_force_creator(x[:, -1].reshape(-1, 1))
+    y = x.copy()
+    psi = stress_calculation(edge_features)
+    data = Data(x=torch.tensor(x, dtype=torch.float32), edge_index=torch.tensor(edge_index, dtype=torch.long), edge_sup=torch.tensor(edge_features, dtype=torch.float32), y=torch.tensor(y, dtype=torch.float32), f=torch.tensor(f, dtype=torch.float32), n=torch.tensor(n, dtype=torch.float32), psi=torch.tensor(psi, dtype=torch.float32))
+    # number from the folder
+    
+    save_dir = Path(args.par_dir) / 'pt_data'
+    torch.save(data, save_dir / f'freefall_{i}.pt')
+  else: continue
 
