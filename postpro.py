@@ -50,6 +50,7 @@ def edge_index_creator(out_dir):
   postpro = read_pickled_file(out_dir, 'postpro.pkl', False)
   edge_features = postpro[3]
   edge_index = np.array(edge_features[:,1:3]).T
+  edge_index = edge_index - 1
   edge_features = edge_features[:,3:]
 
   return edge_index.astype(np.float32), edge_features.astype(np.float32)
@@ -82,21 +83,26 @@ par_dir = Path(args.par_dir)
 files_posix = [f for f in par_dir.iterdir() if f.stem.startswith(args.stem)]
 # in string format
 files = [str(f)+'/' for f in files_posix]
-j = 6
+j = 0
 
 for out_dir in tqdm(files):
   i = int(Path(out_dir).stem[-2:])
   if i >= j:
-    x = node_creator(out_dir)
-    n_nodes = x.shape[0]
-    edge_index, edge_features = edge_index_creator(out_dir)
-    n = hot_vector_plate_conection(out_dir, n_nodes)
-    f = gravitational_force_creator(x[:, -1].reshape(-1, 1))
-    y = x.copy()
-    psi = stress_calculation(edge_features)
-    data = Data(x=torch.tensor(x, dtype=torch.float32), edge_index=torch.tensor(edge_index, dtype=torch.long), edge_sup=torch.tensor(edge_features, dtype=torch.float32), y=torch.tensor(y, dtype=torch.float32), f=torch.tensor(f, dtype=torch.float32), n=torch.tensor(n, dtype=torch.float32), psi=torch.tensor(psi, dtype=torch.float32))
-    # number from the folder
-    
+    try:
+      x = node_creator(out_dir)
+      n_nodes = x.shape[0]
+      edge_index, edge_features = edge_index_creator(out_dir)
+      n = hot_vector_plate_conection(out_dir, n_nodes)
+      # combine x and n
+      x = np.hstack((x, n))
+      f = gravitational_force_creator(x[:, -1].reshape(-1, 1))
+      y = x.copy()
+      psi = stress_calculation(edge_features)
+      data = [Data(x=torch.tensor(x, dtype=torch.float32), edge_index=torch.tensor(edge_index, dtype=torch.long), y=torch.tensor(y, dtype=torch.float32),edge_sup=torch.tensor(edge_features,dtype=torch.float32), f=torch.tensor(f, dtype=torch.float32), psi=torch.tensor(psi, dtype=torch.float32))]
+      # number from the folder
+    except Exception as e:
+      print(e)
+      continue
     save_dir = Path(args.par_dir) / 'pt_data'
     torch.save(data, save_dir / f'freefall_{i}.pt')
   else: continue
