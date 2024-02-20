@@ -6,6 +6,21 @@ import os, shutil
 import os
 import sys
 from contextlib import contextmanager
+from argparse import ArgumentParser
+
+# Parse arguments
+parser = ArgumentParser()
+parser.add_argument("-i", "--iteration", dest="iteration", default=228, type=int, help="Iteration number")
+parser.add_argument("-v", "--visu", dest="visu", default=False, type=bool, help="Visualize")
+args = parser.parse_args()
+
+i = args.iteration -1
+visu = args.visu
+
+
+
+
+
 
 @contextmanager
 def stdout_redirected(to=os.devnull):
@@ -35,8 +50,6 @@ def stdout_redirected(to=os.devnull):
             _redirect_stdout(to=old_stdout) # restore stdout.
                                             # buffering and flags such as
                                             # CLOEXEC may be different
-i = 227
-visu = False
 while i < 300:
     par_dir = f'./train-track-static/data/sncf_random_test_{i+1}/'
     print(f'Iteration {i+1}')
