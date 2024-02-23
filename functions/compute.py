@@ -4,7 +4,7 @@ import numpy as np
 from tqdm.auto import tqdm
 import pickle
 
-def computer(deformable=False):
+def computer(deformable=False, freq_disp=1000):
     # Initializing
     chipy.Initialize()  # initializing the library
     chipy.checkDirectories() # checking/creating mandatory subfolders
@@ -16,10 +16,10 @@ def computer(deformable=False):
     deformable = deformable
     # solver and params
     dt = 1.e-3
-    nb_steps = 2000
+    nb_steps = 4000
     theta = 0.5
     freq_write = 1000 # frequency of writing results
-    freq_disp = 1000 # frequency of visualization
+    freq_disp = freq_disp # frequency of visualization
     Rloc_tol = 5.e-2 # interaction parameter
     # nlgs
     tol = 1.666e-2

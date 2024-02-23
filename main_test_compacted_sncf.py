@@ -8,14 +8,25 @@ import sys
 from contextlib import contextmanager
 import argparse
 
+# Boolean Interpretor
+def str2bool(v):
+    if v.lower() in ('yes', 'True', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'False', 'f', 'n', '0'):
+        return False
+    else: raise argparse.ArgumentTypeError('Boolean value expected.')
+
+
 parser = argparse.ArgumentParser(description='Process some integers.')
-parser.add_argument('--visu', type=bool, default=False, help='Visualize the sample')
-parser.add_argument('--wall', type=bool, default=True, help='Add wall')
-parser.add_argument('--trap', type=bool, default=False, help='Add trapezoid')
-parser.add_argument('--ballast', type=bool, default=False, help='Add ballast')
-parser.add_argument('--layers', type=float, default=1, help='Add ballast')
+parser.add_argument('--visu', type=str2bool, default=False, help='Visualize the sample')
+parser.add_argument('--wall', type=str2bool, default=True, help='Add wall')
+parser.add_argument('--trap', type=str2bool, default=False, help='Add trapezoid')
+parser.add_argument('--ballast', type=str2bool, default=False, help='Add ballast')
+parser.add_argument('--layers', type=float, default=1, help='Add ballast') # size ratio of the top layer
 parser.add_argument('--nb_layers_min', type=int, default=1, help='Add ballast')
 parser.add_argument('--nb_layers_max', type=int, default=5, help='Add ballast')
+parser.add_argument('--freq_display', type=int, default=1000, help='frequency of display')
+parser.add_argument('--verbose', type=str2bool, default=False, help='verbose')
 # thats it
 args = parser.parse_args()
 
@@ -48,8 +59,8 @@ def stdout_redirected(to=os.devnull):
             _redirect_stdout(to=old_stdout) # restore stdout.
                                             # buffering and flags such as
                                             # CLOEXEC may be different
-i = 0
-while i < 20:
+i = 800
+while i < 801:
     par_dir = f'./train-track-static/data/sncf_compacted_{i+1}/'
     print(f'Iteration {i+1}')
     print(f'Creating directory {par_dir}...')
@@ -57,8 +68,10 @@ while i < 20:
         shutil.rmtree(par_dir) if os.path.exists(par_dir) else None
         os.mkdir(par_dir) if not os.path.exists(par_dir) else None
         create_dirs(par_dir=par_dir)
-        
-        with stdout_redirected():
+        if not args.verbose:
+            with stdout_redirected():
+                dict_sample, simul_params = random_compacted_sncf(par_dir=par_dir, seed=687, visu=args.visu, step=1000, args=args)
+        else:
             dict_sample, simul_params = random_compacted_sncf(par_dir=par_dir, seed=687, visu=args.visu, step=1000, args=args)
         # add 
         '''SNAPSHOT SAMPLE
@@ -80,7 +93,7 @@ while i < 20:
     # Write to file
     else: os.chdir(par_dir)
     print('Finished generating sample. Starting computation...')
-    failed=computer()  # Call your function
+    failed=computer(freq_disp=args.freq_display)  # Call your function
     #if failed:
     #    print(f'Failed at iteration {i}: trying again...')
     #    continue

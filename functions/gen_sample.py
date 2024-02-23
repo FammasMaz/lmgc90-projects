@@ -450,16 +450,28 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
     Rmax = 5.7470355839992146E-002
     Px = np.random.uniform(1.96,2.5) # width of the particle generation
     Py = np.random.uniform(0.4,0.6) # height of the particle generation
-    Pz = np.random.uniform(0.18,0.25) # depth of the particle generation
+#    Pz = np.random.uniform(0.18,0.25) # depth of the particle generation
+    Pz = np.random.uniform(2,3) # depth of the particle generation
+
 
     # friction params
     pp = 0.5 # particle-particle friction
     pw = 0.8 # particle-wall friction
     pt = 0.5 # particle-trapezoid friction
 
+    # velocity evolution
+
+    t0=1.
+    t1 =2.
+    vx =0.
+    pre.writeEvolution(f=imposedVx, instants=np.linspace(0., 2*t1, 1000) ,path=par_dir+'DATBOX/', name='vx.dat')
+    pre.writeEvolution(f=imposedVxneg, instants=np.linspace(0., 2*t1, 1000) ,path=par_dir+'DATBOX/', name='vx2.dat')
+    
+
 
     # material dict and container
-    dict_mat = {'TDURx': {'materialType':'RIGID', 'density':2700.}}
+    dict_mat = {'TDURx': {'materialType':'RIGID', 'density':2700.},
+                'TDURT': {'materialType':'RIGID', 'density':8000.}}
     mats = create_materials(dict_mat)
 
     # model dict and container
@@ -472,18 +484,32 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
     ## wall avatar generation if wall in entities_to_gen
     if args.wall:
         wall_bodies = wall_generator(lx, ly, lz, mats['TDURx'], mods['rigid'])
+        #wall_mesh = pre.readMesh('floor.msh', dim=3)
+        #wall_bodies = pre.volumicMeshToRigid3D(wall_mesh, material=mats['TDURx'], model=mods['rigid'], color='WALLx')
         # impose driven dofs
         [wall_body.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy') for wall_body in wall_bodies]
+        #wall_bodies.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
         bodies+=wall_bodies
 
     if args.trap:
         #trapezoid = trapezoid_generator(txb,txt, ty, tz, mats['TDURx'], mods['rigid'])
         #mesh from file
-        meshed_trap = pre.readMesh('trap.msh', dim=3)
-        trapezoid = pre.surfacicMeshToRigid3D(meshed_trap, material=mats['TDURx'], model=mods['rigid'], color='BLUEx')
-        trapezoid.imposeDrivenDof(component=[1,2,4,5,],dofty='vlocy')
-        trapezoid.translate(dz = 0.1)
+        meshed_trap = pre.readMesh('tri.msh', dim=3)
+        trapezoid = pre.volumicMeshToRigid3D(meshed_trap, material=mats['TDURT'], model=mods['rigid'], color='BLUEx')
+        trapezoid.imposeDrivenDof(component=[1,2,4,5,6],dofty='vlocy')
+        trapezoid.imposeDrivenDof(component=2,dofty='vlocy',description='evolution',evolutionFile='vx2.dat')
+        
+        trapezoid.translate(dz = 0.05, dy = -1.)
         bodies+=trapezoid
+        # create a second one and mirrored
+        trapezoid2 = pre.volumicMeshToRigid3D(meshed_trap, material=mats['TDURT'], model=mods['rigid'], color='BLUEx')
+        trapezoid2.imposeDrivenDof(component=[1,2,4,5,6],dofty='vlocy')
+        trapezoid2.imposeDrivenDof(component=2,dofty='vlocy',description='evolution',evolutionFile='vx.dat')
+        trapezoid2.translate(dz = 0.05, dy = -1.)
+        trapezoid2.rotate(description='axis', alpha=3.14, axis=[0,0,1])
+        bodies+=trapezoid2
+
+
 
     if args.ballast:
         ballast_bodies, total_paricles, par_char = ballast_generator_custom(ballast_bib, layers, nb_particles, Px, Py, Pz, mats['TDURx'], mods['rigid'], Rmin=Rmin, Rmax=Rmax)
@@ -491,9 +517,11 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
         track_every = 50
 
     # tact dict and container
-    dict_tact = {'iqsc0': {'law':'IQS_CLB', 'fric':pp},
-                 'iqsc1': {'law':'IQS_CLB', 'fric':pw},
-                'iqsc2': {'law':'IQS_CLB', 'fric':pt}}
+    dict_tact = {'iqsc0': {'law':'IQS_CLB_g0', 'fric':pp},
+                 'iqsc1': {'law':'IQS_CLB_g0', 'fric':pw},
+                'iqsc2': {'law':'IQS_CLB_g0', 'fric':pt},
+                'iqsc3': {'law':'IQS_CLB_g0', 'fric':pt},
+                'iqsc4': {'law':'IQS_CLB_g0', 'fric':pt}}
     tacts = create_tact_behavs(dict_tact)
 
     # see dict and container
@@ -503,10 +531,18 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
     dict_pw = {'vpw': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc1'],
                         'CorpsAntagoniste':'RBDY3', 'antagoniste':'PLANx','colorAntagoniste':'WALLx',
                         'alert':0.001}}
-
+    dict_ma = {'vma': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'REDx','behav':tacts['iqsc3'],
+                        'CorpsAntagoniste':'RBDY3', 'antagoniste':'PLANx','colorAntagoniste':'WALLx',
+                        'alert':0.001}}
+    dict_mb = { 'vma': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc4'],
+                        'CorpsAntagoniste':'RBDY3', 'antagoniste':'POLYR','colorAntagoniste':'REDxx',
+                        'alert':0.001}}
     dict_see = {}
     if args.wall: dict_see.update(dict_pp)
     if args.ballast: dict_see.update(dict_pw)
+    #if args.trap: dict_see.update(dict_ma); #dict_see.update(dict_mb)
+    if args.trap & ~args.ballast: dict_see.update(dict_pw)
+
     svs = create_see_tables(dict_see)
 
     # post dict and container
@@ -527,16 +563,47 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
     pre.writeDatbox(dim,mats,mods,bodies,tacts,svs,post=post, datbox_path=os.path.join(par_dir,'DATBOX'))
     params = {'nb_layers': nb_layers, 'ratio': args.layers}
 
-    dict_sample = {'Px':Px, 'Py':Py, 'Pz':Pz, 'Total Particles':total_paricles, 'Track Every': track_every, 'Layers':len(layers)}
-    par_char_f = 'particle_characteristics.dat'
-    with open(os.path.join(par_dir, par_char_f), 'w') as f:
-        for row in zip(*par_char.values()):
-            f.write('   '.join(str(x) for x in row)+'\n')
-    return dict_sample, params
-
+    if args.ballast: 
+        dict_sample = {'Px':Px, 'Py':Py, 'Pz':Pz, 'Total Particles':total_paricles, 'Track Every': track_every, 'Layers':len(layers)}
+        par_char_f = 'particle_characteristics.dat'
+        with open(os.path.join(par_dir, par_char_f), 'w') as f:
+            for row in zip(*par_char.values()):
+                f.write('   '.join(str(x) for x in row)+'\n')
+        return dict_sample, params
     
 
 
 
 
 
+    else: return None, params
+
+    
+
+
+
+t0=2.
+t1 =3.
+vx =-0.5
+
+def imposedVx(t):
+    # 0 until t0
+    if t <= t0:
+        return 0.
+    # linear growing between [t0, t1]
+    elif t > t0 and t <= t1:
+        return vx
+    # constant value afterward
+    else:
+        return -vx
+    
+def imposedVxneg(t):
+    # 0 until t0
+    if t <= t0:
+        return 0.
+    # linear growing between [t0, t1]
+    elif t > t0 and t <= t1:
+        return -vx
+    # constant value afterward
+    else:
+        return vx
