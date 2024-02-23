@@ -27,6 +27,8 @@ parser.add_argument('--nb_layers_min', type=int, default=1, help='Add ballast')
 parser.add_argument('--nb_layers_max', type=int, default=5, help='Add ballast')
 parser.add_argument('--freq_display', type=int, default=1000, help='frequency of display')
 parser.add_argument('--verbose', type=str2bool, default=False, help='verbose')
+parser.add_argument("--i", "--iteration", dest="iteration", default=801, type=int, help="Iteration number")
+
 # thats it
 args = parser.parse_args()
 
@@ -59,7 +61,7 @@ def stdout_redirected(to=os.devnull):
             _redirect_stdout(to=old_stdout) # restore stdout.
                                             # buffering and flags such as
                                             # CLOEXEC may be different
-i = 800
+i = args.iteration -1
 while i < 801:
     par_dir = f'./train-track-static/data/sncf_compacted_{i+1}/'
     print(f'Iteration {i+1}')
