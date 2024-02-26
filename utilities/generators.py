@@ -99,8 +99,8 @@ def ballast_generator_custom(ballast_bib, layers, nb_particles, Px, Py, Pz, mat,
       body.rotate(phi=r[0],theta=r[1],psi=r[2])
       body.translate(dx=x[k], dy=y[k], dz=z[k])
       # translate up 
-      if len(layers)==1: body.translate(dz=Rmax*1.5) 
-      else:body.translate(dz=Pz*(len(layers)-j) + Rmax*1.5)
+      if len(layers)==1: body.translate(dz=Rmax*3)
+      else:body.translate(dz=Pz*(len(layers)-j) + Rmax*3)
 
       bodies.addAvatar(body)
       particle_char['body_id'].append(l)

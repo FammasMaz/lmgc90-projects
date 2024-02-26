@@ -445,7 +445,7 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
         nb_layers  = np.random.randint(args.nb_layers_min,args.nb_layers_max) 
         layers = np.linspace(1,args.layers, nb_layers)
     layers = layers[::-1]
-    nb_particles = 5000
+    nb_particles = 1500
     Rmin = 1.4044198827808083E-002
     Rmax = 5.7470355839992146E-002
     Px = np.random.uniform(1.96,2.5) # width of the particle generation
