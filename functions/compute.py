@@ -15,8 +15,8 @@ def computer(deformable=0, freq_disp=1000):
     mhyp = 0 # modeling hypothesis ( 1 = plain strain, 2 = plain stress, 3 = axi-symmetry)
     deformable = deformable
     # solver and params
-    dt = 1.e-4
-    nb_steps = 40000
+    dt = 1.e-3
+    nb_steps = 4000
     theta = 0.5
     freq_write = nb_steps//4 # frequency of writing results
     freq_disp = freq_disp # frequency of visualization
@@ -41,12 +41,10 @@ def computer(deformable=0, freq_disp=1000):
     chipy.OpenPostproFiles()
 
     ## simulation
-    #chipy.POLYR_TopologyAngle(10)
-    if model !='SPHER': 
-        chipy.PRPRx_UseCpCundallDetection(100) # use Cundall detection
-        chipy.PRPRx_LowSizeArrayPolyr(10)
-        chipy.PRPRx_ShrinkPolyrFaces(1.e-2)
-        chipy.POLYR_TopologyAngle(10)
+    chipy.POLYR_TopologyAngle(10)
+    chipy.PRPRx_ShrinkPolyrFaces(1.e-2)
+    if model !='SPHER': chipy.PRPRx_UseCpCundallDetection(100) # use Cundall detection
+    chipy.PRPRx_LowSizeArrayPolyr(10)
 
     chipy.ComputeMass()
     chipy.ComputeBulk()

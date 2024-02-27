@@ -445,7 +445,7 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
         nb_layers  = np.random.randint(args.nb_layers_min,args.nb_layers_max) 
         layers = np.linspace(1,args.layers, nb_layers)
     layers = layers[::-1]
-    nb_particles = 1500
+    nb_particles = 2000
     Rmin = 1.4044198827808083E-002
     Rmax = 5.7470355839992146E-002
     Px = np.random.uniform(1.96,2.5) # width of the particle generation
@@ -466,6 +466,8 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
     vx =0.
     pre.writeEvolution(f=imposedVx, instants=np.linspace(0., 2*t1, 1000) ,path=par_dir+'DATBOX/', name='vx.dat')
     pre.writeEvolution(f=imposedVxneg, instants=np.linspace(0., 2*t1, 1000) ,path=par_dir+'DATBOX/', name='vx2.dat')
+
+    pre.writeEvolution(f=imposedVz, instants=np.linspace(0., 2*t1, 1000) ,path=par_dir+'DATBOX/', name='vz.dat')
     
 
 
@@ -509,6 +511,16 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
         trapezoid2.rotate(description='axis', alpha=3.14, axis=[0,0,1])
         bodies+=trapezoid2
 
+        # top compactor
+        # meshed_top = pre.readMesh('compact_top.msh', dim=3)
+        # top_compactor = pre.volumicMeshToRigid3D(meshed_top, material=mats['TDURT'], model=mods['rigid'], color='BLUEx')
+        # top_compactor.imposeDrivenDof(component=[2,3,4,5,6],dofty='vlocy')
+        # top_compactor.imposeDrivenDof(component=3,dofty='vlocy',description='evolution',evolutionFile='vz.dat')
+
+        # top_compactor.translate(dz = 3)
+        # bodies+=top_compactor
+        
+
 
 
     if args.ballast:
@@ -517,26 +529,23 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
         track_every = 50
 
     # tact dict and container
-    dict_tact = {'iqsc0': {'law':'IQS_CLB_g0', 'fric':pp},
-                 'iqsc1': {'law':'IQS_CLB_g0', 'fric':pw},
-                'iqsc2': {'law':'IQS_CLB_g0', 'fric':pt},
-                'iqsc3': {'law':'IQS_CLB_g0', 'fric':pt},
-                'iqsc4': {'law':'IQS_CLB_g0', 'fric':pt}}
+    dict_tact = {'iqsc0': {'law':'IQS_CLB', 'fric':pp},
+                 'iqsc1': {'law':'IQS_CLB', 'fric':pw}}
     tacts = create_tact_behavs(dict_tact)
 
     # see dict and container
     dict_pp = {'vpp': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc0'],
                         'CorpsAntagoniste':'RBDY3', 'antagoniste':'POLYR','colorAntagoniste':'BLUEx',
-                        'alert':0.001}}
+                        'alert':0.0001}}
     dict_pw = {'vpw': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc1'],
                         'CorpsAntagoniste':'RBDY3', 'antagoniste':'PLANx','colorAntagoniste':'WALLx',
-                        'alert':0.001}}
-    dict_ma = {'vma': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'REDx','behav':tacts['iqsc3'],
-                        'CorpsAntagoniste':'RBDY3', 'antagoniste':'PLANx','colorAntagoniste':'WALLx',
-                        'alert':0.001}}
-    dict_mb = { 'vma': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc4'],
-                        'CorpsAntagoniste':'RBDY3', 'antagoniste':'POLYR','colorAntagoniste':'REDxx',
-                        'alert':0.001}}
+                        'alert':0.0001}}
+    # dict_ma = {'vma': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'REDx','behav':tacts['iqsc3'],
+    #                     'CorpsAntagoniste':'RBDY3', 'antagoniste':'PLANx','colorAntagoniste':'WALLx',
+    #                     'alert':0.001}}
+    # dict_mb = { 'vma': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc4'],
+    #                     'CorpsAntagoniste':'RBDY3', 'antagoniste':'POLYR','colorAntagoniste':'REDxx',
+    #                     'alert':0.001}}
     dict_see = {}
     if args.wall: dict_see.update(dict_pp)
     if args.ballast: dict_see.update(dict_pw)
@@ -584,7 +593,7 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
 
 t0=2.
 t1 =3.
-vx =-0.5
+vx =-0.3
 
 def imposedVx(t):
     # 0 until t0
@@ -593,6 +602,9 @@ def imposedVx(t):
     # linear growing between [t0, t1]
     elif t > t0 and t <= t1:
         return vx
+    # leak = 0
+    elif t > t1 and t <= t1 + 0.1:
+        return 0.
     # constant value afterward
     else:
         return -vx
@@ -604,6 +616,24 @@ def imposedVxneg(t):
     # linear growing between [t0, t1]
     elif t > t0 and t <= t1:
         return -vx
+    elif t > t1 and t <= t1 + 0.1:
+        return 0.
     # constant value afterward
     else:
         return vx
+    
+vz=2.2
+t2 = 2.5
+def imposedVz(t):
+    # 0 until t0
+    if t <= 1.0:
+        return 0.
+    # linear growing between [t0, t1]
+    elif t > 1. and t <= t2:
+        return -vz
+    elif t > t2 and t <= t2 + 0.1:
+        return 0.
+    else:
+        return vz/100.
+
+        
