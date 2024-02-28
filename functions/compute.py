@@ -22,13 +22,13 @@ def computer(deformable=0, freq_disp=1000):
     freq_disp = freq_disp # frequency of visualization
     Rloc_tol = 5.e-2 # interaction parameter
     # nlgs
-    tol = 1.666e-4
+    tol = 1.666e-3
     relax = 1.0
     norm = 'Quad'
     gs_it1 = 100 # min number of Gauss-Seidel iterations
     gs_it2 = 10 # max number of Gauss-Seidel iterations (gs_it1*gs_it2)
     # solver_type = 'Stored_Delassus_Loops'
-    solver_type = 'Exchange_Local_Global'
+    solver_type = 'Stored_Delassus_Loops'
 
     ## read and loading data
     chipy.SetDimension(dim,mhyp)
@@ -42,7 +42,6 @@ def computer(deformable=0, freq_disp=1000):
 
     ## simulation
     chipy.POLYR_TopologyAngle(10)
-    chipy.PRPRx_ShrinkPolyrFaces(1.e-2)
     if model !='SPHER': chipy.PRPRx_UseCpCundallDetection(100) # use Cundall detection
     chipy.PRPRx_LowSizeArrayPolyr(10)
 

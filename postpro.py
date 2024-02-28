@@ -65,8 +65,8 @@ def hot_vector_plate_conection(out_dir, n_nodes):
 
 def gravitational_force_creator(m, g=9.8):
     f = np.zeros((m.shape[0], 3))
-    # first one is rigid plate
-    f[1:, 2] = -m[1:, 0]*g
+    # first five is rigid plate, and the sixth seven are the compactor
+    f[5:, 2] = -m[5:, 0]*g
     return f
 def stress_calculation(edge_features):
    reaction_forces = edge_features[:, 0:3]

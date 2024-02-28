@@ -174,8 +174,11 @@ def mass_writer(par_dir, density = 2900, plate=True):
     # ignore the first
     samples = samples[1:]
     mass = np.array([])
+    nb_plates = 5
     # append mass of plate 
-    if plate: mass = np.append(mass, 1.)
+    if plate: 
+        for _ in range(nb_plates):
+            mass = np.append(mass, 1.)
     density = density
     with open(par_dir + 'OUTBOX/MASS.DAT', 'w') as file:
         for sample in samples:
@@ -281,7 +284,7 @@ def plate_connection(par_dir):
 def gravitational_force_creator(m, g=9.8):
     f = np.zeros((m.shape[0], 3))
     # first one is rigid plate
-    f[1:,2] = -m*g
+    f[5:,2] = -m*g
     return f
 
 

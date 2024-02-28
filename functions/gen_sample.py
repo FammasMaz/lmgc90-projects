@@ -445,13 +445,13 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
         nb_layers  = np.random.randint(args.nb_layers_min,args.nb_layers_max) 
         layers = np.linspace(1,args.layers, nb_layers)
     layers = layers[::-1]
-    nb_particles = 2000
+    nb_particles = 8000
     Rmin = 1.4044198827808083E-002
     Rmax = 5.7470355839992146E-002
     Px = np.random.uniform(1.96,2.5) # width of the particle generation
     Py = np.random.uniform(0.4,0.6) # height of the particle generation
 #    Pz = np.random.uniform(0.18,0.25) # depth of the particle generation
-    Pz = np.random.uniform(2,3) # depth of the particle generation
+    Pz = np.random.uniform(3,4) # depth of the particle generation
 
 
     # friction params
@@ -493,6 +493,38 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
         #wall_bodies.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
         bodies+=wall_bodies
 
+        ## create boundaries
+        b1 = pre.rigidPlan(lx/2, 0.3,0.05,center=[0.,0.,0.], material=mats['TDURx'], model=mods['rigid'], color='WALLx')
+        #b1.rotate(description='axis', alpha=np.deg2rad(90), axis=[0,0,1])   
+        b1.rotate(description='axis', alpha=np.deg2rad(90), axis=[1,0,0])
+        b1.translate(dz = 0.1 + (0.3/2.), dy = -ly/2.)
+        b1.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
+        bodies+=b1   
+        b2 = pre.rigidPlan(lx/2, 0.3,0.05,center=[0.,0.,0.], material=mats['TDURx'], model=mods['rigid'], color='WALLx')
+        b2.rotate(description='axis', alpha=np.deg2rad(90), axis=[1,0,0])
+        b2.translate(dz = 0.1 + (0.3/2.), dy = ly/2.)
+        b2.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
+        bodies+=b2
+        b3 = pre.rigidPlan(0.3,ly/2.,0.05,center=[0.,0.,0.], material=mats['TDURx'], model=mods['rigid'], color='WALLx')
+        b3.rotate(description='axis', alpha=np.deg2rad(90), axis=[0,1,0])
+        b3.translate(dz = 0.1 + (0.3/2.), dx = lx/2.)
+        b3.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
+        bodies+=b3
+        b4 = pre.rigidPlan(0.3,ly/2.,0.05,center=[0.,0.,0.], material=mats['TDURx'], model=mods['rigid'], color='WALLx')
+        b4.rotate(description='axis', alpha=np.deg2rad(90), axis=[0,1,0])
+        b4.translate(dz = 0.1 + (0.3/2.), dx = -lx/2.)
+        b4.imposeDrivenDof(component=[1,2,3,4,5,6],dofty='vlocy')
+        bodies+=b4
+
+
+        
+
+
+
+
+
+
+
     if args.trap:
         #trapezoid = trapezoid_generator(txb,txt, ty, tz, mats['TDURx'], mods['rigid'])
         #mesh from file
@@ -512,13 +544,13 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
         bodies+=trapezoid2
 
         # top compactor
-        # meshed_top = pre.readMesh('compact_top.msh', dim=3)
-        # top_compactor = pre.volumicMeshToRigid3D(meshed_top, material=mats['TDURT'], model=mods['rigid'], color='BLUEx')
-        # top_compactor.imposeDrivenDof(component=[2,3,4,5,6],dofty='vlocy')
-        # top_compactor.imposeDrivenDof(component=3,dofty='vlocy',description='evolution',evolutionFile='vz.dat')
+        meshed_top = pre.readMesh('compact_top.msh', dim=3)
+        top_compactor = pre.volumicMeshToRigid3D(meshed_top, material=mats['TDURT'], model=mods['rigid'], color='BLUEx')
+        top_compactor.imposeDrivenDof(component=[2,3,4,5,6],dofty='vlocy')
+        top_compactor.imposeDrivenDof(component=3,dofty='vlocy',description='evolution',evolutionFile='vz.dat')
 
-        # top_compactor.translate(dz = 3)
-        # bodies+=top_compactor
+        top_compactor.translate(dz = 3)
+        bodies+=top_compactor
         
 
 
@@ -607,7 +639,7 @@ def imposedVx(t):
         return 0.
     # constant value afterward
     else:
-        return -vx
+        return -vx*2.
     
 def imposedVxneg(t):
     # 0 until t0
@@ -620,7 +652,7 @@ def imposedVxneg(t):
         return 0.
     # constant value afterward
     else:
-        return vx
+        return vx*2.
     
 vz=2.2
 t2 = 2.5
