@@ -110,6 +110,55 @@ def ballast_generator_custom(ballast_bib, layers, nb_particles, Px, Py, Pz, mat,
   return bodies, total_particles, particle_char
 
 
+def ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widthb, mat, model, color='BLUEx'):
+    bodies = pre.avatars()
+    lballast = get_lbody(ballast_bib)
+    coor = pre.cubicLattice3D(nbx, nby, nlayer, dgrid, x0=-lengthb/2, y0=-widthb/2, z0=0.01)
+    x = coor[0::3]
+    y = coor[1::3]  
+    z = coor[2::3]
+    i=0
+    Ngrains = nbx*nby*nlayer
+    for i in range(Ngrains):
+        rand = int(np.random.random()*len(lballast))
+        body = pre.rigidPolyhedron(model = model, material=mat, color=color, generation_type='full', vertices=lballast[rand][0], faces=lballast[rand][1])
+        r = np.random.random(3)*np.pi
+        body.rotate(phi=r[0],theta=r[1],psi=r[2])
+        body.translate(dx=x[i], dy=y[i], dz=z[i])
+        i+=1
+        bodies.addAvatar(body)
+    return bodies, z
+
+def plate_definition(dict, mod, mat):
+   bodies = pre.avatars()
+   for k, v in dict.items():
+      # the key is the name of the plate
+      plate = pre.avatar(dimension=3)
+      plate.addBulk(pre.rigid3d())
+      # add node
+      plate.addNode(pre.node(np.array([0.,0.,0.]), 1))
+      # define Groups
+      plate.defineGroups()
+      plate.defineModel(model=mod)
+      plate.defineMaterial(material=mat)
+      # define contactors with respect to dic value
+
+      plate.addContactors('PLANx', color='VERTx', axe1=v['axe1'], axe2=v['axe2'], axe3=v['axe3'], group='all')
+      plate.computeRigidProperties()
+      plate.translate(dx=v['x'], dy=v['y'], dz=v['z'])
+      plate.rotate(center=plate.nodes[1].coor,**v['rotate']) if 'rotate' in v else None
+      plate.imposeDrivenDof(dofty='vlocy',**v['imposeDrivenDof'])
+      bodies.addAvatar(plate)
+   return bodies
+
+
+
+
+
+
+        
+
+
 def get_lbody(file):
   f=open(file,'r')
   nbbody= int(f.readline())

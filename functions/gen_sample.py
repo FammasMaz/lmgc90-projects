@@ -611,15 +611,142 @@ def random_compacted_sncf(par_dir, seed=687, visu=False, step=1, args=None):
             for row in zip(*par_char.values()):
                 f.write('   '.join(str(x) for x in row)+'\n')
         return dict_sample, params
-    
-
-
-
-
 
     else: return None, params
 
+def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
+    dim=3
+    # box dimensions
+    thick = 0.01
+    lengthb = 1.
+    widthb = 1.
+    heightb = 1.
+
+    # ballast params
+    ballast_bib = 'BIBLIGRAINS/BIBLIGRAINS.DAT'
+    dgrid = 0.1
+    nbx = int(lengthb/dgrid)
+    nby = int(widthb/dgrid)
+    nlayer = int(20*1.8/0.4)
+
+
+
     
+    # material dict and container
+    dict_mat = {'TDURx': {'materialType':'RIGID', 'density':2700.}}
+    mats = create_materials(dict_mat)
+
+    # model dict and container
+    dict_mod = {'rigid': {'physics':'MECAx', 'element':'Rxx3D', 'dimension':dim}}
+    mods = create_models(dict_mod)
+
+    ## Avatar generation
+
+    bodies = pre.avatars()
+    if args.ballast:
+
+        bodies, z = ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widthb, mats['TDURx'], mods['rigid'])
+    
+    if args.closet:
+        dict = {
+        'left':{
+            'axe1': lengthb/2 + 0.1,
+            'axe2': heightb/2,
+            'axe3': thick/2,
+            'x': 0.,
+            'y': -widthb/2 - thick/2,
+            'z': heightb/2,
+            'rotate':{'theta': -0.5*np.pi},
+            'imposeDrivenDof': {'component':[1,2,3,4,5,6]}
+        },
+        'right':{
+            'axe1': lengthb/2 + 0.1,
+            'axe2': heightb/2,
+            'axe3': thick/2,
+            'x': 0.,
+            'y': widthb/2 + thick/2,
+            'z': heightb/2,
+            'rotate':{'theta': 0.5*np.pi},
+            'imposeDrivenDof': {'component':[1,2,3,4,5,6]}
+        },
+        'front':{
+            'axe1': heightb/2 ,
+            'axe2': widthb/2 + 0.1,
+            'axe3': thick/2,
+            'x': lengthb/2 + thick/2,
+            'y': 0.,
+            'z': heightb/2,
+            'rotate':{'description':'axis', 'alpha': -0.5*np.pi, 'axis':[0.,1.,0.]},
+            'imposeDrivenDof': {'component':[1,2,3,4,5,6]}
+        },
+        'back':{
+            'axe1': heightb/2 ,
+            'axe2': widthb/2 + 0.1,
+            'axe3': thick/2,
+            'x': -lengthb/2 - thick/2,
+            'y': 0.,
+            'z': heightb/2,
+            'rotate':{'description':'axis', 'alpha': 0.5*np.pi, 'axis':[0.,1.,0.]},
+            'imposeDrivenDof': {'component':[1,2,3,4,5,6]}
+        },
+        'bottom':{
+            'axe1': lengthb/2+0.1,
+            'axe2': widthb/2+0.1,
+            'axe3': thick/2,
+            'x': 0.,
+            'y': 0.,
+            'z': -thick/2.,
+            'imposeDrivenDof': {'component':[1,2,3,4,5,6]}
+        },
+        'top':{
+            'axe1': lengthb/2+0.1,
+            'axe2': widthb/2+0.1,
+            'axe3': thick/2,
+            'x': 0.,
+            'y': 0.,
+            'z': max(z)+dgrid/2.,
+            'rotate':{'theta': np.pi},
+            'imposeDrivenDof': {'component':[1,2,4,5,6]}
+        }
+        }
+    bodies_plates = plate_definition(dict, mat=mats['TDURx'], mod=mods['rigid'])
+    if args.visu:pre.visuAvatars(bodies)
+    bodies+=bodies_plates
+
+    # tact dict and container
+    dict_tact = {'iqsc0': {'law':'IQS_CLB', 'fric':0.0},
+                 'iqsc1': {'law':'IQS_CLB', 'fric':0.1},
+                 'iqsc3': {'law':'IQS_CLB', 'fric':0.8}}
+    tacts = create_tact_behavs(dict_tact)
+
+    # see dict and container
+    dict_pp = {'vpp': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc1'],
+                        'CorpsAntagoniste':'RBDY3', 'antagoniste':'POLYR','colorAntagoniste':'BLUEx',
+                        'alert':0.001}}
+
+    dict_pw = {'vpw': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc1'],
+                        'CorpsAntagoniste':'RBDY3', 'antagoniste':'PLANx','colorAntagoniste':'VERTx',
+                        'alert':0.001}}
+    
+    dict_see = {}
+    if args.ballast: dict_see.update(dict_pp)
+    if args.closet: dict_see.update(dict_pw)
+
+    svs = create_see_tables(dict_see)
+    post_dict = {'CONTACT FORCE DISTRIBUTION': {'step':step, 'val':1},
+                'COORDINATION NUMBER': {'step':step},
+                'AVERAGE VELOCITY EVOLUTION': {'step':step, 'color':'BLUEx'},
+                'KINETIC ENERGY': {'step':step},
+                'DISSIPATED ENERGY': {'step':step}
+                }
+    post = create_postpro_commands(post_dict)
+    pre.writeDatbox(dim,mats,mods,bodies,tacts,svs,post=post, datbox_path=os.path.join(par_dir,'DATBOX'))
+    return None
+
+
+
+
+
 
 
 
