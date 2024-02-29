@@ -16,7 +16,7 @@ def computer(deformable=0, freq_disp=1000):
     deformable = deformable
     # solver and params
     dt = 1.e-3
-    nb_steps = 4000
+    nb_steps = 4500
     theta = 0.5
     freq_write = nb_steps//4 # frequency of writing results
     freq_disp = freq_disp # frequency of visualization

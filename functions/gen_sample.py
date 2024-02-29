@@ -626,8 +626,9 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
     ballast_bib = 'BIBLIGRAINS/BIBLIGRAINS.DAT'
     dgrid = 0.1
     nbx = int(lengthb/dgrid)
-    nby = int(widthb/dgrid)
-    nlayer = int(20*1.8/0.4)
+    # minus the width decreased by slanted plates
+    nby = int(widthb/dgrid) - int(nbx*np.sin(np.deg2rad(20))) + 1
+    nlayer = int(30*1.8/0.4)
 
 
 
@@ -656,8 +657,10 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'x': 0.,
             'y': -widthb/2 - thick/2,
             'z': heightb/2,
+            'rotate_Ax':{ 'theta': np.deg2rad(-10)},
             'rotate':{'theta': -0.5*np.pi},
-            'imposeDrivenDof': {'component':[1,2,3,4,5,6]}
+            'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
+            'DrivenDof':{'vx': -2,'name':'vleft','component':2,'path':par_dir}, 
         },
         'right':{
             'axe1': lengthb/2 + 0.1,
@@ -666,12 +669,15 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'x': 0.,
             'y': widthb/2 + thick/2,
             'z': heightb/2,
+            'rotate_Ax':{ 'theta': np.deg2rad(10)},
             'rotate':{'theta': 0.5*np.pi},
-            'imposeDrivenDof': {'component':[1,2,3,4,5,6]}
+            'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
+            'DrivenDof':{'vx': 2,'name':'vright','component':2,'path':par_dir}, 
+
         },
         'front':{
             'axe1': heightb/2 ,
-            'axe2': widthb/2 + 0.1,
+            'axe2': widthb/2 + 0.5,
             'axe3': thick/2,
             'x': lengthb/2 + thick/2,
             'y': 0.,
@@ -681,7 +687,7 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
         },
         'back':{
             'axe1': heightb/2 ,
-            'axe2': widthb/2 + 0.1,
+            'axe2': widthb/2 + 0.5,
             'axe3': thick/2,
             'x': -lengthb/2 - thick/2,
             'y': 0.,
@@ -690,8 +696,8 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'imposeDrivenDof': {'component':[1,2,3,4,5,6]}
         },
         'bottom':{
-            'axe1': lengthb/2+0.1,
-            'axe2': widthb/2+0.1,
+            'axe1': 2+0.1,
+            'axe2': 2+0.1,
             'axe3': thick/2,
             'x': 0.,
             'y': 0.,
@@ -706,12 +712,15 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'y': 0.,
             'z': max(z)+dgrid/2.,
             'rotate':{'theta': np.pi},
-            'imposeDrivenDof': {'component':[1,2,4,5,6]}
+            'imposeDrivenDof': {'component':[1,2,4,5,6]},
+            'DrivenDof':{'vx': 3,'name':'vtop','component':3,'path':par_dir, 'vinit': -9.8}, 
+
         }
         }
     bodies_plates = plate_definition(dict, mat=mats['TDURx'], mod=mods['rigid'])
-    if args.visu:pre.visuAvatars(bodies)
+    
     bodies+=bodies_plates
+    if args.visu:pre.visuAvatars(bodies)
 
     # tact dict and container
     dict_tact = {'iqsc0': {'law':'IQS_CLB', 'fric':0.0},
@@ -794,5 +803,12 @@ def imposedVz(t):
         return 0.
     else:
         return vz/100.
+    
+
+def imposedv(t):
+    if t > 4.0 and t <= 4.2:
+        return vx
+    else:
+        return 0.
 
         

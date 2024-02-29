@@ -124,7 +124,7 @@ def ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widt
         body = pre.rigidPolyhedron(model = model, material=mat, color=color, generation_type='full', vertices=lballast[rand][0], faces=lballast[rand][1])
         r = np.random.random(3)*np.pi
         body.rotate(phi=r[0],theta=r[1],psi=r[2])
-        body.translate(dx=x[i], dy=y[i], dz=z[i])
+        body.translate(dx=x[i], dy=y[i]+ 0.1, dz=z[i])
         i+=1
         bodies.addAvatar(body)
     return bodies, z
@@ -145,12 +145,30 @@ def plate_definition(dict, mod, mat):
 
       plate.addContactors('PLANx', color='VERTx', axe1=v['axe1'], axe2=v['axe2'], axe3=v['axe3'], group='all')
       plate.computeRigidProperties()
+      if 'rotate_Ax' in v:
+         plate.rotate(center=plate.nodes[1].coor,**v['rotate_Ax'])
       plate.translate(dx=v['x'], dy=v['y'], dz=v['z'])
       plate.rotate(center=plate.nodes[1].coor,**v['rotate']) if 'rotate' in v else None
+
       plate.imposeDrivenDof(dofty='vlocy',**v['imposeDrivenDof'])
+      if 'DrivenDof' in v:
+        def imposedv(t):
+          if t > 4.0:
+            return vx
+          else:
+            # return gravity
+             return vinit * t
+          
+        vx = v['DrivenDof']['vx']
+        vinit = 0. if 'vinit' not in v['DrivenDof'] else v['DrivenDof']['vinit']
+        fname = v['DrivenDof']['name'] + '.dat'
+        if 'start' not in v['DrivenDof']:start = 0.
+        else: start = v['DrivenDof']['start']
+        pre.writeEvolution(f=imposedv, instants=np.linspace(start,4.5, 1000), path=v['DrivenDof']['path'] + 'DATBOX/',name=fname)
+        plate.imposeDrivenDof(component=v['DrivenDof']['component'], description='evolution',dofty='vlocy', evolutionFile=fname)
+      
       bodies.addAvatar(plate)
    return bodies
-
 
 
 

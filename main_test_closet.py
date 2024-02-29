@@ -22,8 +22,9 @@ parser.add_argument('--visu', type=str2bool, default=False, help='Visualize the 
 parser.add_argument('--closet', type=str2bool, default=True, help='Add wall')
 parser.add_argument('--ballast', type=str2bool, default=False, help='Add ballast')
 parser.add_argument("--i", "--iteration", dest="iteration", default=801, type=int, help="Iteration number")
-parser.add_argument("--v", "--verbose", dest="verbose", default=True, type=bool, help="Verbose")
+parser.add_argument("--v", "--verbose", dest="verbose", default=True, type=str2bool, help="Verbose")
 parser.add_argument("--f", "--freq_display", dest="freq_display", default=1000, type=int, help="Frequency of display")
+parser.add_argument("--c", "--compute", dest="compute", default=True, type=str2bool, help="Compute")
 
 # thats it
 args = parser.parse_args()
@@ -79,6 +80,7 @@ while i < 850:
     #    print(f'Failed at iteration {i}: trying again...')
     #    continue
     #shutil.rmtree('DISPLAY') if i % 10 != 0 else None
-    failed=computer(freq_disp=args.freq_display)
+    if args.compute:failed=computer(freq_disp=args.freq_display)
+    else: break
     i += 1  # Increment i after the try-except block
     os.chdir('../../../')
