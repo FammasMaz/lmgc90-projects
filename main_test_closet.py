@@ -25,6 +25,7 @@ parser.add_argument("--i", "--iteration", dest="iteration", default=801, type=in
 parser.add_argument("--v", "--verbose", dest="verbose", default=True, type=str2bool, help="Verbose")
 parser.add_argument("--f", "--freq_display", dest="freq_display", default=1000, type=int, help="Frequency of display")
 parser.add_argument("--c", "--compute", dest="compute", default=True, type=str2bool, help="Compute")
+parser.add_argument("--N", "--n_layers", dest="n_layers", default=10, type=int, help="Number of layers")
 
 # thats it
 args = parser.parse_args()

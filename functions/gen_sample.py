@@ -627,8 +627,8 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
     dgrid = 0.1
     nbx = int(lengthb/dgrid)
     # minus the width decreased by slanted plates
-    nby = int(widthb/dgrid) - int(nbx*np.sin(np.deg2rad(20))) + 1
-    nlayer = int(30*1.8/0.4)
+    nby = int(widthb/dgrid) - int(nbx*np.sin(np.deg2rad(20))) -1
+    nlayer = int(args.n_layers*1.8/0.4)
 
 
 

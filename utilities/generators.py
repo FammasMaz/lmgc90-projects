@@ -124,7 +124,7 @@ def ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widt
         body = pre.rigidPolyhedron(model = model, material=mat, color=color, generation_type='full', vertices=lballast[rand][0], faces=lballast[rand][1])
         r = np.random.random(3)*np.pi
         body.rotate(phi=r[0],theta=r[1],psi=r[2])
-        body.translate(dx=x[i], dy=y[i]+ 0.1, dz=z[i])
+        body.translate(dx=x[i], dy=y[i]+ 0.15, dz=z[i])
         i+=1
         bodies.addAvatar(body)
     return bodies, z
@@ -164,7 +164,7 @@ def plate_definition(dict, mod, mat):
         fname = v['DrivenDof']['name'] + '.dat'
         if 'start' not in v['DrivenDof']:start = 0.
         else: start = v['DrivenDof']['start']
-        pre.writeEvolution(f=imposedv, instants=np.linspace(start,4.5, 1000), path=v['DrivenDof']['path'] + 'DATBOX/',name=fname)
+        pre.writeEvolution(f=imposedv, instants=np.linspace(start,4.5, 9000), path=v['DrivenDof']['path'] + 'DATBOX/',name=fname)
         plate.imposeDrivenDof(component=v['DrivenDof']['component'], description='evolution',dofty='vlocy', evolutionFile=fname)
       
       bodies.addAvatar(plate)
