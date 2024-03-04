@@ -618,20 +618,21 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
     dim=3
     # box dimensions
     thick = 0.01
-    lengthb = 1.
-    widthb = 1.
+    lengthb = 1.435
+    widthb = 0.8
     heightb = 1.
 
     # ballast params
     ballast_bib = 'BIBLIGRAINS/BIBLIGRAINS.DAT'
     dgrid = 0.1
-    nbx = int(lengthb/dgrid)
-    # minus the width decreased by slanted plates
-    nby = int(widthb/dgrid) - int(nbx*np.sin(np.deg2rad(20))) -1
-    nlayer = int(args.n_layers*1.8/0.4)
-
-
-
+    angle_for_plate = args.angle_for_plate
+    nbx = int(lengthb/dgrid) -1
+    # minus the width decreased by slanted plates - 
+    nby = int(widthb/dgrid  )# override
+    if angle_for_plate != 0:
+        # minus the width decreased by slanted plates -
+        nby =nby - int((lengthb*np.tan(np.deg2rad(angle_for_plate)))/dgrid) -1 
+    nlayer = int(args.n_layers)
     
     # material dict and container
     dict_mat = {'TDURx': {'materialType':'RIGID', 'density':2700.}}
@@ -646,7 +647,7 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
     bodies = pre.avatars()
     if args.ballast:
 
-        bodies, z = ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widthb, mats['TDURx'], mods['rigid'])
+        bodies, z = ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widthb, mats['TDURx'], mods['rigid'], angle_for_plate=angle_for_plate)
     
     if args.closet:
         dict = {
@@ -656,8 +657,8 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'axe3': thick/2,
             'x': 0.,
             'y': -widthb/2 - thick/2,
-            'z': heightb/2,
-            'rotate_Ax':{ 'theta': np.deg2rad(-10)},
+            'z': heightb/2.,
+            'rotate_Ax':{ 'theta': np.deg2rad(-angle_for_plate)},
             'rotate':{'theta': -0.5*np.pi},
             'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
             'DrivenDof':{'vx': -2,'name':'vleft','component':2,'path':par_dir}, 
@@ -668,8 +669,8 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'axe3': thick/2,
             'x': 0.,
             'y': widthb/2 + thick/2,
-            'z': heightb/2,
-            'rotate_Ax':{ 'theta': np.deg2rad(10)},
+            'z': heightb/2.,
+            'rotate_Ax':{ 'theta': np.deg2rad(angle_for_plate)},
             'rotate':{'theta': 0.5*np.pi},
             'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
             'DrivenDof':{'vx': 2,'name':'vright','component':2,'path':par_dir}, 
@@ -681,9 +682,11 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'axe3': thick/2,
             'x': lengthb/2 + thick/2,
             'y': 0.,
-            'z': heightb/2,
+            'z': heightb/2.,
             'rotate':{'description':'axis', 'alpha': -0.5*np.pi, 'axis':[0.,1.,0.]},
-            'imposeDrivenDof': {'component':[1,2,3,4,5,6]}
+            'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
+            'DrivenDof':{'vx': 2,'name':'vfront','component':1,'path':par_dir}, 
+
         },
         'back':{
             'axe1': heightb/2 ,
@@ -691,9 +694,10 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'axe3': thick/2,
             'x': -lengthb/2 - thick/2,
             'y': 0.,
-            'z': heightb/2,
+            'z': heightb/2.,
             'rotate':{'description':'axis', 'alpha': 0.5*np.pi, 'axis':[0.,1.,0.]},
-            'imposeDrivenDof': {'component':[1,2,3,4,5,6]}
+            'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
+            'DrivenDof':{'vx': -2,'name':'vback','component':1,'path':par_dir}, 
         },
         'bottom':{
             'axe1': 2+0.1,
@@ -712,12 +716,12 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'y': 0.,
             'z': max(z)+dgrid/2.,
             'rotate':{'theta': np.pi},
-            'imposeDrivenDof': {'component':[1,2,4,5,6]},
-            'DrivenDof':{'vx': 3,'name':'vtop','component':3,'path':par_dir, 'vinit': -9.8}, 
-
+            'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
+            #'DrivenDof':{'vx': 3,'name':'vtopleft','component':2,'path':par_dir, 'vinit': -9.8, 'start': 0.}, 
+            'pullup':{'acc': -9.8, 'mass': 2700 * lengthb*widthb *thick, 'path':par_dir,'component':3, 'name':'ftop'},
         }
         }
-    bodies_plates = plate_definition(dict, mat=mats['TDURx'], mod=mods['rigid'])
+    bodies_plates = plate_definition(dict, mat=mats['TDURx'], mod=mods['rigid'],dt=args.dt, time=args.time)
     
     bodies+=bodies_plates
     if args.visu:pre.visuAvatars(bodies)
@@ -731,22 +735,18 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
     # see dict and container
     dict_pp = {'vpp': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc1'],
                         'CorpsAntagoniste':'RBDY3', 'antagoniste':'POLYR','colorAntagoniste':'BLUEx',
-                        'alert':0.001}}
+                        'alert':1.4044198827808083E-003}}
 
     dict_pw = {'vpw': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc1'],
                         'CorpsAntagoniste':'RBDY3', 'antagoniste':'PLANx','colorAntagoniste':'VERTx',
-                        'alert':0.001}}
-    
+                        'alert':1.4044198827808083E-003}}
+
     dict_see = {}
     if args.ballast: dict_see.update(dict_pp)
     if args.closet: dict_see.update(dict_pw)
 
     svs = create_see_tables(dict_see)
-    post_dict = {'CONTACT FORCE DISTRIBUTION': {'step':step, 'val':1},
-                'COORDINATION NUMBER': {'step':step},
-                'AVERAGE VELOCITY EVOLUTION': {'step':step, 'color':'BLUEx'},
-                'KINETIC ENERGY': {'step':step},
-                'DISSIPATED ENERGY': {'step':step}
+    post_dict = {'CONTACT FORCE DISTRIBUTION': {'step':step, 'val':1}
                 }
     post = create_postpro_commands(post_dict)
     pre.writeDatbox(dim,mats,mods,bodies,tacts,svs,post=post, datbox_path=os.path.join(par_dir,'DATBOX'))

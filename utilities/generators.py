@@ -110,7 +110,7 @@ def ballast_generator_custom(ballast_bib, layers, nb_particles, Px, Py, Pz, mat,
   return bodies, total_particles, particle_char
 
 
-def ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widthb, mat, model, color='BLUEx'):
+def ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widthb, mat, model, color='BLUEx', angle_for_plate=0.):
     bodies = pre.avatars()
     lballast = get_lbody(ballast_bib)
     coor = pre.cubicLattice3D(nbx, nby, nlayer, dgrid, x0=-lengthb/2, y0=-widthb/2, z0=0.01)
@@ -124,12 +124,12 @@ def ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widt
         body = pre.rigidPolyhedron(model = model, material=mat, color=color, generation_type='full', vertices=lballast[rand][0], faces=lballast[rand][1])
         r = np.random.random(3)*np.pi
         body.rotate(phi=r[0],theta=r[1],psi=r[2])
-        body.translate(dx=x[i], dy=y[i]+ 0.15, dz=z[i])
+        body.translate(dx=x[i]+0.1, dy=y[i]+0.1 + np.tan(np.deg2rad(angle_for_plate)/2), dz=z[i])
         i+=1
         bodies.addAvatar(body)
     return bodies, z
 
-def plate_definition(dict, mod, mat):
+def plate_definition(dict, mod, mat, dt, time):
    bodies = pre.avatars()
    for k, v in dict.items():
       # the key is the name of the plate
@@ -142,8 +142,8 @@ def plate_definition(dict, mod, mat):
       plate.defineModel(model=mod)
       plate.defineMaterial(material=mat)
       # define contactors with respect to dic value
-
-      plate.addContactors('PLANx', color='VERTx', axe1=v['axe1'], axe2=v['axe2'], axe3=v['axe3'], group='all')
+      color = 'VERTx' if 'color' not in v else v['color']
+      plate.addContactors('PLANx', color=color, axe1=v['axe1'], axe2=v['axe2'], axe3=v['axe3'], group='all')
       plate.computeRigidProperties()
       if 'rotate_Ax' in v:
          plate.rotate(center=plate.nodes[1].coor,**v['rotate_Ax'])
@@ -153,7 +153,7 @@ def plate_definition(dict, mod, mat):
       plate.imposeDrivenDof(dofty='vlocy',**v['imposeDrivenDof'])
       if 'DrivenDof' in v:
         def imposedv(t):
-          if t > 4.0:
+          if t > (time-0.5):
             return vx
           else:
             # return gravity
@@ -164,9 +164,19 @@ def plate_definition(dict, mod, mat):
         fname = v['DrivenDof']['name'] + '.dat'
         if 'start' not in v['DrivenDof']:start = 0.
         else: start = v['DrivenDof']['start']
-        pre.writeEvolution(f=imposedv, instants=np.linspace(start,4.5, 9000), path=v['DrivenDof']['path'] + 'DATBOX/',name=fname)
+        pre.writeEvolution(f=imposedv, instants=np.linspace(start,time, int(1/dt)), path=v['DrivenDof']['path'] + 'DATBOX/',name=fname)
         plate.imposeDrivenDof(component=v['DrivenDof']['component'], description='evolution',dofty='vlocy', evolutionFile=fname)
-      
+
+      if 'pullup' in v:
+         # previously the body fell under gravity now pull it up
+         def drivenForce(t):
+            if t > (time-0.5): 
+               return 1800
+            else:
+               return -4.9
+            
+         pre.writeEvolution(f=drivenForce, instants=np.linspace(0,time,int(1/dt)), path=v['pullup']['path'] + 'DATBOX/',name=v['pullup']['name'] + '.dat')
+         plate.imposeDrivenDof(component=v['pullup']['component'], description='evolution',dofty='force', evolutionFile=v['pullup']['name'] + '.dat')
       bodies.addAvatar(plate)
    return bodies
 

@@ -3,8 +3,9 @@ from pylmgc90 import post
 import numpy as np
 from tqdm.auto import tqdm
 import pickle
+from tabulate import tabulate
 
-def computer(deformable=0, freq_disp=1000):
+def computer(deformable=0, freq_disp=1, dt=5.e-3,time=3.5):
     # Initializing
     chipy.Initialize()  # initializing the library
     chipy.checkDirectories() # checking/creating mandatory subfolders
@@ -15,16 +16,28 @@ def computer(deformable=0, freq_disp=1000):
     mhyp = 0 # modeling hypothesis ( 1 = plain strain, 2 = plain stress, 3 = axi-symmetry)
     deformable = deformable
     # solver and params
-    dt = 5.e-4
-    nb_steps = 9000
+    nb_steps = int(time/dt)
+    print(f'Number of steps: {nb_steps}')
     theta = 0.5
     freq_write = nb_steps//4 # frequency of writing results
-    freq_disp = freq_disp # frequency of visualization
+    freq_disp = int(nb_steps/freq_disp) # frequency of 
+
+    table = [
+        ["Parameter", "Value"],
+        ["Time step", dt],
+        ["Number of steps", nb_steps],
+        ["Total time", time],
+        ["Every x file written", freq_write],
+        ["Every x file displayed", freq_disp],
+        ["Num of files written", nb_steps//freq_write]
+    ]
+
+    print(tabulate(table, headers="firstrow", tablefmt="grid"))
     Rloc_tol = 5.e-2 # interaction parameter
     # nlgs
-    tol = 1.666e-4
+    tol = 1.666e-3
     relax = 1.0
-    norm = 'Quad/16'
+    norm = 'Quad'
     gs_it1 = 100 # min number of Gauss-Seidel iterations
     gs_it2 = 10 # max number of Gauss-Seidel iterations (gs_it1*gs_it2)
     # solver_type = 'Stored_Delassus_Loops'
@@ -41,10 +54,9 @@ def computer(deformable=0, freq_disp=1000):
     chipy.OpenPostproFiles()
 
     ## simulation
-    chipy.POLYR_TopologyAngle(10)
-    chipy.PRPRx_ShrinkPolyrFaces(1.e-2)
+    # topology angle
+
     if model !='SPHER': chipy.PRPRx_UseCpCundallDetection(100) # use Cundall detection
-    chipy.PRPRx_LowSizeArrayPolyr(10)
 
     chipy.ComputeMass()
     chipy.ComputeBulk()

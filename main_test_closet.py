@@ -26,10 +26,13 @@ parser.add_argument("--v", "--verbose", dest="verbose", default=True, type=str2b
 parser.add_argument("--f", "--freq_display", dest="freq_display", default=1000, type=int, help="Frequency of display")
 parser.add_argument("--c", "--compute", dest="compute", default=True, type=str2bool, help="Compute")
 parser.add_argument("--N", "--n_layers", dest="n_layers", default=10, type=int, help="Number of layers")
+parser.add_argument("--theta", "--angle_for_plate", dest="angle_for_plate", default=10, type=float, help="Angle for plate")
+parser.add_argument("--dt", "--time-step", dest="dt", default=5e-2, type=float, help="Time step")
+parser.add_argument("--t", "--time", dest="time", default=3.5, type=float, help="Time")
+
 
 # thats it
 args = parser.parse_args()
-
 
 @contextmanager
 def stdout_redirected(to=os.devnull):
@@ -70,7 +73,7 @@ while i < 850:
         create_dirs(par_dir=par_dir)
         if not args.verbose:
             with stdout_redirected():
-                test = closet_ballast(par_dir=par_dir, args=args)
+                test = closet_ballast(par_dir=par_dir, args=args, seed=687, visu=args.visu, step=1000)
                 
         else:
             test = closet_ballast(par_dir=par_dir, seed=687, visu=args.visu, step=1000, args=args)
@@ -81,7 +84,7 @@ while i < 850:
     #    print(f'Failed at iteration {i}: trying again...')
     #    continue
     #shutil.rmtree('DISPLAY') if i % 10 != 0 else None
-    if args.compute:failed=computer(freq_disp=args.freq_display)
+    if args.compute:failed=computer(freq_disp=args.freq_display, dt=args.dt, time=args.time)
     else: break
     i += 1  # Increment i after the try-except block
     os.chdir('../../../')
