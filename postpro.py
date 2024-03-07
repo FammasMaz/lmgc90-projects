@@ -39,7 +39,7 @@ class stack_creator:
       arvd = read_pickled_file(self.out_dir, 'arvd.pkl')
       mass_writer(self.out_dir)
       mass = read_pickled_file(self.out_dir, 'mass.pkl')
-      x = np.hstack((dof, coord, arvd[:,1], mass, fint, fext))
+      x = np.hstack((dof, coord, arvd[:,1].reshape(-1,1), mass, fint, fext))
       x = x.astype(np.float32)
       return x, mass
   def edge_index_creator(self):
