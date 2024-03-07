@@ -63,7 +63,9 @@ def stdout_redirected(to=os.devnull):
                                             # buffering and flags such as
                                             # CLOEXEC may be different
 i = args.iteration -1
-while i < 850:
+max = i + 50
+
+while i < max:
     par_dir = f'./train-track-static/data/closet_{i+1}/'
     print(f'Iteration {i+1}')
     print(f'Creating directory {par_dir}...')

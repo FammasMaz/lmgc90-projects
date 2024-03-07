@@ -148,9 +148,9 @@ def tracker(par_dir, start_idx=2):
     
 
     
-def dof_writer(par_dir, fname = 'DOF.OUT.2'):
+def dof_writer(par_dir, fname = 'DOF.LAST'):
     samples = sampler(par_dir, fname = fname,sw='$bdyty')
-    indices = [1, 5, 7, 9, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39]
+    indices = [5, 7, 9, 17, 19, 21, 29, 31, 33, 35, 37, 39, 41, 43, 45]
     # remove if file exists
     if os.path.exists(par_dir + 'OUTBOX/DOF.DAT'):
         os.remove(par_dir + 'OUTBOX/DOF.DAT')
@@ -171,17 +171,14 @@ def dof_writer(par_dir, fname = 'DOF.OUT.2'):
 
 def mass_writer(par_dir, density = 2900, plate=True):
     samples = sampler(par_dir, fname = 'BODIES.OUT',sw='$tacty')
-    # ignore the first
-    samples = samples[1:]
     mass = np.array([])
-    nb_plates = 5
+    nb_plates = 6
     # append mass of plate 
-    if plate: 
-        for _ in range(nb_plates):
-            mass = np.append(mass, 1.)
     density = density
     with open(par_dir + 'OUTBOX/MASS.DAT', 'w') as file:
-        for sample in samples:
+        # run for bodies minus the nb_plates at last
+        ballast_samples = samples[:-nb_plates]
+        for sample in ballast_samples:
             numbers = extract_numbers(sample[1:])
             nb_vertices = int(numbers[1])
             nb_faces = int(numbers[2])
@@ -197,7 +194,9 @@ def mass_writer(par_dir, density = 2900, plate=True):
             file.write(f'{m:.6e}')
             file.write('\n')
             mass = np.append(mass,  m)
-
+    if plate: 
+        for _ in range(nb_plates):
+            mass = np.append(mass, 1.)
     
     mass = mass.reshape(-1,1)
     with open(par_dir + 'OUTBOX/mass.pkl', 'wb') as file:
@@ -273,20 +272,42 @@ def tetrahedron_volume(a, b, c):
     return abs(np.dot(a, np.cross(b, c))) / 6
 
 
-def plate_connection(par_dir):
-    postpro = read_pickled_file(par_dir, 'postpro.pkl', False)
-    inter = postpro[1]
-    # use only the ones where first value is PRPRx
-    inter_filt = [inter[i] for i in range(len(inter)) if inter[i][0]==b'PRPLx']
-    stacked = np.array([inter_filt[i][3] for i in range(len(inter_filt))]).reshape(-1,1)
-    return stacked.astype(int)
-
 def gravitational_force_creator(m, g=9.8):
     f = np.zeros((m.shape[0], 3))
     # first one is rigid plate
     f[5:,2] = -m*g
     return f
 
+
+class pickle_procesor:
+    def __init__(self, par_dir):
+        self.par_dir = par_dir
+        self.postpro = read_pickled_file(par_dir, 'postpro.pkl', False)
+        
+    def coordinates(self):
+        return self.postpro[4]
+    def plate_connection(self):
+        inter = self.postpro[1]
+        inter_filt = [inter[i] for i in range(len(inter)) if inter[i][0]==b'PRPLx']
+        stacked = np.array([inter_filt[i][3] for i in range(len(inter_filt))]).reshape(-1,1)
+        return stacked.astype(int)
+    def fint(self):
+        return self.postpro[5]
+    def fext(self):
+        return self.postpro[6]
+    def edge_data(self):
+        return self.postpro[3]
+    def edge_index(self):
+        return np.array(self.postpro[3][:,1:3]).T -1
+    def edge_features(self):    
+        return self.postpro[3][:,3:]
+    def n_nodes(self):
+        return self.postpro[4].shape[0]
+    
+    
+    
+    
+    
 
 
 

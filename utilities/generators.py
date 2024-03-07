@@ -124,7 +124,7 @@ def ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widt
         body = pre.rigidPolyhedron(model = model, material=mat, color=color, generation_type='full', vertices=lballast[rand][0], faces=lballast[rand][1])
         r = np.random.random(3)*np.pi
         body.rotate(phi=r[0],theta=r[1],psi=r[2])
-        body.translate(dx=x[i]+0.1, dy=y[i]+0.1 + np.tan(np.deg2rad(angle_for_plate)/2), dz=z[i])
+        body.translate(dx=x[i]+0.1, dy=y[i]+0.07 + np.tan(np.deg2rad(angle_for_plate)/2), dz=z[i])
         i+=1
         bodies.addAvatar(body)
     return bodies, z
@@ -170,7 +170,7 @@ def plate_definition(dict, mod, mat, dt, time):
       if 'pullup' in v:
          # previously the body fell under gravity now pull it up
          def drivenForce(t):
-            if t > (time-0.5): 
+            if t > (time-0.2): 
                return 1800
             else:
                return -4.9

@@ -728,12 +728,12 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
 
     # tact dict and container
     dict_tact = {'iqsc0': {'law':'IQS_CLB', 'fric':0.0},
-                 'iqsc1': {'law':'IQS_CLB', 'fric':0.1},
+                 'iqsc1': {'law':'IQS_CLB', 'fric':0.3},
                  'iqsc3': {'law':'IQS_CLB', 'fric':0.8}}
     tacts = create_tact_behavs(dict_tact)
 
     # see dict and container
-    dict_pp = {'vpp': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc1'],
+    dict_pp = {'vpp': {'CorpsCandidat':'RBDY3', 'candidat':'POLYR','colorCandidat':'BLUEx','behav':tacts['iqsc3'],
                         'CorpsAntagoniste':'RBDY3', 'antagoniste':'POLYR','colorAntagoniste':'BLUEx',
                         'alert':1.4044198827808083E-003}}
 

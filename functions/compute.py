@@ -83,10 +83,10 @@ def computer(deformable=0, freq_disp=1, dt=5.e-3,time=3.5):
 
             chipy.ComputeDof()
 
+
+
             chipy.UpdateStep()
             chipy.WriteOut(freq_write)
-            chipy.WriteOutVlocRloc(freq_write)
-
             chipy.WriteDisplayFiles(freq_disp)
             chipy.WritePostproFiles()
             # chipy.checkInteractiveCommand()
@@ -96,6 +96,15 @@ def computer(deformable=0, freq_disp=1, dt=5.e-3,time=3.5):
             return failed
         
     # Post Processing
+    chipy.WriteLastDof()
+    chipy.WriteLastVlocRloc()
+    x = chipy.POLYR_GetNbPOLYR()
+    y = chipy.PLANx_GetNbPLANx()
+    z = chipy.RBDY3_GetNbRBDY3()
+    print(f'Number of POLYR: {x}, Number of PLANx: {y}, Number of RBDY3: {z}')
+    coor = np.array([chipy.RBDY3_GetBodyVector("Coor_", i)[:3] for i in range(z)])
+    fint = np.array([chipy.RBDY3_GetBodyVector("Fint_", i)[:3] for i in range(z)])
+    fext = np.array([chipy.RBDY3_GetBodyVector("Fext_", i)[:3] for i in range(z)])
     time = chipy.TimeEvolution_GetTime()
     f2f = chipy.PRPRx_GetF2f2Inters()
     inter = chipy.getInteractions()
@@ -127,7 +136,9 @@ def computer(deformable=0, freq_disp=1, dt=5.e-3,time=3.5):
     stacked = np.hstack((stacked, ic_vec))
     # save the post pro files
     with open('postpro.pkl','wb') as f:
-        pickle.dump((f2f, inter, ic_vec, stacked),f)
+        pickle.dump((f2f, inter, ic_vec, stacked, coor, fint, fext),f)
+        
+
     # as dat file
     np.savetxt('postpro.dat', stacked, fmt='%s', delimiter='   ')
 
