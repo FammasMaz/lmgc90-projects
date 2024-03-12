@@ -1,6 +1,6 @@
 # writing the postpro script
 import numpy as np
-from utilities.postpro_utilities import pickle_procesor, mass_writer, dof_writer, arvd_writer, read_pickled_file, stress_calculator
+from utilities.postpro_utilities import pickle_procesor, mass_writer, dof_writer, arvd_writer, read_pickled_file, stress_caculator_voigt
 from torch_geometric.data import Data   
 import argparse
 from pathlib import Path
@@ -78,7 +78,7 @@ def gravitational_force_creator(x, mass, nb_plates=6):
 def stress_calculation(edge_features):
    reaction_forces = edge_features[:, 0:3]
    intercenter_vectors = edge_features[:, -3:]
-   psi = stress_calculator(reaction_forces, intercenter_vectors)
+   psi = stress_caculator_voigt(reaction_forces, intercenter_vectors,princ_stresses=True)
    return np.array(psi).astype(np.float32)
 
 
