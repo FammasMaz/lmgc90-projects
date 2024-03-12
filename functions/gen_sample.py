@@ -661,7 +661,7 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'rotate_Ax':{ 'theta': np.deg2rad(-angle_for_plate)},
             'rotate':{'theta': -0.5*np.pi},
             'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
-            'DrivenDof':{'vx': -2,'name':'vleft','component':2,'path':par_dir}, 
+            'DrivenDof':{'vx': -1.0,'name':'vleft','component':2,'path':par_dir}, 
         },
         'right':{
             'axe1': lengthb/2 + 0.1,
@@ -673,7 +673,7 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'rotate_Ax':{ 'theta': np.deg2rad(angle_for_plate)},
             'rotate':{'theta': 0.5*np.pi},
             'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
-            'DrivenDof':{'vx': 2,'name':'vright','component':2,'path':par_dir}, 
+            'DrivenDof':{'vx': 1.0,'name':'vright','component':2,'path':par_dir}, 
 
         },
         'front':{
@@ -685,7 +685,7 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'z': heightb/2.,
             'rotate':{'description':'axis', 'alpha': -0.5*np.pi, 'axis':[0.,1.,0.]},
             'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
-            'DrivenDof':{'vx': 2,'name':'vfront','component':1,'path':par_dir}, 
+            'DrivenDof':{'vx': 1.0,'name':'vfront','component':1,'path':par_dir}, 
 
         },
         'back':{
@@ -697,7 +697,7 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'z': heightb/2.,
             'rotate':{'description':'axis', 'alpha': 0.5*np.pi, 'axis':[0.,1.,0.]},
             'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
-            'DrivenDof':{'vx': -2,'name':'vback','component':1,'path':par_dir}, 
+            'DrivenDof':{'vx': -1.0,'name':'vback','component':1,'path':par_dir}, 
         },
         'bottom':{
             'axe1': 2+0.1,
@@ -718,7 +718,7 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'rotate':{'theta': np.pi},
             'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
             #'DrivenDof':{'vx': 3,'name':'vtopleft','component':2,'path':par_dir, 'vinit': -9.8, 'start': 0.}, 
-            'pullup':{'acc': -9.8, 'mass': 2700 * lengthb*widthb *thick, 'path':par_dir,'component':3, 'name':'ftop'},
+            'pullup':{'acc': 4.9, 'mass': 2700 * lengthb*widthb *thick, 'path':par_dir,'component':3, 'name':'ftop'},
         }
         }
     bodies_plates = plate_definition(dict, mat=mats['TDURx'], mod=mods['rigid'],dt=args.dt, time=args.time)
@@ -728,7 +728,7 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
 
     # tact dict and container
     dict_tact = {'iqsc0': {'law':'IQS_CLB', 'fric':0.0},
-                 'iqsc1': {'law':'IQS_CLB', 'fric':0.3},
+                 'iqsc1': {'law':'IQS_CLB', 'fric':0.1},
                  'iqsc3': {'law':'IQS_CLB', 'fric':0.8}}
     tacts = create_tact_behavs(dict_tact)
 

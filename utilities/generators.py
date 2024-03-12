@@ -153,7 +153,7 @@ def plate_definition(dict, mod, mat, dt, time):
       plate.imposeDrivenDof(dofty='vlocy',**v['imposeDrivenDof'])
       if 'DrivenDof' in v:
         def imposedv(t):
-          if t > (time-0.5):
+          if t > 2.2:
             return vx
           else:
             # return gravity
@@ -170,10 +170,10 @@ def plate_definition(dict, mod, mat, dt, time):
       if 'pullup' in v:
          # previously the body fell under gravity now pull it up
          def drivenForce(t):
-            if t > (time-0.2): 
-               return 1800
+            if t > 2.4: 
+               return 600
             else:
-               return -4.9
+               return -v['pullup']['acc']
             
          pre.writeEvolution(f=drivenForce, instants=np.linspace(0,time,int(1/dt)), path=v['pullup']['path'] + 'DATBOX/',name=v['pullup']['name'] + '.dat')
          plate.imposeDrivenDof(component=v['pullup']['component'], description='evolution',dofty='force', evolutionFile=v['pullup']['name'] + '.dat')
