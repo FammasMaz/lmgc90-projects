@@ -78,7 +78,7 @@ def gravitational_force_creator(x, mass, nb_plates=6):
 def stress_calculation(edge_features):
    reaction_forces = edge_features[:, 0:3]
    intercenter_vectors = edge_features[:, -3:]
-   psi = stress_caculator_voigt(reaction_forces, intercenter_vectors,princ_stresses=True)
+   psi = stress_caculator_voigt(reaction_forces, intercenter_vectors,princ_stress_cal=True)
    return np.array(psi).astype(np.float32)
 
 

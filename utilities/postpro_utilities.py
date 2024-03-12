@@ -261,7 +261,7 @@ def stress_calculator(contact_forces, inter_vec):
     stress = torch.tensor(contact_forces * inter_vec, dtype=torch.float32)
     return stress
 
-def stress_caculator_voigt(contact_forces, inter_vec, princ_stresses=True):
+def stress_caculator_voigt(contact_forces, inter_vec, princ_stress_cal=True):
     n_contacts = contact_forces.shape[0]
     stresses = torch.zeros((n_contacts, 6))
     princ_stresses = torch.zeros((n_contacts, 3))
@@ -271,10 +271,11 @@ def stress_caculator_voigt(contact_forces, inter_vec, princ_stresses=True):
         stress_tensor = np.outer(force, vec)
         stress_voigt = np.array([stress_tensor[0,0], stress_tensor[1,1], stress_tensor[2,2], stress_tensor[0,1], stress_tensor[1,2], stress_tensor[0,2]])
         stresses[i] = torch.tensor(stress_voigt, dtype=torch.float32)
-        # principle stresses
-        eigvals, eigvecs = np.linalg.eig(stress_tensor)
-        princ_stresses[i] = torch.tensor(eigvals, dtype=torch.float32)
-    if princ_stresses:
+        # principle stresses are the first three eigenvalues
+        eigvals = np.linalg.eigvals(stress_tensor)
+        # the eigenvalues are complex, take the real part
+        princ_stresses[i] = torch.tensor(np.real(eigvals), dtype=torch.float32)
+    if princ_stress_cal:
         return princ_stresses
     else: 
         return stresses
