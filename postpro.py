@@ -1,6 +1,6 @@
 # writing the postpro script
 import numpy as np
-from utilities.postpro_utilities import pickle_procesor, mass_writer, dof_writer, arvd_writer, read_pickled_file, stress_caculator_voigt
+from utilities.postpro_utilities import pickle_procesor, mass_writer, dof_writer, arvd_writer, read_pickled_file, stress_caculator_voigt, stress_calculator_grain
 from torch_geometric.data import Data   
 import argparse
 from pathlib import Path
@@ -22,7 +22,7 @@ class stack_creator:
   def __init__(self, out_dir):
       self.out_dir = out_dir
       self.picked = pickle_procesor(out_dir)
-      self.nb_plates = 6
+      self.nb_plates = 8
   def nodes_creator(self):
       # dof x(3), v(3), a (9)
       # coord x, y, z
@@ -67,6 +67,13 @@ class stack_creator:
       # set last six to 1
       x[-self.nb_plates:] = 1
       return x.astype(np.float32)
+  def global_force(self):
+      return self.picked.global_force()
+
+
+  
+
+
 
 def gravitational_force_creator(x, mass, nb_plates=6):
       n_nodes = x.shape[0]
@@ -80,6 +87,12 @@ def stress_calculation(edge_features):
    intercenter_vectors = edge_features[:, -3:]
    psi = stress_caculator_voigt(reaction_forces, intercenter_vectors,princ_stress_cal=True)
    return np.array(psi).astype(np.float32)
+
+def stress_calculation_grain(edge_features,global_forces, edge_index, n_nodes):
+   intercenter_vectors = edge_features[:, -3:]
+   psi = stress_calculator_grain(global_forces, edge_index,intercenter_vectors, n_nodes)
+   return np.array(psi).astype(np.float32)
+
 
 
 
@@ -100,7 +113,10 @@ for out_dir in tqdm(files):
       # combine x and n
       x = np.hstack((x, n))
       f = gravitational_force_creator(x, mass)
+      fg = stack_creator(out_dir).global_force()
       psi = stress_calculation(edge_features)
+      psi_grain = stress_calculation_grain(edge_features, fg, edge_index, n_nodes)
+      breakpoint()
       data = [Data(x=torch.tensor(x, dtype=torch.float32), edge_index=torch.tensor(edge_index, dtype=torch.long), y=torch.tensor(x, dtype=torch.float32),edge_sup=torch.tensor(edge_features,dtype=torch.float32), f=torch.tensor(f, dtype=torch.float32), psi=torch.tensor(psi, dtype=torch.float32))]
       # number from the folder
       save_dir = Path(args.par_dir) / 'closet_pt'

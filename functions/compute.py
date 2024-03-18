@@ -5,7 +5,7 @@ from tqdm.auto import tqdm
 import pickle
 from tabulate import tabulate
 
-def computer(deformable=0, freq_disp=1, dt=5.e-3,time=3.5):
+def computer(deformable=0, freq_disp=1, dt=5.e-3,time=3.5, info_dict = False, solver='SDL'):
     # Initializing
     chipy.Initialize()  # initializing the library
     chipy.checkDirectories() # checking/creating mandatory subfolders
@@ -21,18 +21,6 @@ def computer(deformable=0, freq_disp=1, dt=5.e-3,time=3.5):
     theta = 0.5
     freq_write = nb_steps//4 # frequency of writing results
     freq_disp = int(nb_steps/freq_disp) # frequency of 
-
-    table = [
-        ["Parameter", "Value"],
-        ["Time step", dt],
-        ["Number of steps", nb_steps],
-        ["Total time", time],
-        ["Every x file written", freq_write],
-        ["Every x file displayed", freq_disp],
-        ["Num of files written", nb_steps//freq_write]
-    ]
-
-    print(tabulate(table, headers="firstrow", tablefmt="grid"))
     Rloc_tol = 5.e-2 # interaction parameter
     # nlgs
     tol = 1.666e-3
@@ -40,8 +28,28 @@ def computer(deformable=0, freq_disp=1, dt=5.e-3,time=3.5):
     norm = 'Quad'
     gs_it1 = 100 # min number of Gauss-Seidel iterations
     gs_it2 = 10 # max number of Gauss-Seidel iterations (gs_it1*gs_it2)
-    # solver_type = 'Stored_Delassus_Loops'
-    solver_type = 'Exchange_Local_Global'
+    solver_type = 'Stored_Delassus_Loops' if solver == 'SDL' else 'Exchange_Local_Global'
+
+
+    # print the params
+    table = [
+        ["Parameter", "Value"],
+        ["Time step", dt],
+        ["Number of steps", nb_steps],
+        ["Total time", time],
+        ["Every x file written", freq_write],
+        ["Every x file displayed", freq_disp],
+        ["Num of files written", nb_steps//freq_write],
+        ["Solver Type", solver_type],
+    ]
+    # add the key and values from info dict
+    if info_dict:
+        for key, value in info_dict.items():
+            table.append([key, value])
+
+    print(tabulate(table, headers="firstrow", tablefmt="grid"))
+
+
 
     ## read and loading data
     chipy.SetDimension(dim,mhyp)
@@ -62,6 +70,9 @@ def computer(deformable=0, freq_disp=1, dt=5.e-3,time=3.5):
     chipy.ComputeBulk()
 
     failed = False
+    ## min ranges
+    chipy.RBDY3_SetZminBoundary(-0.8)
+
     for k in tqdm(range(0,nb_steps)):
         try:    
             chipy.IncrementStep()
@@ -102,38 +113,35 @@ def computer(deformable=0, freq_disp=1, dt=5.e-3,time=3.5):
     y = chipy.PLANx_GetNbPLANx()
     z = chipy.RBDY3_GetNbRBDY3()
     print(f'Number of POLYR: {x}, Number of PLANx: {y}, Number of RBDY3: {z}')
-    coor = np.array([chipy.RBDY3_GetBodyVector("Coor_", i)[:3] for i in range(z)])
-    fint = np.array([chipy.RBDY3_GetBodyVector("Fint_", i)[:3] for i in range(z)])
-    fext = np.array([chipy.RBDY3_GetBodyVector("Fext_", i)[:3] for i in range(z)])
+    coor = np.array([chipy.RBDY3_GetBodyVector("Coor_", i+1)[:3] for i in range(z)])
+    fint = np.array([chipy.RBDY3_GetBodyVector("Fint_", i+1)[:3] for i in range(z)])
+    fext = np.array([chipy.RBDY3_GetBodyVector("Fext_", i+1)[:3] for i in range(z)])
     time = chipy.TimeEvolution_GetTime()
     f2f = chipy.PRPRx_GetF2f2Inters()
     inter = chipy.getInteractions()
-    icdans = np.array([inter[i][1] for i in range(len(inter)) if inter[i][0]==b'PRPRx'])
-    ic_vec = np.zeros((len(icdans),3))
-    # for each interaction get the intercenter vector
-    for i in range(len(icdans)):
-        ic_vec[i,:] = chipy.PRPRx_GetInteractionVector("Coor_", int(icdans[i]))
-    # making the post pro files manually
-    # 15. rl (3,1)
-    # 16. vl (3,1)
-    # 17. gaptt(1)
-    # 18. coord (3,1)
-    # 19. local (3,3)
-    indices = [3,7,15,16,17,18,13]
-    # use only the ones where first value is PRPRx
-    inter_filt = [inter[i] for i in range(len(inter)) if inter[i][0]==b'PRPRx']
-    stacked = np.array([inter_filt[i][1] for i in range(len(inter_filt))]).reshape(-1,1)
-    for index in indices:
-        column_data = np.array([row[index] for row in inter_filt])
-        if index in [3,7,17]:
-            column_data = column_data.reshape(-1, 1)
-        if index == 13:
-            column_data = np.array([0 if row[13] == b'stick' else 1 for row in inter_filt]).reshape(-1, 1)
-        stacked = np.hstack((stacked, column_data))
 
-    column_19 = np.array([row[19] for row in inter_filt]).reshape(-1, 9)
-    stacked = np.hstack((stacked, column_19))
-    stacked = np.hstack((stacked, ic_vec))
+    # try again with directly getting data
+    # filter in the inter for b'PRPRx'
+    inter_prpr = inter[inter['inter']==b'PRPRx']
+    rl = inter_prpr['rl']
+    vl = inter_prpr['vl']
+    gaptt = inter_prpr['gapTT'].reshape(-1,1)
+    coord = inter_prpr['coor']
+    type = inter_prpr['status'] == b'stick'
+    # convert to 1 or 0
+    type = type.astype(int).reshape(-1,1)
+    uc = inter_prpr['uc'].reshape(-1,9)
+    # get the intercenter vector
+    cdbdy = inter_prpr['icdbdy'].reshape(-1,1)
+    anbdy = inter_prpr['ianbdy'].reshape(-1,1)
+    icdans = inter_prpr['icdan'].reshape(-1,1)
+    # for each body in in cdbdy and anbdy get the coor and compute the difference
+    ic_vec = np.zeros((len(cdbdy),3))
+    for i in range(len(cdbdy)):
+        ic_vec[i,:] = coor[cdbdy[i]-1] - coor[anbdy[i]-1]
+    
+    # stack all the data
+    stacked = np.hstack((icdans,cdbdy,anbdy,rl,vl,gaptt,coord,type,uc,ic_vec))
     # save the post pro files
     with open('postpro.pkl','wb') as f:
         pickle.dump((f2f, inter, ic_vec, stacked, coor, fint, fext),f)

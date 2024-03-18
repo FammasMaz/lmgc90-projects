@@ -280,6 +280,27 @@ def stress_caculator_voigt(contact_forces, inter_vec, princ_stress_cal=True):
     else: 
         return stresses
 
+def stress_calculator_grain(global_forces, edge_index, inter_center, n_nodes,princ_stress_cal=True):
+    n_contacts = edge_index.shape[1]
+    stresses = torch.zeros((n_nodes, 6))
+    princ_stresses = torch.zeros((n_nodes, 3))
+    for i in range(n_contacts):
+        # weber tensor of stress
+        weber_tensor = np.outer(global_forces[i], inter_center[i])
+        voigt = torch.tensor([weber_tensor[0,0], weber_tensor[1,1], weber_tensor[2,2], weber_tensor[0,1], weber_tensor[1,2], weber_tensor[0,2]], dtype=torch.float32)
+
+        # transfer this contact stress to the nodes/grians only the diagonals
+        stresses[int(edge_index[0,i]),:] += voigt
+        stresses[int(edge_index[1,i]),:] -= voigt
+        eigvals = np.linalg.eigvals(weber_tensor)
+        # the eigenvalues are complex, take the real part
+        # and put the princpal stressses in the princ_stresses
+        princ_stresses[int(edge_index[0,i])] += torch.tensor(np.real(eigvals), dtype=torch.float32)
+        princ_stresses[int(edge_index[1,i])] -= torch.tensor(np.real(eigvals), dtype=torch.float32)
+    if princ_stress_cal:
+        return princ_stresses
+    else:
+        return stresses
 
 def read_pickled_file(par_dir, fname, dir='OUTBOX/'):
     if dir: par_dir = par_dir + dir
@@ -323,6 +344,23 @@ class pickle_procesor:
         return self.postpro[3][:,3:]
     def n_nodes(self):
         return self.postpro[4].shape[0]
+    def global_force(self):
+        # calculate the global force for each contact point
+        edge_features = self.edge_features()
+        edge_index = self.edge_index()
+        n_contacts = edge_index.shape[1]
+        global_force = np.zeros((n_contacts, 3))
+        # last three edge_features are intercenter vectors 
+        # nine before that are local frame
+        frame = edge_features[:,-12:-3].reshape(-1,3,3)
+        # first three are contact forces
+        contact_forces = edge_features[:,:3]
+        # calculate the global force
+        for i in range(n_contacts):
+            global_force[i] = np.dot(frame[i], contact_forces[i])
+        return global_force
+    
+
     
     
     

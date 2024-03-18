@@ -2,7 +2,8 @@ from pylmgc90 import pre
 import math
 import numpy as np
 
-from pylmgc90 import chipy    
+from pylmgc90 import chipy   
+import timeit 
 
 def rail_generator(nb_rails, rail_length, rail_height, rail_width, rail_spacing, rail_offset, rail_color, rail_material, rail_model):
     bodies = pre.avatars()
@@ -109,6 +110,31 @@ def ballast_generator_custom(ballast_bib, layers, nb_particles, Px, Py, Pz, mat,
     total_particles += nb_dep
   return bodies, total_particles, particle_char
 
+def ballast_generator_filled(ballast_bib, lengthb, widthb, heightb, mat, mod, nb_particles = 5206):
+   bodies = pre.avatars()
+   lballast = get_lbody(ballast_bib)
+   radii = pre.granulo_Random(int(nb_particles), 4.4044198827808083E-002, 5.7470355839992146E-002)
+   elapsed = 0
+   threshold_time = 0.5
+   while elapsed < threshold_time:
+         start_time = timeit.default_timer()
+         radii = pre.granulo_Random(int(nb_particles), 2.4044198827808083E-002, 5.7470355839992146E-002)
+         [nb_dep, coor] = pre.depositInBox3D(radii, lengthb, widthb, heightb)
+         elapsed = timeit.default_timer() - start_time
+   print(f'Elapsed time for depositInBox3D: {elapsed}')
+   x = coor[::3];  y = coor[1::3];  z = coor[2::3]
+   i=0
+   for i in range(nb_dep):
+        rand = int(np.random.random()*len(lballast))
+        body = pre.rigidPolyhedron(mod, mat, color='BLUEx', generation_type='full', vertices=lballast[rand][0], faces=lballast[rand][1])
+        r = np.random.random(3)*np.pi
+        body.rotate(phi=r[0],theta=r[1],psi=r[2])
+        body.translate(dx=x[i], dy=y[i], dz=z[i])
+        bodies.addAvatar(body)
+        i+=1
+
+   return bodies, nb_dep,z
+
 
 def ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widthb, mat, model, color='BLUEx', angle_for_plate=0.):
     bodies = pre.avatars()
@@ -124,7 +150,9 @@ def ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widt
         body = pre.rigidPolyhedron(model = model, material=mat, color=color, generation_type='full', vertices=lballast[rand][0], faces=lballast[rand][1])
         r = np.random.random(3)*np.pi
         body.rotate(phi=r[0],theta=r[1],psi=r[2])
-        body.translate(dx=x[i]+0.1, dy=y[i]+0.07 + np.tan(np.deg2rad(angle_for_plate)/2), dz=z[i])
+        body.translate(dx=x[i]+0.1, dy=y[i], dz=z[i])
+        #body.imposeDrivenDof(dofty='vloc', component=[1,2,3,4,5,6])
+        #body.imposeDrivenDof(dofty='force', description='predefined', component=3, ct=-4.9*0.0005)
         i+=1
         bodies.addAvatar(body)
     return bodies, z
@@ -153,7 +181,7 @@ def plate_definition(dict, mod, mat, dt, time):
       plate.imposeDrivenDof(dofty='vlocy',**v['imposeDrivenDof'])
       if 'DrivenDof' in v:
         def imposedv(t):
-          if t > 2.2:
+          if t > time -1 :
             return vx
           else:
             # return gravity
@@ -166,11 +194,11 @@ def plate_definition(dict, mod, mat, dt, time):
         else: start = v['DrivenDof']['start']
         pre.writeEvolution(f=imposedv, instants=np.linspace(start,time, int(1/dt)), path=v['DrivenDof']['path'] + 'DATBOX/',name=fname)
         plate.imposeDrivenDof(component=v['DrivenDof']['component'], description='evolution',dofty='vlocy', evolutionFile=fname)
-
+  
       if 'pullup' in v:
          # previously the body fell under gravity now pull it up
          def drivenForce(t):
-            if t > 2.4: 
+            if t > time - 1: 
                return 600
             else:
                return -v['pullup']['acc']
@@ -178,6 +206,17 @@ def plate_definition(dict, mod, mat, dt, time):
          pre.writeEvolution(f=drivenForce, instants=np.linspace(0,time,int(1/dt)), path=v['pullup']['path'] + 'DATBOX/',name=v['pullup']['name'] + '.dat')
          plate.imposeDrivenDof(component=v['pullup']['component'], description='evolution',dofty='force', evolutionFile=v['pullup']['name'] + '.dat')
       bodies.addAvatar(plate)
+      if 'pullin' in v:
+          def drivenForce(t):
+              if t> 2.5 and t<3.4:
+                return v['pullin']['acc']
+              elif t> 3.5 and t<10:
+                return -v['pullin']['acc']
+              else:
+                return 0
+              
+          pre.writeEvolution(f=drivenForce, instants=np.linspace(0,time,int(1/dt)), path=v['pullin']['path'] + 'DATBOX/',name=v['pullin']['name'] + '.dat')
+          plate.imposeDrivenDof(component=v['pullin']['component'], description='evolution',dofty='force', evolutionFile=v['pullin']['name'] + '.dat')
    return bodies
 
 

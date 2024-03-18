@@ -619,8 +619,9 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
     # box dimensions
     thick = 0.01
     lengthb = 1.435
-    widthb = 0.8
-    heightb = 1.
+    widthb = args.width
+    heightb = 1.6
+    height_ballast = args.height
 
     # ballast params
     ballast_bib = 'BIBLIGRAINS/BIBLIGRAINS.DAT'
@@ -631,11 +632,12 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
     nby = int(widthb/dgrid  )# override
     if angle_for_plate != 0:
         # minus the width decreased by slanted plates -
-        nby =nby - int((lengthb*np.tan(np.deg2rad(angle_for_plate)))/dgrid) -1 
+        nby =nby #- int((lengthb*np.tan(np.deg2rad(angle_for_plate)))/dgrid) -1 
     nlayer = int(args.n_layers)
     
     # material dict and container
-    dict_mat = {'TDURx': {'materialType':'RIGID', 'density':2700.}}
+    dict_mat = {'TDURx': {'materialType':'RIGID', 'density':2700.},
+                'TDURT': {'materialType':'RIGID', 'density':2700.}}
     mats = create_materials(dict_mat)
 
     # model dict and container
@@ -647,7 +649,8 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
     bodies = pre.avatars()
     if args.ballast:
 
-        bodies, z = ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widthb, mats['TDURx'], mods['rigid'], angle_for_plate=angle_for_plate)
+        #bodies, z = ballast_generator_closet(ballast_bib, nbx, nby, nlayer, dgrid, lengthb, widthb, mats['TDURx'], mods['rigid'], angle_for_plate=angle_for_plate)
+        bodies, nb_dep,z = ballast_generator_filled(ballast_bib, lengthb-0.3, widthb - 0.3, height_ballast, mats['TDURx'], mods['rigid'], nb_particles=args.npart)
     
     if args.closet:
         dict = {
@@ -657,11 +660,31 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'axe3': thick/2,
             'x': 0.,
             'y': -widthb/2 - thick/2,
-            'z': heightb/2.,
+            #'y': -0.8,
+            'z': heightb/2.2,
             'rotate_Ax':{ 'theta': np.deg2rad(-angle_for_plate)},
             'rotate':{'theta': -0.5*np.pi},
             'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
             'DrivenDof':{'vx': -1.0,'name':'vleft','component':2,'path':par_dir}, 
+            #'pullin':{'acc': args.acc, 'mass': 2700 * lengthb*widthb *thick, 'path':par_dir,'component':2, 'name':'fleft'},
+
+
+        },
+        'left2':{
+            'axe1': lengthb/2 + 0.1,
+            'axe2': heightb/2,
+            'axe3': thick/2,
+            'x': 0.,
+            'y': -widthb/2 - thick/2 - 0.5,
+            #'y': -1.5,
+            'z': heightb/2.9,
+            'rotate_Ax':{ 'theta': np.deg2rad(-45)},
+            'rotate':{'theta': -0.5*np.pi},
+            'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
+            'DrivenDof':{'vx': -1.0,'name':'vleft','component':2,'path':par_dir}, 
+            'pullin':{'acc': args.acc, 'mass': 2700 * lengthb*widthb *thick, 'path':par_dir,'component':2, 'name':'fleft'},
+
+
         },
         'right':{
             'axe1': lengthb/2 + 0.1,
@@ -669,11 +692,28 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'axe3': thick/2,
             'x': 0.,
             'y': widthb/2 + thick/2,
-            'z': heightb/2.,
+            #'y': 0.8,
+            'z': heightb/2.2,
             'rotate_Ax':{ 'theta': np.deg2rad(angle_for_plate)},
             'rotate':{'theta': 0.5*np.pi},
             'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
             'DrivenDof':{'vx': 1.0,'name':'vright','component':2,'path':par_dir}, 
+            #'pullin':{'acc': -args.acc, 'mass': 2700 * lengthb*widthb *thick, 'path':par_dir,'component':2, 'name':'fright'},
+
+        },
+        'right2':{
+            'axe1': lengthb/2 + 0.1,
+            'axe2': heightb/2 ,
+            'axe3': thick/2,
+            'x': 0.,
+            'y': widthb/2 + thick/2 + 0.5,
+            #'y': 1.5,
+            'z': heightb/2.9,
+            'rotate_Ax':{ 'theta': np.deg2rad(45)},
+            'rotate':{'theta': 0.5*np.pi},
+            'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
+            'DrivenDof':{'vx': 1.0,'name':'vright','component':2,'path':par_dir}, 
+            'pullin':{'acc': -args.acc, 'mass': 2700 * lengthb*widthb *thick, 'path':par_dir,'component':2, 'name':'fright'},
 
         },
         'front':{
@@ -681,11 +721,14 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'axe2': widthb/2 + 0.5,
             'axe3': thick/2,
             'x': lengthb/2 + thick/2,
+            #'x': 0.8,
             'y': 0.,
-            'z': heightb/2.,
-            'rotate':{'description':'axis', 'alpha': -0.5*np.pi, 'axis':[0.,1.,0.]},
+            'z': heightb/2.2,
+            'rotate':{'description':'axis', 'alpha': np.deg2rad(90-angle_for_plate), 'axis':[0.,1.,0.]},
             'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
             'DrivenDof':{'vx': 1.0,'name':'vfront','component':1,'path':par_dir}, 
+            #'pullin':{'acc': -args.acc, 'mass': 2*2700 * lengthb*widthb *thick, 'path':par_dir,'component':1, 'name':'ffront'},
+
 
         },
         'back':{
@@ -693,11 +736,14 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'axe2': widthb/2 + 0.5,
             'axe3': thick/2,
             'x': -lengthb/2 - thick/2,
+            #'x': -0.8,
             'y': 0.,
-            'z': heightb/2.,
-            'rotate':{'description':'axis', 'alpha': 0.5*np.pi, 'axis':[0.,1.,0.]},
+            'z': heightb/2.2,
+            'rotate':{'description':'axis', 'alpha': np.deg2rad(-90+angle_for_plate), 'axis':[0.,1.,0.]},
             'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
             'DrivenDof':{'vx': -1.0,'name':'vback','component':1,'path':par_dir}, 
+            #'pullin':{'acc': args.acc, 'mass': 2*2700 * lengthb*widthb *thick, 'path':par_dir,'component':1, 'name':'fback'},
+
         },
         'bottom':{
             'axe1': 2+0.1,
@@ -721,7 +767,7 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'pullup':{'acc': 4.9, 'mass': 2700 * lengthb*widthb *thick, 'path':par_dir,'component':3, 'name':'ftop'},
         }
         }
-    bodies_plates = plate_definition(dict, mat=mats['TDURx'], mod=mods['rigid'],dt=args.dt, time=args.time)
+    bodies_plates = plate_definition(dict, mat=mats['TDURT'], mod=mods['rigid'],dt=args.dt, time=args.time)
     
     bodies+=bodies_plates
     if args.visu:pre.visuAvatars(bodies)
@@ -750,7 +796,11 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
                 }
     post = create_postpro_commands(post_dict)
     pre.writeDatbox(dim,mats,mods,bodies,tacts,svs,post=post, datbox_path=os.path.join(par_dir,'DATBOX'))
-    return None
+    info_dict = {}
+    # if variable nb_dep is defined, it means that the ballast is generated
+    if 'nb_dep' in locals():
+        info_dict['Nb_Particles'] = nb_dep
+    return info_dict
 
 
 

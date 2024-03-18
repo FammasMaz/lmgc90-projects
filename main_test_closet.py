@@ -29,6 +29,15 @@ parser.add_argument("--N", "--n_layers", dest="n_layers", default=10, type=int, 
 parser.add_argument("--theta", "--angle_for_plate", dest="angle_for_plate", default=10, type=float, help="Angle for plate")
 parser.add_argument("--dt", "--time-step", dest="dt", default=5e-2, type=float, help="Time step")
 parser.add_argument("--t", "--time", dest="time", default=3.5, type=float, help="Time")
+parser.add_argument("--acc", "--pullup_acc", dest="acc", default=32, type=float, help="Pullup acceleration")
+parser.add_argument("--np","--np", dest="npart", default=5000, type=int, help="Number of particles")
+parser.add_argument("--hb", "--height",dest="height", default=1.6, type=float, help="Height of the ballast")
+parser.add_argument("--wb","--width", dest="width", default=2.0, type=float, help="Width of the ballast")
+parser.add_argument("--st", "--solver_type", dest="solver", default='SDL', type=str, help="Solver type")
+
+# to get help for arguments in temrinal write: python main_test_closet.py -h
+# for example to show the help for --wb argument do:
+# python main_test_closet.py --wb -h
 
 
 # thats it
@@ -76,7 +85,6 @@ while i < max:
         if not args.verbose:
             with stdout_redirected():
                 test = closet_ballast(par_dir=par_dir, args=args, seed=687, visu=args.visu, step=1000)
-                
         else:
             test = closet_ballast(par_dir=par_dir, seed=687, visu=args.visu, step=1000, args=args)
         os.chdir(par_dir)
@@ -86,7 +94,7 @@ while i < max:
     #    print(f'Failed at iteration {i}: trying again...')
     #    continue
     #shutil.rmtree('DISPLAY') if i % 10 != 0 else None
-    if args.compute:failed=computer(freq_disp=args.freq_display, dt=args.dt, time=args.time)
+    if args.compute:failed=computer(freq_disp=args.freq_display, dt=args.dt, time=args.time, info_dict=test, solver=args.solver)
     else: break
     i += 1  # Increment i after the try-except block
     os.chdir('../../../')
