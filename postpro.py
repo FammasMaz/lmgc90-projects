@@ -7,9 +7,19 @@ from pathlib import Path
 import torch
 from tqdm.auto import tqdm
 
+
+def str2bool(v):
+    if v.lower() in ('yes', 'True', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'False', 'f', 'n', '0'):
+        return False
+    else: raise argparse.ArgumentTypeError('Boolean value expected.')
+
+
 parser = argparse.ArgumentParser()  
 parser.add_argument('--par_dir', type=str, default='/Users/fammasmaz/Downloads/')
 parser.add_argument('--stem', type=str, default='sncf_random_test_2') 
+parser.add_argument('--psi_grain', type=str2bool, default=False)
 args = parser.parse_args()
 
 
@@ -114,9 +124,10 @@ for out_dir in tqdm(files):
       x = np.hstack((x, n))
       f = gravitational_force_creator(x, mass)
       fg = stack_creator(out_dir).global_force()
-      psi = stress_calculation(edge_features)
-      psi_grain = stress_calculation_grain(edge_features, fg, edge_index, n_nodes)
-      breakpoint()
+      if not args.psi_grain:
+        psi = stress_calculation(edge_features)
+      else:
+        psi = stress_calculation_grain(edge_features, fg, edge_index, n_nodes) # psi at granular level
       data = [Data(x=torch.tensor(x, dtype=torch.float32), edge_index=torch.tensor(edge_index, dtype=torch.long), y=torch.tensor(x, dtype=torch.float32),edge_sup=torch.tensor(edge_features,dtype=torch.float32), f=torch.tensor(f, dtype=torch.float32), psi=torch.tensor(psi, dtype=torch.float32))]
       # number from the folder
       save_dir = Path(args.par_dir) / 'closet_pt'
