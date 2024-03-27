@@ -760,7 +760,7 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
             'axe3': thick/2,
             'x': 0.,
             'y': 0.,
-            'z': max(z)+dgrid/2.,
+            'z':max(z)+dgrid/2.,
             'rotate':{'theta': np.pi},
             'imposeDrivenDof': {'component':[1,2,3,4,5,6]},
             #'DrivenDof':{'vx': 3,'name':'vtopleft','component':2,'path':par_dir, 'vinit': -9.8, 'start': 0.}, 
@@ -792,7 +792,9 @@ def closet_ballast(par_dir, seed=687, visu=False, step=1, args=None):
     if args.closet: dict_see.update(dict_pw)
 
     svs = create_see_tables(dict_see)
-    post_dict = {'CONTACT FORCE DISTRIBUTION': {'step':step, 'val':1}
+    post_dict = {'CONTACT FORCE DISTRIBUTION': {'step':step, 'val':1},
+                 'SOLVER INFORMATIONS': {'step':1},
+                 'VIOLATION EVOLUTION': {'step':1}
                 }
     post = create_postpro_commands(post_dict)
     pre.writeDatbox(dim,mats,mods,bodies,tacts,svs,post=post, datbox_path=os.path.join(par_dir,'DATBOX'))

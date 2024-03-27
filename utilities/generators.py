@@ -199,7 +199,8 @@ def plate_definition(dict, mod, mat, dt, time):
          # previously the body fell under gravity now pull it up
          def drivenForce(t):
             if t > time - 1: 
-               return 600
+               #return 600
+               return -v['pullup']['acc'] *4
             else:
                return -v['pullup']['acc']
             

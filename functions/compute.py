@@ -26,11 +26,12 @@ def computer(deformable=0, freq_disp=1, dt=5.e-3,time=3.5, info_dict = False, so
     tol = 1.666e-3
     relax = 1.0
     norm = 'Quad'
-    gs_it1 = 100 # min number of Gauss-Seidel iterations
-    gs_it2 = 10 # max number of Gauss-Seidel iterations (gs_it1*gs_it2)
+    gs_it1 = 20 # min number of Gauss-Seidel iterations
+    gs_it2 = 50 # max number of Gauss-Seidel iterations (gs_it1*gs_it2)
     solver_type = 'Stored_Delassus_Loops' if solver == 'SDL' else 'Exchange_Local_Global'
 
-
+    chipy.nlgs_3D_DiagonalResolution()
+    
     # print the params
     table = [
         ["Parameter", "Value"],
